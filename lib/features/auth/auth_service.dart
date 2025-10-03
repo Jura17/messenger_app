@@ -22,10 +22,6 @@ class AuthService {
         'email': email,
       });
 
-      // save device token
-      // final notificationService = NotificationService();
-      // notificationService.setupTokenListeners();
-
       return userCredential;
     } on FirebaseAuthException catch (e) {
       throw Exception(e.code);
@@ -42,10 +38,6 @@ class AuthService {
         'email': email,
       });
 
-      // save device token
-      // final notificationService = NotificationService();
-      // notificationService.setupTokenListeners();
-
       return userCredentials;
     } on FirebaseAuthException catch (e) {
       throw Exception(e.code);
@@ -53,13 +45,6 @@ class AuthService {
   }
 
   Future<void> signOut() async {
-    // clear device token
-    // final notificationService = NotificationService();
-    // String? userId = _authInstance.currentUser?.uid;
-    // if (userId != null) {
-    //   await notificationService.clearTokenOnLogout(userId);
-    // }
-
     return await _authInstance.signOut();
   }
 

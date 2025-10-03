@@ -8,13 +8,11 @@ class UserInput extends StatefulWidget {
   const UserInput({
     super.key,
     required this.receiverID,
-    required this.focusNode,
     required this.scrollDown,
   });
 
   final void Function() scrollDown;
   final String receiverID;
-  final FocusNode focusNode;
 
   @override
   State<UserInput> createState() => _UserInputState();
@@ -33,24 +31,20 @@ class _UserInputState extends State<UserInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: MessageTextfield(
-              hintText: "Type a message...",
-              controller: _messageController,
-              focusNode: widget.focusNode,
-            ),
+    return Row(
+      children: [
+        Expanded(
+          child: MessageTextfield(
+            hintText: "Type a message...",
+            controller: _messageController,
           ),
-          IconButton(
-            onPressed: sendMessage,
-            icon: const Icon(Icons.send),
-          ),
-          SizedBox(width: 15),
-        ],
-      ),
+        ),
+        IconButton(
+          onPressed: sendMessage,
+          icon: const Icon(Icons.send),
+        ),
+        SizedBox(width: 15),
+      ],
     );
   }
 

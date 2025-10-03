@@ -16,20 +16,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // final FirebaseAuth auth = FirebaseAuth.instance;
-  // final FirebaseFirestore db = FirebaseFirestore.instance;
-  // final AuthApi authApi = FirebaseAuthApi(auth: auth, db: db);
-  // final FirebaseAuthRepository authRepo = FirebaseAuthRepository(authApi);
-
-  // FirebaseAuthApi _api = FirebaseAuthApi(auth: auth, db: db);
-
-  // runApp(MainApp(auth: _api));
-
-  // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-  // final notificationService = NotificationService();
-  // await notificationService.requestPersmission();
-  // notificationService.setupInteractions();
-
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
@@ -48,18 +34,13 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 class MainApp extends StatelessWidget {
   const MainApp({
     super.key,
-    // required this.auth,
   });
-
-  // final FirebaseAuthApi auth;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthGate(
-          // auth: auth,
-          ),
+      home: AuthGate(),
       theme: context.watch<ThemeProvider>().themeData,
     );
   }

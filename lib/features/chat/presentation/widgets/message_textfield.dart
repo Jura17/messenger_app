@@ -4,14 +4,12 @@ class MessageTextfield extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final TextEditingController controller;
-  final FocusNode focusNode;
 
   const MessageTextfield({
     super.key,
     required this.hintText,
     this.obscureText = false,
     required this.controller,
-    required this.focusNode,
   });
 
   @override
@@ -19,7 +17,6 @@ class MessageTextfield extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 25, right: 10),
       child: TextField(
-        focusNode: focusNode,
         obscureText: obscureText,
         controller: controller,
         minLines: 1,

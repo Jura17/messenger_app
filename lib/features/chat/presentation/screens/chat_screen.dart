@@ -20,12 +20,29 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final FocusNode _textInputFocusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
+  // bool _showScrollToBottom = true;
+
+  // void _scrollListener() {
+  //   final maxScroll = _scrollController.position.maxScrollExtent;
+  //   final offset = _scrollController.offset;
+
+  //   if (offset < maxScroll && !_showScrollToBottom) {
+  //     setState(() {
+  //       _showScrollToBottom = true;
+  //     });
+  //   } else if (offset >= maxScroll && _showScrollToBottom) {
+  //     setState(() {
+  //       _showScrollToBottom = false;
+  //     });
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
+    // _scrollController.addListener(_scrollListener);
+
     Future.delayed(
       const Duration(milliseconds: 500),
       () {
@@ -35,20 +52,11 @@ class _ChatScreenState extends State<ChatScreen> {
         widget.updateUnread();
       },
     );
-
-    _textInputFocusNode.addListener(() {
-      if (_textInputFocusNode.hasFocus) {
-        Future.delayed(
-          const Duration(milliseconds: 500),
-          () => scrollDown(),
-        );
-      }
-    });
   }
 
   @override
   void dispose() {
-    _textInputFocusNode.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -71,19 +79,32 @@ class _ChatScreenState extends State<ChatScreen> {
             UserInput(
               scrollDown: scrollDown,
               receiverID: widget.receiverID,
-              focusNode: _textInputFocusNode,
             )
           ],
+        ),
+      ),
+      floatingActionButton: GestureDetector(
+        onTap: scrollDown,
+        child: Container(
+          padding: EdgeInsets.all(10),
+          margin: EdgeInsets.only(bottom: 70),
+          decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, shape: BoxShape.circle),
+          child: const Icon(
+            Icons.expand_more,
+            size: 30,
+          ),
         ),
       ),
     );
   }
 
   void scrollDown() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(seconds: 1),
-      curve: Curves.fastOutSlowIn,
-    );
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 }
