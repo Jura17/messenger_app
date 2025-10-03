@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:messenger_app/features/notifications/notification_service.dart';
 
 class AuthService {
   final FirebaseAuth _authInstance = FirebaseAuth.instance;
@@ -24,8 +23,8 @@ class AuthService {
       });
 
       // save device token
-      final notificationService = NotificationService();
-      notificationService.setupTokenListeners();
+      // final notificationService = NotificationService();
+      // notificationService.setupTokenListeners();
 
       return userCredential;
     } on FirebaseAuthException catch (e) {
@@ -33,27 +32,21 @@ class AuthService {
     }
   }
 
-  Future<UserCredential> signUpWithEmailPassword({
-    // required String username,
-    required String email,
-    required String password,
-  }) async {
+  Future<UserCredential> signUpWithEmailPassword({required String email, required String password}) async {
     try {
-      UserCredential userCredential = await _authInstance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential userCredentials =
+          await _authInstance.createUserWithEmailAndPassword(email: email, password: password);
 
-      _firestore.collection('users').doc(userCredential.user!.uid).set({
-        'uid': userCredential.user!.uid,
+      _firestore.collection('users').doc(userCredentials.user!.uid).set({
+        'uid': userCredentials.user!.uid,
         'email': email,
       });
 
       // save device token
-      final notificationService = NotificationService();
-      notificationService.setupTokenListeners();
+      // final notificationService = NotificationService();
+      // notificationService.setupTokenListeners();
 
-      return userCredential;
+      return userCredentials;
     } on FirebaseAuthException catch (e) {
       throw Exception(e.code);
     }
@@ -61,11 +54,11 @@ class AuthService {
 
   Future<void> signOut() async {
     // clear device token
-    final notificationService = NotificationService();
-    String? userId = _authInstance.currentUser?.uid;
-    if (userId != null) {
-      await notificationService.clearTokenOnLogout(userId);
-    }
+    // final notificationService = NotificationService();
+    // String? userId = _authInstance.currentUser?.uid;
+    // if (userId != null) {
+    //   await notificationService.clearTokenOnLogout(userId);
+    // }
 
     return await _authInstance.signOut();
   }

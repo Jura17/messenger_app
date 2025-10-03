@@ -5,7 +5,6 @@ import 'package:messenger_app/features/auth/presentation/widgets/custom_button.d
 import 'package:messenger_app/features/auth/presentation/widgets/custom_textfield.dart';
 
 class RegisterScreen extends StatelessWidget {
-  // final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
@@ -38,10 +37,6 @@ class RegisterScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 25),
-          // CustomTextfield(
-          //   hintText: "Username",
-          //   controller: _usernameController,
-          // ),
           SizedBox(height: 10),
           CustomTextfield(
             hintText: "Email",
@@ -91,23 +86,21 @@ class RegisterScreen extends StatelessWidget {
     );
   }
 
-  void register(BuildContext context) {
+  void register(BuildContext context) async {
     final authService = AuthService();
-    if (_passwordController.text == _confirmPasswordController.text) {
-      try {
-        authService.signUpWithEmailPassword(
-          // username: _usernameController.text,
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-      } catch (e) {
-        showDialog(
-          context: context,
-          builder: (context) => const AlertDialog(
-            title: Text("Passwords don't match!"),
-          ),
-        );
-      }
+
+    try {
+      await authService.signUpWithEmailPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(e.toString()),
+        ),
+      );
     }
   }
 }

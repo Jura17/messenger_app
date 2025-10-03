@@ -4,10 +4,6 @@ abstract class AuthApi {
   Stream<User?> onAuthChanged();
   User? getCurrentUser();
   Future<UserCredential> signInWithEmailPassword(String email, String password);
-  Future<UserCredential> signUpWithEmailPassword({
-    required String username,
-    required String email,
-    required String password,
-  });
+  Future<UserCredential> signUpWithEmailPassword(String email, String password);
   Future<void> signOut();
 }

@@ -1,16 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:messenger_app/core/theme/light_theme.dart';
+
 import 'package:messenger_app/core/theme/theme_provider.dart';
-import 'package:messenger_app/features/auth/data/provider/auth_api.dart';
-import 'package:messenger_app/features/auth/data/provider/firebase_auth_api.dart';
-import 'package:messenger_app/features/auth/data/repos/firebase_auth_repository.dart';
 
 import 'package:messenger_app/features/auth/presentation/screens/auth_gate.dart';
-import 'package:messenger_app/features/notifications/notification_service.dart';
 import 'package:messenger_app/firebase_options.dart';
 import 'package:provider/provider.dart';
 
@@ -31,11 +25,10 @@ void main() async {
 
   // runApp(MainApp(auth: _api));
 
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
-  final notificationService = NotificationService();
-  await notificationService.requestPersmission();
-  notificationService.setupInteractions();
+  // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  // final notificationService = NotificationService();
+  // await notificationService.requestPersmission();
+  // notificationService.setupInteractions();
 
   runApp(
     ChangeNotifierProvider(
