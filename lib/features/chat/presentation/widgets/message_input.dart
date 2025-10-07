@@ -4,8 +4,8 @@ import 'package:messenger_app/features/auth/auth_service.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/message_textfield.dart';
 import 'package:messenger_app/features/chat/service/chat_service.dart';
 
-class UserInput extends StatefulWidget {
-  const UserInput({
+class MessageInput extends StatefulWidget {
+  const MessageInput({
     super.key,
     required this.receiverID,
     required this.scrollDown,
@@ -15,10 +15,10 @@ class UserInput extends StatefulWidget {
   final String receiverID;
 
   @override
-  State<UserInput> createState() => _UserInputState();
+  State<MessageInput> createState() => _MessageInputState();
 }
 
-class _UserInputState extends State<UserInput> {
+class _MessageInputState extends State<MessageInput> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService chatService = ChatService();
   final AuthService authService = AuthService();

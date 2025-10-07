@@ -1,4 +1,4 @@
-import 'package:messenger_app/features/auth/data/models/user_data.dart';
+import 'package:messenger_app/features/users/data/models/user_data.dart';
 
 abstract class UserdataRepository {
   Future<void> createUser(String uid, String email);

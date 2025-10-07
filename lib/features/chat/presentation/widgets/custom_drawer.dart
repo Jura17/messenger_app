@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/features/auth/auth_service.dart';
-import 'package:messenger_app/features/chat/presentation/screens/settings_screen.dart';
+import 'package:messenger_app/features/settings/presentation/screens/settings_screen.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/drawer_menu_item.dart';
 
 class CustomDrawer extends StatelessWidget {

@@ -1,30 +1,42 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/bloc/auth_event.dart';
+import 'package:messenger_app/features/auth/bloc/auth_state.dart';
 
 import 'package:messenger_app/features/auth/presentation/screens/login_or_register.dart';
 import 'package:messenger_app/features/chat/presentation/screens/home_screen.dart';
 
 class AuthGate extends StatelessWidget {
-  const AuthGate({
-    super.key,
-    // required this.auth,
-  });
-
-  // final FirebaseAuthRepository auth;
+  const AuthGate({super.key});
 
   @override
   Widget build(BuildContext context) {
+    context.read<AuthBloc>().add(AppStarted());
+
     return Scaffold(
-      body: StreamBuilder(
-          // stream: auth.onAuthChanged(),
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return HomeScreen();
-            } else {
-              return const LoginOrRegister();
-            }
-          }),
+      body: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          if (state is AuthLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is AuthError) {
+            return Center(child: Text(state.message));
+          } else if (state is Unauthenticated) {
+            return const LoginOrRegister();
+          } else {
+            return HomeScreen();
+          }
+        },
+      ),
+      // body: StreamBuilder(
+      //     stream: FirebaseAuth.instance.authStateChanges(),
+      //     builder: (context, snapshot) {
+      //       if (snapshot.hasData) {
+      //         return HomeScreen();
+      //       } else {
+      //         return const LoginOrRegister();
+      //       }
+      //     }),
     );
   }
 }

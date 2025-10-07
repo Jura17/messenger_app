@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/message_list.dart';
-import 'package:messenger_app/features/chat/presentation/widgets/user_input.dart';
+import 'package:messenger_app/features/chat/presentation/widgets/message_input.dart';
 import 'package:messenger_app/features/chat/service/chat_service.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -76,7 +76,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 receiverID: widget.receiverID,
               ),
             ),
-            UserInput(
+            MessageInput(
               scrollDown: scrollDown,
               receiverID: widget.receiverID,
             )

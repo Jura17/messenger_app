@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:messenger_app/features/auth/auth_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/bloc/auth_event.dart';
 
 import 'package:messenger_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:messenger_app/features/auth/presentation/widgets/custom_textfield.dart';
@@ -79,13 +81,15 @@ class LoginScreen extends StatelessWidget {
   }
 
   void login(BuildContext context) async {
-    final authService = AuthService();
+    // final authService = AuthService();
+    final authBloc = context.read<AuthBloc>();
 
     try {
-      await authService.signInWithEmailPassword(
-        _emailController.text,
-        _passwordController.text,
-      );
+      authBloc.add(LoginRequested(_emailController.text, _passwordController.text));
+      // await authService.signInWithEmailPassword(
+      //   _emailController.text,
+      //   _passwordController.text,
+      // );
     } catch (e) {
       showDialog(
         context: context,

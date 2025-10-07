@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:messenger_app/features/auth/data/provider/auth_api.dart';
-import 'package:messenger_app/features/auth/data/repositories/firestore_userdata_repository.dart';
+import 'package:messenger_app/features/users/data/repositories/firestore_userdata_repository.dart';
 
-class FirebaseAuthApi extends AuthApi {
+class FirebaseAuthApi implements AuthApi {
   final FirebaseAuth auth;
   final FirestoreUserdataRepository userRepo;
 

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:messenger_app/features/auth/data/models/user_data.dart';
-import 'package:messenger_app/features/auth/data/repositories/userdata_repository.dart';
+import 'package:messenger_app/features/users/data/models/user_data.dart';
+import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
 
 class FirestoreUserdataRepository implements UserdataRepository {
   final FirebaseFirestore firestoreDb;
@@ -10,10 +10,7 @@ class FirestoreUserdataRepository implements UserdataRepository {
       : firestoreDb = firestoreDb ?? FirebaseFirestore.instance;
 
   @override
-  Future<void> createUser(String uid, String email) async {
-    final newUser = Userdata(uid: uid, email: email);
-    await firestoreDb.collection('users').doc(uid).set(newUser.toMap());
-  }
+  Future<void> createUser(String uid, String email) async {}
 
   @override
   Future<List<Userdata>> getAllUsers() {

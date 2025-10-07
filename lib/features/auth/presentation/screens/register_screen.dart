@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:messenger_app/features/auth/auth_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/bloc/auth_event.dart';
 
 import 'package:messenger_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:messenger_app/features/auth/presentation/widgets/custom_textfield.dart';
@@ -87,13 +89,15 @@ class RegisterScreen extends StatelessWidget {
   }
 
   void register(BuildContext context) async {
-    final authService = AuthService();
+    // final authService = AuthService();
+    final authBloc = context.read<AuthBloc>();
 
     try {
-      await authService.signUpWithEmailPassword(
-        _emailController.text,
-        _passwordController.text,
-      );
+      authBloc.add(SignUpRequested(_emailController.text, _passwordController.text));
+      // await authService.signUpWithEmailPassword(
+      //   _emailController.text,
+      //   _passwordController.text,
+      // );
     } catch (e) {
       showDialog(
         context: context,
