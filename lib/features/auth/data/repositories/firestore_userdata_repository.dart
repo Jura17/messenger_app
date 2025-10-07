@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:messenger_app/features/auth/data/models/userdata.dart';
+import 'package:messenger_app/features/auth/data/models/user_data.dart';
 import 'package:messenger_app/features/auth/data/repositories/userdata_repository.dart';
 
 class FirestoreUserdataRepository implements UserdataRepository {
-  FirestoreUserdataRepository(this._firestoreDb);
+  final FirebaseFirestore firestoreDb;
 
-  final FirebaseFirestore _firestoreDb;
+  // accept mock db for testing
+  FirestoreUserdataRepository({FirebaseFirestore? firestoreDb})
+      : firestoreDb = firestoreDb ?? FirebaseFirestore.instance;
 
   @override
   Future<void> createUser(String uid, String email) async {
     final newUser = Userdata(uid: uid, email: email);
-    await _firestoreDb.collection('users').doc(uid).set(newUser.toMap());
+    await firestoreDb.collection('users').doc(uid).set(newUser.toMap());
   }
 
   @override
@@ -29,5 +31,10 @@ class FirestoreUserdataRepository implements UserdataRepository {
   Future<void> updateLastLogin(String uid) {
     // TODO: implement updateLastLogin
     throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteAccount(String uid) async {
+    await firestoreDb.collection('users').doc(uid).delete();
   }
 }

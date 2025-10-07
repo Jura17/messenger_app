@@ -6,7 +6,10 @@ class FirebaseAuthApi extends AuthApi {
   final FirebaseAuth auth;
   final FirestoreUserdataRepository userRepo;
 
-  FirebaseAuthApi({required this.auth, required this.userRepo});
+  // accept mock auth & db for testing
+  FirebaseAuthApi({FirebaseAuth? auth, FirestoreUserdataRepository? userRepo})
+      : auth = auth ?? FirebaseAuth.instance,
+        userRepo = userRepo ?? FirestoreUserdataRepository();
 
   @override
   Stream<User?> onAuthChanged() => auth.authStateChanges();
@@ -17,24 +20,24 @@ class FirebaseAuthApi extends AuthApi {
   }
 
   @override
-  Future<UserCredential> signUpWithEmailPassword(String email, String password) async {
+  Future<User> signUpWithEmailPassword(String email, String password) async {
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(email: email, password: password);
       // create firestore user
       userRepo.createUser(userCredential.user!.uid, email);
-      return userCredential;
+      return userCredential.user!;
     } on FirebaseAuthException catch (e) {
       throw Exception(e.code);
     }
   }
 
   @override
-  Future<UserCredential> signInWithEmailPassword(String email, String password) async {
+  Future<User> signInWithEmailPassword(String email, String password) async {
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(email: email, password: password);
       userRepo.updateLastLogin(userCredential.user!.uid);
 
-      return userCredential;
+      return userCredential.user!;
     } on FirebaseAuthException catch (e) {
       throw Exception(e.code);
     }
@@ -43,5 +46,14 @@ class FirebaseAuthApi extends AuthApi {
   @override
   Future<void> signOut() async {
     return await auth.signOut();
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    User? currentUser = getCurrentUser();
+    if (currentUser != null) {
+      await userRepo.deleteAccount(currentUser.uid);
+      await currentUser.delete();
+    }
   }
 }

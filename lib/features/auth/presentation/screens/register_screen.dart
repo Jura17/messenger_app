@@ -91,8 +91,8 @@ class RegisterScreen extends StatelessWidget {
 
     try {
       await authService.signUpWithEmailPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
+        _emailController.text,
+        _passwordController.text,
       );
     } catch (e) {
       showDialog(

@@ -10,13 +10,13 @@ class FirebaseAuthRepository {
 
   User? getCurrentUser() => _authApi.getCurrentUser();
 
-  Future<UserCredential> signInWithEmailAndPassword(String email, String password) async {
+  Future<User> signIn(String email, String password) async {
     return _authApi.signInWithEmailPassword(email, password);
   }
 
-  Future<UserCredential> signUpWithEmailPassword(String email, String password) async {
+  Future<User> signUp(String email, String password) async {
     return _authApi.signUpWithEmailPassword(email, password);
   }
 
-  Future<void> signOut() async => await _authApi.signOut();
+  Future<void> logout() async => await _authApi.signOut();
 }
