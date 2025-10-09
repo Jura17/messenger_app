@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:messenger_app/features/auth/auth_service.dart';
+import 'package:messenger_app/features/chat/data/provider/firestore_chat_api.dart';
+import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
 
 import 'package:messenger_app/features/chat/presentation/widgets/message_list_bubble.dart';
-import 'package:messenger_app/features/chat/service/chat_service.dart';
+import 'package:messenger_app/features/chat/chat_service.dart';
 
 class MessageList extends StatelessWidget {
   const MessageList({
@@ -24,6 +26,7 @@ class MessageList extends StatelessWidget {
 
     final ChatService chatService = ChatService();
     final AuthService authService = AuthService();
+
     String senderID = authService.getCurrentUser()!.uid;
 
     return StreamBuilder(

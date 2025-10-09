@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:messenger_app/features/auth/auth_service.dart';
 
 import 'package:messenger_app/features/users/presentation/widgets/user_tile.dart';
-import 'package:messenger_app/features/chat/service/chat_service.dart';
+import 'package:messenger_app/features/chat/chat_service.dart';
 
 class UserListView extends StatefulWidget {
   const UserListView({

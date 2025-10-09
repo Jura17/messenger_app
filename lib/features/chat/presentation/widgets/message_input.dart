@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:messenger_app/features/auth/auth_service.dart';
 
 import 'package:messenger_app/features/chat/presentation/widgets/message_textfield.dart';
-import 'package:messenger_app/features/chat/service/chat_service.dart';
+import 'package:messenger_app/features/chat/chat_service.dart';
 
 class MessageInput extends StatefulWidget {
   const MessageInput({

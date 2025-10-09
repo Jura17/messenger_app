@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/message_list.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/message_input.dart';
-import 'package:messenger_app/features/chat/service/chat_service.dart';
+import 'package:messenger_app/features/chat/chat_service.dart';
 
 class ChatScreen extends StatefulWidget {
   final String receiverEmail;

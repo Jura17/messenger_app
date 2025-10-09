@@ -2,7 +2,12 @@ import 'package:messenger_app/features/users/data/models/user_data.dart';
 
 abstract class UserdataApi {
   Future<void> createUser(String uid, String email);
-  Future<List<Userdata>> getAllUsers(); // not sure if really needed
+  Stream<List<Map<String, dynamic>>> getAllPermittedUsers();
+  Stream<List<String>> getBlockedUserIds();
   Future<Userdata?> getUser(String uid);
-  Future<void> updateLastLogin(String uid);
+  Future<void> updateLastLogin();
+  // Stream<List<Map<String, dynamic>>> getBlockedUsers(String uid);
+  Future<void> blockUser(String uid);
+  Future<void> unblockUser(String uid);
+  Future<void> deleteAccount();
 }

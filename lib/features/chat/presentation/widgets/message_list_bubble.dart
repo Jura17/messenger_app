@@ -4,7 +4,7 @@ import 'package:messenger_app/core/theme/custom_colors.dart';
 import 'package:messenger_app/core/theme/theme_provider.dart';
 
 import 'package:messenger_app/features/auth/auth_service.dart';
-import 'package:messenger_app/features/chat/service/chat_service.dart';
+import 'package:messenger_app/features/chat/chat_service.dart';
 import 'package:provider/provider.dart';
 
 class MessageListBubble extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:messenger_app/features/chat/service/chat_service.dart';
+import 'package:messenger_app/features/chat/chat_service.dart';
 
 class BlockedUserTile extends StatelessWidget {
   const BlockedUserTile({

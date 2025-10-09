@@ -70,9 +70,9 @@ class ChatService extends ChangeNotifier {
 
     // create a new message
     Message newMessage = Message(
-      senderID: currentUserID,
+      senderId: currentUserID,
       senderEmail: currentUserEmail,
-      receiverID: receiverID,
+      receiverId: receiverID,
       message: message,
       timestamp: timestamp,
     );
@@ -102,18 +102,18 @@ class ChatService extends ChangeNotifier {
         .snapshots();
   }
 
-  Future<void> markMessagesAsRead(String receiverID) async {
-    final currentUserID = _auth.currentUser!.uid;
+  Future<void> markMessagesAsRead(String receiverId) async {
+    final currentUserId = _auth.currentUser!.uid;
 
-    List<String> ids = [currentUserID, receiverID];
+    List<String> ids = [currentUserId, receiverId];
     ids.sort();
-    String chatRoomID = ids.join('_');
+    String chatRoomId = ids.join('_');
 
     final unreadMessagesQuery = _firestore
         .collection('chatrooms')
-        .doc(chatRoomID)
+        .doc(chatRoomId)
         .collection('messages')
-        .where('receiverID', isEqualTo: currentUserID)
+        .where('receiverID', isEqualTo: currentUserId)
         .where('isRead', isEqualTo: false);
 
     final unreadMessagesSnapshot = await unreadMessagesQuery.get();

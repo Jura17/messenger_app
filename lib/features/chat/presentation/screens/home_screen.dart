@@ -7,7 +7,7 @@ import 'package:messenger_app/features/auth/bloc/auth_state.dart';
 
 import 'package:messenger_app/features/chat/presentation/widgets/custom_drawer.dart';
 import 'package:messenger_app/features/users/presentation/widgets/user_list_view.dart';
-import 'package:messenger_app/features/chat/service/chat_service.dart';
+import 'package:messenger_app/features/chat/chat_service.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
