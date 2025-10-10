@@ -17,17 +17,36 @@ class FirestoreUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Stream<List<Userdata>> getAllPermittedUsers() {
+  Stream<List<Userdata>> getAllPermittedUsersStream() {
     final currentUser = _authApi.getCurrentUser();
-    final allUsersStream = _userdataApi.getAllUsers();
-    final blockedUsersStream = _userdataApi.getBlockedUserIds();
+    if (currentUser == null) throw Exception("No authenticated user");
+
+    final allUsersStream = _userdataApi.getAllUsersStream();
+    final blockedUsersStream = _userdataApi.getBlockedUserIdsStream();
 
     // merge user stream and blocked user ID stream into one (emits value when one of them changes)
     return Rx.combineLatest2(allUsersStream, blockedUsersStream, (allUsers, blockedUserIds) {
       final permittedUsers =
-          allUsers.where((user) => user['uid'] != currentUser!.uid && !blockedUserIds.contains(user['uid']));
+          allUsers.where((user) => user['uid'] != currentUser.uid && !blockedUserIds.contains(user['uid']));
 
       return permittedUsers.map((user) => Userdata.fromMap(user)).toList();
+    });
+  }
+
+  @override
+  Stream<List<Userdata>> getBlockedUsersStream() {
+    final currentUser = _authApi.getCurrentUser();
+    if (currentUser == null) throw Exception("No authenticated user");
+
+    final allUsersStream = _userdataApi.getAllUsersStream();
+    final blockedUsersStream = _userdataApi.getBlockedUserIdsStream();
+
+    // merge user stream and blocked user ID stream into one (emits value when one of them changes)
+    return Rx.combineLatest2(allUsersStream, blockedUsersStream, (allUsers, blockedUserIds) {
+      final blockedUsers =
+          allUsers.where((user) => user['uid'] != currentUser.uid && blockedUserIds.contains(user['uid']));
+
+      return blockedUsers.map((user) => Userdata.fromMap(user)).toList();
     });
   }
 
@@ -38,15 +57,9 @@ class FirestoreUserdataRepository implements UserdataRepository {
 
   @override
   Future<void> updateLastLogin(String uid) async {
+    // TODO: implement updateLastLogin logic after adding property to userdata model
     debugPrint("updateLastLogin from Api");
   }
-
-  // @override
-  // Stream<List<Userdata>> getBlockedUsers(String uid) {
-  //   return _userdataApi
-  //       .getBlockedUserIds(uid)
-  //       .map((userList) => userList.map((user) => Userdata.fromMap(user)).toList());
-  // }
 
   @override
   Future<void> blockUser(String uid) async {

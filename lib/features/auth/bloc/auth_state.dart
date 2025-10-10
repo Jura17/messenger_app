@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 // sealed = only classes in this file can extend this class
 sealed class AuthState extends Equatable {
   const AuthState();
+
   @override
+  // needed to define what "equality" actually means when two types are compared using Equatable
   List<Object?> get props => [];
 }
 
