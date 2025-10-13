@@ -36,7 +36,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
   }
 
-  Future<void> _onWatchPermittedUsers(WatchPermittedUsers event, Emitter<UserState> emit) async {
+  Future<void> _onWatchPermittedUsers(WatchPermittedUsers _, Emitter<UserState> emit) async {
     emit(UsersLoading());
     // consumes the stream
     await emit.forEach<List<Userdata>>(
@@ -46,7 +46,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     );
   }
 
-  Future<void> _onWatchBlockedUsers(WatchBlockedUsers event, Emitter<UserState> emit) async {
+  Future<void> _onWatchBlockedUsers(WatchBlockedUsers _, Emitter<UserState> emit) async {
     emit(UsersLoading());
     // consumes the stream
     await emit.forEach<List<Userdata>>(

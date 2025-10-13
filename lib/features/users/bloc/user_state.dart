@@ -19,17 +19,17 @@ final class UsersLoaded extends UserState {
 }
 
 final class UserActionSuccess extends UserState {
-  final String? message;
-  const UserActionSuccess([this.message]);
+  final String? text;
+  const UserActionSuccess([this.text]);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [text];
 }
 
 final class UserError extends UserState {
-  final String errorMessage;
-  const UserError(this.errorMessage);
+  final String errorText;
+  const UserError(this.errorText);
 
   @override
-  List<Object?> get props => [errorMessage];
+  List<Object?> get props => [errorText];
 }

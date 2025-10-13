@@ -31,8 +31,8 @@ class FirestoreChatRepository implements ChatRepository {
   }
 
   @override
-  Future<void> markMessagesAsRead(String receiverID) async {
-    await chatApi.markMessagesAsRead(receiverID);
+  Future<void> markMessagesAsRead(String receiverId) async {
+    await chatApi.markMessagesAsRead(receiverId);
   }
 
   @override
