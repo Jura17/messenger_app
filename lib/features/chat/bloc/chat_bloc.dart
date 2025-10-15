@@ -29,14 +29,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Future<void> _onWatchUnreadMessagesCount(WatchUnreadMessagesCount event, Emitter<ChatState> emit) async {
     await emit.forEach<int>(
       _chatRepo.watchUnreadMessageCount(event.chatPartnerId),
-      onData: (count) => UnreadCountLoaded(count),
+      onData: (count) {
+        return UnreadCountLoaded(count, event.chatPartnerId);
+      },
       onError: (error, stackTrace) => ChatError(error.toString()),
     );
   }
 
   Future<void> _onSendMessage(SendMessage event, Emitter<ChatState> emit) async {
     try {
-      await _chatRepo.sendMessage(event.receiverId, event.message);
+      await _chatRepo.sendMessage(event.chatPartnerId, event.message);
     } catch (e) {
       emit(ChatError(e.toString()));
     }
@@ -44,7 +46,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   Future<void> _onMarkMessagesAsRead(MarkMessagesAsRead event, Emitter<ChatState> emit) async {
     try {
-      await _chatRepo.markMessagesAsRead(event.receiverId);
+      await _chatRepo.markMessagesAsRead(event.chatPartnerId);
     } catch (e) {
       emit(ChatError(e.toString()));
     }
@@ -52,8 +54,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   Future<void> _onReportMessage(ReportMessage event, Emitter<ChatState> emit) async {
     try {
-      await _chatRepo.reportMessage(event.messageId, event.messageOwnerId);
-      emit(MessageReported());
+      await _chatRepo.reportMessage(event.messageId, event.chatPartnerId);
+      // emit(MessageReported());
     } catch (e) {
       emit(ChatError(e.toString()));
     }

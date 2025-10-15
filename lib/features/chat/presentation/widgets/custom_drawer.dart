@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:messenger_app/features/auth/auth_service.dart';
+
+import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/bloc/auth_event.dart';
+import 'package:messenger_app/features/auth/bloc/auth_state.dart';
 import 'package:messenger_app/features/settings/presentation/screens/settings_screen.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/drawer_menu_item.dart';
+import 'package:provider/provider.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({
-    super.key,
-  });
+  const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final auth = AuthService();
-    final currentUser = auth.getCurrentUser()!.email;
+    final authState = context.watch<AuthBloc>().state;
+
+    String? email;
+    if (authState is Authenticated) {
+      email = authState.user.email;
+    }
 
     return Drawer(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -28,7 +34,7 @@ class CustomDrawer extends StatelessWidget {
                       color: Theme.of(context).colorScheme.primary,
                       size: 60,
                     ),
-                    Text(currentUser!)
+                    Text(email!)
                   ],
                 ),
               ),
@@ -56,8 +62,7 @@ class CustomDrawer extends StatelessWidget {
             Spacer(),
             DrawerMenuItem(
               onTap: () {
-                final authService = AuthService();
-                authService.signOut();
+                context.read<AuthBloc>().add(LogoutRequested());
               },
               title: "L O G O U T",
               iconData: Icons.logout,

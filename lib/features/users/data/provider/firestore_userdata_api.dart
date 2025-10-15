@@ -35,6 +35,30 @@ class FirestoreUserdataApi implements UserdataApi {
         .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
   }
 
+  // @override
+  // Future<void> markMessagesAsRead(String chatPartnerId) async {
+  //   final currentUser = authApi.getCurrentUser();
+  //   if (currentUser == null) throw Exception('No authenticated user');
+
+  //   final currentUserId = currentUser.uid;
+
+  //   List<String> ids = [currentUserId, chatPartnerId];
+  //   ids.sort();
+  //   String chatRoomId = ids.join('_');
+
+  //   final unreadMessagesQuery = firestoreDb
+  //       .collection('chatrooms')
+  //       .doc(chatRoomId)
+  //       .collection('messages')
+  //       .where('receiverId', isEqualTo: currentUserId)
+  //       .where('isRead', isEqualTo: false);
+
+  //   final unreadMessagesSnapshot = await unreadMessagesQuery.get();
+  //   for (var message in unreadMessagesSnapshot.docs) {
+  //     await message.reference.update({'isRead': true});
+  //   }
+  // }
+
   @override
   Future<Userdata?> getUser(String uid) async {
     final userDoc = await firestoreDb.collection('users').doc(uid).get();

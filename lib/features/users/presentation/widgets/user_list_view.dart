@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:messenger_app/features/auth/auth_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/bloc/auth_state.dart';
+
+import 'package:messenger_app/features/users/bloc/user_bloc.dart';
+
+import 'package:messenger_app/features/users/bloc/user_state.dart';
 
 import 'package:messenger_app/features/users/presentation/widgets/user_tile.dart';
-import 'package:messenger_app/features/chat/chat_service.dart';
 
 class UserListView extends StatefulWidget {
-  const UserListView({
-    super.key,
-    required ChatService chatService,
-    required AuthService authService,
-  })  : _chatService = chatService,
-        _authService = authService;
-
-  final ChatService _chatService;
-  final AuthService _authService;
+  const UserListView({super.key});
 
   @override
   State<UserListView> createState() => _UserListViewState();
@@ -22,35 +19,41 @@ class UserListView extends StatefulWidget {
 class _UserListViewState extends State<UserListView> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: widget._chatService.getPermittedUsers(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text("Error while loading users: ${snapshot.error}");
-        } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: const CircularProgressIndicator());
+    final authState = context.watch<AuthBloc>().state;
+
+    String? currentUserEmail;
+
+    if (authState is Authenticated) {
+      currentUserEmail = authState.user.email;
+    }
+
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) {
+        if (state is UserError) {
+          return Center(
+            child: Text(
+              state.errorText,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          );
         }
 
-        return ListView(
-          children: snapshot.data!.map<Widget>((userData) {
-            if (userData["email"] != widget._authService.getCurrentUser()?.email) {
-              return UserTile(
-                email: userData["email"],
-                unreadMessagesCount: userData["unreadCount"],
-                receiverEmail: userData["email"],
-                receiverID: userData["uid"],
-                updateUnread: updateUnread,
-              );
-            } else {
-              return Container();
-            }
-          }).toList(),
-        );
+        if (state is UsersLoaded) {
+          return ListView(
+            children: state.users.map<Widget>(
+              (userData) {
+                if (userData.email == currentUserEmail) return SizedBox.shrink();
+                return UserTile(
+                  email: userData.email,
+                  chatPartnerEmail: userData.email,
+                  chatPartnerId: userData.uid,
+                );
+              },
+            ).toList(),
+          );
+        }
+        return CircularProgressIndicator();
       },
     );
-  }
-
-  void updateUnread() {
-    setState(() {});
   }
 }

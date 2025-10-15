@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:messenger_app/features/auth/auth_service.dart';
+
+import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
+import 'package:messenger_app/features/chat/bloc/chat_event.dart';
 
 import 'package:messenger_app/features/chat/presentation/widgets/message_textfield.dart';
-import 'package:messenger_app/features/chat/chat_service.dart';
+
+import 'package:provider/provider.dart';
 
 class MessageInput extends StatefulWidget {
   const MessageInput({
     super.key,
-    required this.receiverID,
+    required this.receiverId,
     required this.scrollDown,
   });
 
   final void Function() scrollDown;
-  final String receiverID;
+  final String receiverId;
 
   @override
   State<MessageInput> createState() => _MessageInputState();
@@ -20,8 +23,8 @@ class MessageInput extends StatefulWidget {
 
 class _MessageInputState extends State<MessageInput> {
   final TextEditingController _messageController = TextEditingController();
-  final ChatService chatService = ChatService();
-  final AuthService authService = AuthService();
+  // final ChatService chatService = ChatService();
+  // final AuthService authService = AuthService();
 
   @override
   void dispose() {
@@ -40,7 +43,9 @@ class _MessageInputState extends State<MessageInput> {
           ),
         ),
         IconButton(
-          onPressed: sendMessage,
+          onPressed: () {
+            sendMessage(context);
+          },
           icon: const Icon(Icons.send),
         ),
         SizedBox(width: 15),
@@ -48,9 +53,10 @@ class _MessageInputState extends State<MessageInput> {
     );
   }
 
-  void sendMessage() async {
+  void sendMessage(BuildContext context) async {
     if (_messageController.text.isEmpty) return;
-    await chatService.sendMessage(widget.receiverID, _messageController.text);
+    context.read<ChatBloc>().add(SendMessage(widget.receiverId, _messageController.text));
+    // await chatService.sendMessage(widget.receiverID, _messageController.text);
     _messageController.clear();
     widget.scrollDown();
   }

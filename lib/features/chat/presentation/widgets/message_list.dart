@@ -1,61 +1,62 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:messenger_app/features/auth/auth_service.dart';
-import 'package:messenger_app/features/chat/data/provider/firestore_chat_api.dart';
-import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
+
+import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
+
+import 'package:messenger_app/features/chat/bloc/chat_state.dart';
 
 import 'package:messenger_app/features/chat/presentation/widgets/message_list_bubble.dart';
-import 'package:messenger_app/features/chat/chat_service.dart';
 
-class MessageList extends StatelessWidget {
+class MessageList extends StatefulWidget {
   const MessageList({
     super.key,
-    required this.receiverEmail,
-    required this.receiverID,
+    required this.chatPartnerId,
     required this.scrollController,
   });
 
-  final String receiverEmail;
-  final String receiverID;
+  final String chatPartnerId;
   final ScrollController scrollController;
 
+  @override
+  State<MessageList> createState() => _MessageListState();
+}
+
+class _MessageListState extends State<MessageList> {
   @override
   Widget build(BuildContext context) {
     String? currentMessageTime;
 
-    final ChatService chatService = ChatService();
-    final AuthService authService = AuthService();
-
-    String senderID = authService.getCurrentUser()!.uid;
-
-    return StreamBuilder(
-      stream: chatService.getMessages(senderID, receiverID),
-      builder: (context, snapshot) {
-        if (snapshot.hasError || snapshot.data == null) {
-          return Text("An error occurred.");
-        } else if (snapshot.connectionState == ConnectionState.waiting) {
+    return BlocBuilder<ChatBloc, ChatState>(
+      builder: (context, state) {
+        if (state is ChatLoading) {
           return CircularProgressIndicator();
         }
+        if (state is ChatError) {
+          return Text(state.errorText);
+        }
 
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView(
-            controller: scrollController,
-            children: snapshot.data!.docs.map((doc) {
-              final data = doc.data() as Map<String, dynamic>;
-              final Timestamp timestamp = data['timestamp'];
-              final String dateTime = DateFormat.Hm().format(timestamp.toDate());
-              // only show the timestamp if it has changed
-              if (dateTime == currentMessageTime) {
-                currentMessageTime = null;
-              } else {
-                currentMessageTime = dateTime;
-              }
-              return MessageListBubble(doc: doc, time: currentMessageTime);
-            }).toList(),
-          ),
-        );
+        if (state is ChatLoaded && state.messages != null) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView(
+              controller: widget.scrollController,
+              children: state.messages!.map((message) {
+                final Timestamp timestamp = message.timestamp;
+                final String dateTime = DateFormat.Hm().format(timestamp.toDate());
+                // only show the timestamp if it has changed
+                if (dateTime == currentMessageTime) {
+                  currentMessageTime = null;
+                } else {
+                  currentMessageTime = dateTime;
+                }
+                return MessageListBubble(message: message, time: currentMessageTime);
+              }).toList(),
+            ),
+          );
+        }
+        return SizedBox.shrink();
       },
     );
   }

@@ -26,11 +26,11 @@ class FirestoreChatApi implements ChatApi {
         .collection('messages')
         .orderBy('timestamp', descending: false)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((messageDoc) => Message.fromMap(messageDoc.data())).toList());
+        .map((snapshot) => snapshot.docs.map((messageDoc) => Message.fromDocument(messageDoc)).toList());
   }
 
   @override
-  Future<void> sendMessage(String receiverId, message) async {
+  Future<void> sendMessage(String chatPartnerId, message) async {
     final currentUser = authRepo.getCurrentUser();
     if (currentUser == null) throw Exception('No authenticated user');
 
@@ -38,33 +38,36 @@ class FirestoreChatApi implements ChatApi {
     final String currentUserEmail = currentUser.email!;
     final Timestamp timestamp = Timestamp.now();
 
-    // create a new message
-    Message newMessage = Message(
-      senderId: currentUserId,
-      senderEmail: currentUserEmail,
-      receiverId: receiverId,
-      message: message,
-      timestamp: timestamp,
-    );
-
     // construct chat room ID for the two users (sorted to ensure uniqueness)
-    List<String> userIds = [currentUserId, receiverId];
+    List<String> userIds = [currentUserId, chatPartnerId];
     // sort the IDs to ensure the chatroom ID is the same for any 2 people
     userIds.sort();
     final String chatroomId = userIds.join('_');
+
+    final docRef = firestoreDb.collection('chatrooms').doc(chatroomId).collection('messages').doc();
+
+    // create a new message
+    Message newMessage = Message(
+      id: docRef.id,
+      senderId: currentUserId,
+      senderEmail: currentUserEmail,
+      receiverId: chatPartnerId,
+      message: message,
+      timestamp: timestamp,
+    );
 
     // add new message to database
     await firestoreDb.collection('chatrooms').doc(chatroomId).collection('messages').add(newMessage.toMap());
   }
 
   @override
-  Future<void> markMessagesAsRead(String receiverId) async {
+  Future<void> markMessagesAsRead(String chatPartnerId) async {
     final currentUser = authRepo.getCurrentUser();
     if (currentUser == null) throw Exception('No authenticated user');
 
     final currentUserId = currentUser.uid;
 
-    List<String> ids = [currentUserId, receiverId];
+    List<String> ids = [currentUserId, chatPartnerId];
     ids.sort();
     String chatRoomId = ids.join('_');
 
@@ -72,7 +75,7 @@ class FirestoreChatApi implements ChatApi {
         .collection('chatrooms')
         .doc(chatRoomId)
         .collection('messages')
-        .where('receiverID', isEqualTo: currentUserId)
+        .where('receiverId', isEqualTo: currentUserId)
         .where('isRead', isEqualTo: false);
 
     final unreadMessagesSnapshot = await unreadMessagesQuery.get();

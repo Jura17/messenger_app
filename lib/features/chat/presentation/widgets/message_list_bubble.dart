@@ -1,20 +1,24 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:messenger_app/core/theme/custom_colors.dart';
 import 'package:messenger_app/core/theme/theme_provider.dart';
 
 import 'package:messenger_app/features/auth/auth_service.dart';
-import 'package:messenger_app/features/chat/chat_service.dart';
+import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
+import 'package:messenger_app/features/chat/bloc/chat_event.dart';
+
+import 'package:messenger_app/features/chat/data/models/message.dart';
+import 'package:messenger_app/features/users/bloc/user_bloc.dart';
+import 'package:messenger_app/features/users/bloc/user_event.dart';
 import 'package:provider/provider.dart';
 
 class MessageListBubble extends StatelessWidget {
   const MessageListBubble({
     super.key,
-    required this.doc,
+    required this.message,
     required this.time,
   });
 
-  final QueryDocumentSnapshot doc;
+  final Message message;
   final String? time;
 
   @override
@@ -22,8 +26,8 @@ class MessageListBubble extends StatelessWidget {
     final authService = AuthService();
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
 
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    bool isCurrentUser = data['senderID'] == authService.getCurrentUser()!.uid;
+    // Map<String, dynamic> data = message as Map<String, dynamic>;
+    bool isCurrentUser = message.senderId == authService.getCurrentUser()!.uid;
 
     var alignment = isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
 
@@ -41,8 +45,9 @@ class MessageListBubble extends StatelessWidget {
     return GestureDetector(
       onLongPress: () {
         if (!isCurrentUser) {
-          // Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-          _showMessageOptions(context, doc.id, data['senderID']);
+          // Map<String, dynamic> data = message.data() as Map<String, dynamic>;
+          // context.read<ChatBloc>().add(ReportMessage(message.senderId, message.id));
+          _showMessageOptions(context, message.id, message.senderId);
         }
       },
       child: Padding(
@@ -62,7 +67,7 @@ class MessageListBubble extends StatelessWidget {
                 crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: [
                   Text(
-                    data["message"],
+                    message.message,
                     style: TextStyle(color: isCurrentUser ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
                   ),
                   if (time != null)
@@ -126,8 +131,9 @@ class MessageListBubble extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    final chatService = ChatService();
-                    chatService.reportMessage(messageId, userId);
+                    // final chatService = ChatService();
+                    // chatService.reportMessage(messageId, userId);
+                    context.read<ChatBloc>().add(ReportMessage(userId, messageId));
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Message reported.")),
@@ -152,8 +158,9 @@ class MessageListBubble extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    final chatService = ChatService();
-                    chatService.blockUser(userId);
+                    // final chatService = ChatService();
+                    // chatService.blockUser(userId);
+                    context.read<UserBloc>().add(BlockUser(userId));
                     Navigator.pop(context);
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(

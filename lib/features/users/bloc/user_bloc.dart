@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:messenger_app/features/users/bloc/user_event.dart';
 import 'package:messenger_app/features/users/bloc/user_state.dart';
 import 'package:messenger_app/features/users/data/models/user_data.dart';
@@ -41,8 +42,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     // consumes the stream
     await emit.forEach<List<Userdata>>(
       _userRepo.getAllPermittedUsersStream(),
-      onData: (users) => UsersLoaded(users),
-      onError: (error, stackTrace) => UserError(error.toString()),
+      onData: (users) {
+        return UsersLoaded(users);
+      },
+      onError: (error, stackTrace) {
+        return UserError(error.toString());
+      },
     );
   }
 

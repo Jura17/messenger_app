@@ -26,30 +26,30 @@ class WatchUnreadMessagesCount extends ChatEvent {
 }
 
 class SendMessage extends ChatEvent {
-  final String receiverId;
+  final String chatPartnerId;
   final String message;
 
-  const SendMessage(this.receiverId, this.message);
+  const SendMessage(this.chatPartnerId, this.message);
 
   @override
-  List<Object?> get props => [receiverId, message];
+  List<Object?> get props => [chatPartnerId, message];
 }
 
 class MarkMessagesAsRead extends ChatEvent {
-  final String receiverId;
+  final String chatPartnerId;
 
-  const MarkMessagesAsRead(this.receiverId);
+  const MarkMessagesAsRead(this.chatPartnerId);
 
   @override
-  List<Object?> get props => [receiverId];
+  List<Object?> get props => [chatPartnerId];
 }
 
 class ReportMessage extends ChatEvent {
-  final String messageOwnerId;
+  final String chatPartnerId;
   final String messageId;
 
-  const ReportMessage(this.messageOwnerId, this.messageId);
+  const ReportMessage(this.chatPartnerId, this.messageId);
 
   @override
-  List<Object?> get props => [messageOwnerId, messageId];
+  List<Object?> get props => [chatPartnerId, messageId];
 }

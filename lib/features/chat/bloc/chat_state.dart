@@ -29,8 +29,9 @@ final class MessageReported extends ChatState {}
 // to show unread badge
 final class UnreadCountLoaded extends ChatState {
   final int count;
+  final String chatPartnerId;
 
-  const UnreadCountLoaded(this.count);
+  const UnreadCountLoaded(this.count, this.chatPartnerId);
 
   @override
   List<Object?> get props => [count];

@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
+
 import 'package:messenger_app/features/chat/presentation/widgets/message_list.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/message_input.dart';
-import 'package:messenger_app/features/chat/chat_service.dart';
 
 class ChatScreen extends StatefulWidget {
-  final String receiverEmail;
-  final String receiverID;
-  final void Function() updateUnread;
+  final String chatPartnerEmail;
+  final String chatPartnerId;
 
   const ChatScreen({
     super.key,
-    required this.receiverEmail,
-    required this.receiverID,
-    required this.updateUnread,
+    required this.chatPartnerEmail,
+    required this.chatPartnerId,
   });
 
   @override
@@ -47,9 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
       const Duration(milliseconds: 500),
       () {
         scrollDown();
-        final chatService = ChatService();
-        chatService.markMessagesAsRead(widget.receiverID);
-        widget.updateUnread();
+        context.read<FirestoreChatRepository>().markMessagesAsRead(widget.chatPartnerId);
       },
     );
   }
@@ -64,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.receiverEmail),
+        title: Text(widget.chatPartnerEmail),
       ),
       body: SafeArea(
         child: Column(
@@ -72,13 +71,12 @@ class _ChatScreenState extends State<ChatScreen> {
             Expanded(
               child: MessageList(
                 scrollController: _scrollController,
-                receiverEmail: widget.receiverEmail,
-                receiverID: widget.receiverID,
+                chatPartnerId: widget.chatPartnerId,
               ),
             ),
             MessageInput(
               scrollDown: scrollDown,
-              receiverID: widget.receiverID,
+              receiverId: widget.chatPartnerId,
             )
           ],
         ),

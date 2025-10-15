@@ -13,20 +13,31 @@ class FirestoreChatRepository implements ChatRepository {
     return messageStream;
   }
 
+  // TODO: maybe move this to chat api
   @override
   Stream<int> watchUnreadMessageCount(String chatPartnerId) {
     final currentUser = chatApi.authRepo.getCurrentUser();
     if (currentUser == null) throw Exception('No authenticated user');
+
     final currentUserId = currentUser.uid;
 
-    final messagesStream = chatApi.getMessages(chatPartnerId);
+    // build consistent chatroom ID
+    List<String> userIds = [currentUserId, chatPartnerId];
+    userIds.sort();
+    final String chatroomId = userIds.join('_');
 
-    // We're returning a stream that emits integers over time
-    return messagesStream.map((messages) {
-      final numOfunread =
-          messages.where((message) => message.receiverId == currentUserId && message.isRead == false).length;
+    // watch only unread messages
+    return chatApi.firestoreDb
+        .collection('chatrooms')
+        .doc(chatroomId)
+        .collection('messages')
+        .where('receiverId', isEqualTo: currentUserId)
+        .where('isRead', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) {
+      final count = snapshot.docs.length;
 
-      return numOfunread;
+      return count;
     });
   }
 

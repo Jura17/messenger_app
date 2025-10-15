@@ -1,34 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/core/theme/custom_colors.dart';
+import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
+import 'package:messenger_app/features/chat/bloc/chat_event.dart';
+
+import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
 import 'package:messenger_app/features/chat/presentation/screens/chat_screen.dart';
 
-class UserTile extends StatelessWidget {
+class UserTile extends StatefulWidget {
   const UserTile({
     super.key,
     required this.email,
-    required this.receiverEmail,
-    required this.receiverID,
-    required this.updateUnread,
-    required this.unreadMessagesCount,
+    required this.chatPartnerEmail,
+    required this.chatPartnerId,
   });
 
   final String email;
-  final String receiverEmail;
-  final String receiverID;
-  final void Function() updateUnread;
-  final int unreadMessagesCount;
+  final String chatPartnerEmail;
+  final String chatPartnerId;
 
   @override
+  State<UserTile> createState() => _UserTileState();
+}
+
+class _UserTileState extends State<UserTile> {
+  @override
   Widget build(BuildContext context) {
+    int unreadCount = 0;
+
+    final Stream<int> unreadCountStream =
+        context.watch<FirestoreChatRepository>().watchUnreadMessageCount(widget.chatPartnerId);
+
     return GestureDetector(
       onTap: () async {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen(
-              receiverEmail: receiverEmail,
-              receiverID: receiverID,
-              updateUnread: updateUnread,
+            builder: (context) => BlocProvider(
+              create: (context) {
+                final chatBloc = ChatBloc(chatRepo: context.read<FirestoreChatRepository>());
+                chatBloc.add(WatchMessages(widget.chatPartnerId));
+                return chatBloc;
+              },
+              child: ChatScreen(
+                chatPartnerEmail: widget.chatPartnerEmail,
+                chatPartnerId: widget.chatPartnerId,
+              ),
             ),
           ),
         );
@@ -45,22 +62,43 @@ class UserTile extends StatelessWidget {
           children: [
             Icon(Icons.person, color: Theme.of(context).colorScheme.inversePrimary),
             Text(
-              email,
+              widget.email,
               style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
             ),
             Spacer(),
-            if (unreadMessagesCount > 0)
-              Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.lightGreen),
-                child: Text(
-                  unreadMessagesCount.toString(),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            StreamBuilder<int>(
+              stream: unreadCountStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  debugPrint("Error fetching unread count");
+                  return SizedBox.shrink();
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
+
+                if (snapshot.data != null) {
+                  unreadCount = snapshot.data!;
+                }
+
+                // show unread count as green circle
+                if (unreadCount != 0) {
+                  return Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.lightGreen),
+                    child: Text(
+                      snapshot.data.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                }
+                return SizedBox.shrink();
+              },
+            )
           ],
         ),
       ),

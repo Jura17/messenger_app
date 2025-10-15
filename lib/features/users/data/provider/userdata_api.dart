@@ -5,6 +5,7 @@ abstract class UserdataApi {
   Stream<List<Map<String, dynamic>>> getAllUsersStream();
   // Stream<List<Map<String, dynamic>>> getAllPermittedUsersStream();
   Stream<List<String>> getBlockedUserIdsStream();
+  // Future<void> markMessagesAsRead(String receiverId);
   Future<Userdata?> getUser(String uid);
   Future<void> updateLastLogin();
   // Stream<List<Map<String, dynamic>>> getBlockedUsers(String uid);
