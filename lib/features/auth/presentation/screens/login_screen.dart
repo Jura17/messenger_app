@@ -81,15 +81,10 @@ class LoginScreen extends StatelessWidget {
   }
 
   void login(BuildContext context) async {
-    // final authService = AuthService();
     final authBloc = context.read<AuthBloc>();
 
     try {
       authBloc.add(LoginRequested(_emailController.text, _passwordController.text));
-      // await authService.signInWithEmailPassword(
-      //   _emailController.text,
-      //   _passwordController.text,
-      // );
     } catch (e) {
       showDialog(
         context: context,

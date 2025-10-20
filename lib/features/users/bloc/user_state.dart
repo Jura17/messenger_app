@@ -13,9 +13,10 @@ final class UsersInitial extends UserState {}
 final class UsersLoading extends UserState {}
 
 final class UsersLoaded extends UserState {
-  final List<Userdata> users;
+  final List<Userdata> permittedUsers;
+  final List<Userdata> blockedUsers;
 
-  const UsersLoaded(this.users);
+  const UsersLoaded(this.permittedUsers, this.blockedUsers);
 }
 
 final class UserActionSuccess extends UserState {

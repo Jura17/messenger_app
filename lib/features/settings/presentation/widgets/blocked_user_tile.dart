@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:messenger_app/features/chat/chat_service.dart';
+
 import 'package:messenger_app/features/users/bloc/user_bloc.dart';
 import 'package:messenger_app/features/users/bloc/user_event.dart';
+import 'package:messenger_app/features/users/data/models/user_data.dart';
 import 'package:provider/provider.dart';
 
 class BlockedUserTile extends StatelessWidget {
@@ -10,13 +11,13 @@ class BlockedUserTile extends StatelessWidget {
     required this.user,
   });
 
-  final Map<String, dynamic> user;
+  final Userdata user;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        _showUnblockBox(context, user['uid']);
+        _showUnblockBox(context, user.uid);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -28,7 +29,7 @@ class BlockedUserTile extends StatelessWidget {
         child: Row(
           children: [
             const Icon(Icons.person),
-            Text(user['email']),
+            Text(user.email),
           ],
         ),
       ),
@@ -45,10 +46,9 @@ class BlockedUserTile extends StatelessWidget {
           TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
           TextButton(
             onPressed: () {
-              // final chatService = ChatService();
-              // chatService.unblockUser(userId);
               context.read<UserBloc>().add(UnblockUser(userId));
               Navigator.pop(context);
+
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("User unblocked!")));
             },
             child: const Text("Unblock"),

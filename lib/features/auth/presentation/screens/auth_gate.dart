@@ -24,6 +24,7 @@ class AuthGate extends StatelessWidget {
           } else if (state is Unauthenticated) {
             return const LoginOrRegister();
           } else {
+            // context.read<UserBloc>().add(WatchPermittedUsers());
             return HomeScreen();
           }
         },

@@ -25,6 +25,4 @@ final class UnblockUser extends UserEvent {
   List<Object?> get props => [uid];
 }
 
-final class WatchPermittedUsers extends UserEvent {}
-
-final class WatchBlockedUsers extends UserEvent {}
+final class WatchUsers extends UserEvent {}

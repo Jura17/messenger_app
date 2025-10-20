@@ -15,6 +15,7 @@ import 'package:messenger_app/features/auth/presentation/screens/auth_gate.dart'
 import 'package:messenger_app/features/chat/data/provider/firestore_chat_api.dart';
 import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
 import 'package:messenger_app/features/users/bloc/user_bloc.dart';
+import 'package:messenger_app/features/users/bloc/user_event.dart';
 
 import 'package:messenger_app/features/users/data/provider/firestore_userdata_api.dart';
 
@@ -78,9 +79,11 @@ class MainApp extends StatelessWidget {
             },
           ),
           BlocProvider<UserBloc>(
+            lazy: false,
             create: (context) {
               final userRepo = context.read<FirestoreUserdataRepository>();
               final userBloc = UserBloc(userRepo: userRepo);
+              userBloc.add(WatchUsers());
               return userBloc;
             },
           ),

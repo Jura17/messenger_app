@@ -89,15 +89,10 @@ class RegisterScreen extends StatelessWidget {
   }
 
   void register(BuildContext context) async {
-    // final authService = AuthService();
     final authBloc = context.read<AuthBloc>();
 
     try {
       authBloc.add(SignUpRequested(_emailController.text, _passwordController.text));
-      // await authService.signUpWithEmailPassword(
-      //   _emailController.text,
-      //   _passwordController.text,
-      // );
     } catch (e) {
       showDialog(
         context: context,

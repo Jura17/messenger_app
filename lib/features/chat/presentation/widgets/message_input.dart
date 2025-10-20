@@ -23,8 +23,6 @@ class MessageInput extends StatefulWidget {
 
 class _MessageInputState extends State<MessageInput> {
   final TextEditingController _messageController = TextEditingController();
-  // final ChatService chatService = ChatService();
-  // final AuthService authService = AuthService();
 
   @override
   void dispose() {
@@ -56,7 +54,7 @@ class _MessageInputState extends State<MessageInput> {
   void sendMessage(BuildContext context) async {
     if (_messageController.text.isEmpty) return;
     context.read<ChatBloc>().add(SendMessage(widget.receiverId, _messageController.text));
-    // await chatService.sendMessage(widget.receiverID, _messageController.text);
+
     _messageController.clear();
     widget.scrollDown();
   }

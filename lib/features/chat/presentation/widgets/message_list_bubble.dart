@@ -158,8 +158,6 @@ class MessageListBubble extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    // final chatService = ChatService();
-                    // chatService.blockUser(userId);
                     context.read<UserBloc>().add(BlockUser(userId));
                     Navigator.pop(context);
                     Navigator.pop(context);

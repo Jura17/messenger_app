@@ -38,9 +38,13 @@ class _UserListViewState extends State<UserListView> {
           );
         }
 
+        if (state is UsersLoading) {
+          return Center(child: CircularProgressIndicator());
+        }
+
         if (state is UsersLoaded) {
           return ListView(
-            children: state.users.map<Widget>(
+            children: state.permittedUsers.map<Widget>(
               (userData) {
                 if (userData.email == currentUserEmail) return SizedBox.shrink();
                 return UserTile(
@@ -52,7 +56,8 @@ class _UserListViewState extends State<UserListView> {
             ).toList(),
           );
         }
-        return CircularProgressIndicator();
+
+        return SizedBox.shrink();
       },
     );
   }

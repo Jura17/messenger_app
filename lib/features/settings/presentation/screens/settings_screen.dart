@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:messenger_app/core/theme/theme_provider.dart';
 import 'package:messenger_app/features/auth/auth_service.dart';
 import 'package:messenger_app/features/settings/presentation/screens/blocked_users_screen.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/settings_list_tile.dart';
+
 import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -36,7 +38,12 @@ class SettingsScreen extends StatelessWidget {
             SettingsListTile(
               title: "Blocked Users",
               action: IconButton(
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BlockedUsersScreen())),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlockedUsersScreen(),
+                  ),
+                ),
                 icon: Icon(
                   Icons.arrow_forward_rounded,
                   color: Theme.of(context).colorScheme.inversePrimary,
