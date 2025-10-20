@@ -30,23 +30,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  final firebaseAuth = FirebaseAuth.instance;
+  final firestoreDb = FirebaseFirestore.instance;
+
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
-      child: MainApp(),
-    ),
-  );
-}
-
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final firebaseAuth = FirebaseAuth.instance;
-    final firestoreDb = FirebaseFirestore.instance;
-
-    return MultiRepositoryProvider(
+    MultiRepositoryProvider(
       providers: [
         RepositoryProvider(create: (_) => FirebaseAuthApi(firebaseAuth)),
         RepositoryProvider(create: (context) {
@@ -78,22 +66,25 @@ class MainApp extends StatelessWidget {
               return authBloc;
             },
           ),
-          BlocProvider<UserBloc>(
-            lazy: false,
-            create: (context) {
-              final userRepo = context.read<FirestoreUserdataRepository>();
-              final userBloc = UserBloc(userRepo: userRepo);
-              userBloc.add(WatchUsers());
-              return userBloc;
-            },
-          ),
         ],
-        child: MaterialApp(
-          home: const AuthGate(),
-          debugShowCheckedModeBanner: false,
-          theme: context.watch<ThemeProvider>().themeData,
+        child: ChangeNotifierProvider(
+          create: (context) => ThemeProvider(),
+          child: MainApp(),
         ),
       ),
+    ),
+  );
+}
+
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: const AuthGate(),
+      debugShowCheckedModeBanner: false,
+      theme: context.watch<ThemeProvider>().themeData,
     );
   }
 }

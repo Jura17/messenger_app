@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:messenger_app/core/theme/theme_provider.dart';
 import 'package:messenger_app/features/auth/auth_service.dart';
+import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/bloc/auth_event.dart';
 import 'package:messenger_app/features/settings/presentation/screens/blocked_users_screen.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/settings_list_tile.dart';
 
@@ -97,9 +99,8 @@ class SettingsScreen extends StatelessWidget {
 
     if (confirm) {
       try {
-        final authService = AuthService();
         Navigator.pop(context);
-        await authService.deleteAccount();
+        context.read<AuthBloc>().add(DeletionRequested());
       } catch (e) {
         debugPrint("Deleting account failed: $e");
       }
