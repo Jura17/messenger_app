@@ -12,8 +12,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       : _authRepo = authRepo,
         super(AuthInitial()) {
     on<AppStarted>(_onAppStarted);
-    on<SignUpRequested>(_onSignUpRequested);
-    on<LoginRequested>(_onLoginRequested);
     on<LogoutRequested>(_onLogoutRequested);
     on<DeletionRequested>(_onDeletionRequested);
   }
@@ -22,39 +20,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onAppStarted(AppStarted event, Emitter<AuthState> emit) async {
     return emit.onEach<User?>(
       _authRepo.onAuthChanged(),
-      onData: (user) {
-        if (user != null) {
-          emit(Authenticated(user));
-        } else {
-          emit(Unauthenticated());
-        }
-      },
-      onError: (error, stackTrace) => AuthError(error.toString()),
+      onData: (user) => user != null ? emit(Authenticated(user)) : emit(Unauthenticated()),
+      onError: (_, __) => AuthError("Error loading auth state"),
     );
-  }
-
-  Future<void> _onSignUpRequested(SignUpRequested event, Emitter<AuthState> emit) async {
-    try {
-      final newUser = await _authRepo.signUp(event.email, event.password);
-      emit(Authenticated(newUser));
-    } catch (e) {
-      emit(AuthError(e.toString()));
-    }
-  }
-
-  Future<void> _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
-    try {
-      final user = await _authRepo.signIn(event.email, event.password);
-      emit(Authenticated(user));
-    } catch (e) {
-      emit(AuthError(e.toString()));
-    }
   }
 
   Future<void> _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
     try {
       await _authRepo.logout();
-
       emit(Unauthenticated());
     } catch (e) {
       emit(AuthError(e.toString()));
@@ -65,12 +38,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       await _authRepo.deleteAccount();
       emit(Unauthenticated());
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'requires-recent-login') {
-        emit(AuthError('Please log in again before deleting your account'));
-      } else {
-        emit(AuthError(e.message ?? 'Unknown Firebase error.'));
-      }
     } catch (e) {
       emit(AuthError(e.toString()));
     }

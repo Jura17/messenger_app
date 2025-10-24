@@ -14,7 +14,7 @@ sealed class AuthState extends Equatable {
 final class AuthInitial extends AuthState {}
 
 // while checking or signing in
-final class AuthLoading extends AuthState {}
+// final class AuthLoading extends AuthState {}
 
 // user successfully authenticated
 final class Authenticated extends AuthState {

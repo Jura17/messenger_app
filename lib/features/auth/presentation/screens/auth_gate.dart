@@ -15,17 +15,13 @@ class AuthGate extends StatelessWidget {
     return Scaffold(
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          if (state is AuthInitial) {
-            return LoginOrRegister();
+          if (state is Authenticated) {
+            return const HomeScreen();
           } else if (state is AuthError) {
-            // TODO: implement better error handling here
+            return Center(child: Text("Error: ${state.message}"));
+          } else {
             return const LoginOrRegister();
-          } else if (state is Unauthenticated) {
-            return const LoginOrRegister();
-          } else if (state is Authenticated) {
-            return HomeScreen();
           }
-          throw Exception("Some unknown auth problem in AuthGate...");
         },
       ),
     );

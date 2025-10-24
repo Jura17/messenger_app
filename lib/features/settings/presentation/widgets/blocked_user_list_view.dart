@@ -19,7 +19,6 @@ class BlockedUserListView extends StatelessWidget {
       itemBuilder: (context, index) {
         final userData = state.blockedUsers[index];
         if (userData.email == currentUserEmail) {
-          debugPrint("current user");
           return SizedBox.shrink();
         }
 

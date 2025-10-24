@@ -20,8 +20,8 @@ class FirebaseAuthApi implements AuthApi {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(email: email, password: password);
 
       return userCredential;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.code);
+    } on FirebaseAuthException {
+      rethrow;
     }
   }
 
@@ -31,8 +31,8 @@ class FirebaseAuthApi implements AuthApi {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(email: email, password: password);
 
       return userCredential;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.code);
+    } on FirebaseAuthException {
+      rethrow;
     }
   }
 
