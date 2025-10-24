@@ -20,21 +20,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   // Event handlers
   Future<void> _onAppStarted(AppStarted event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
-    try {
-      final currentUser = _authRepo.getCurrentUser();
-      if (currentUser != null) {
-        emit(Authenticated(currentUser));
-      } else {
-        emit(Unauthenticated());
-      }
-    } catch (e) {
-      emit(AuthError(e.toString()));
-    }
+    return emit.onEach<User?>(
+      _authRepo.onAuthChanged(),
+      onData: (user) {
+        if (user != null) {
+          emit(Authenticated(user));
+        } else {
+          emit(Unauthenticated());
+        }
+      },
+      onError: (error, stackTrace) => AuthError(error.toString()),
+    );
   }
 
   Future<void> _onSignUpRequested(SignUpRequested event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
     try {
       final newUser = await _authRepo.signUp(event.email, event.password);
       emit(Authenticated(newUser));
@@ -44,7 +43,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
     try {
       final user = await _authRepo.signIn(event.email, event.password);
       emit(Authenticated(user));
@@ -54,7 +52,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
     try {
       await _authRepo.logout();
 
@@ -65,7 +62,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onDeletionRequested(DeletionRequested event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
     try {
       await _authRepo.deleteAccount();
       emit(Unauthenticated());

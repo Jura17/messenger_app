@@ -66,6 +66,13 @@ void main() async {
               return authBloc;
             },
           ),
+          BlocProvider<UserBloc>(
+            create: (context) {
+              final userRepo = context.read<FirestoreUserdataRepository>();
+              final userBloc = UserBloc(userRepo: userRepo);
+              return userBloc;
+            },
+          )
         ],
         child: ChangeNotifierProvider(
           create: (context) => ThemeProvider(),
