@@ -55,7 +55,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Future<void> _onReportMessage(ReportMessage event, Emitter<ChatState> emit) async {
     try {
       await _chatRepo.reportMessage(event.messageId, event.chatPartnerId);
-      // emit(MessageReported());
     } catch (e) {
       emit(ChatError(e.toString()));
     }

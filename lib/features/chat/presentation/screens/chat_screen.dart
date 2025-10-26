@@ -48,7 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
       const Duration(milliseconds: 500),
       () {
         scrollDown();
-        context.read<FirestoreChatRepository>().markMessagesAsRead(widget.chatPartnerId);
+        if (mounted) context.read<FirestoreChatRepository>().markMessagesAsRead(widget.chatPartnerId);
       },
     );
   }

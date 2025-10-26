@@ -11,6 +11,7 @@ import 'package:messenger_app/features/auth/data/provider/firebase_auth_api.dart
 import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
 
 import 'package:messenger_app/features/auth/presentation/screens/auth_gate.dart';
+import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
 
 import 'package:messenger_app/features/chat/data/provider/firestore_chat_api.dart';
 import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
@@ -70,7 +71,14 @@ void main() async {
               final userBloc = UserBloc(userRepo: userRepo);
               return userBloc;
             },
-          )
+          ),
+          BlocProvider<ChatBloc>(
+            create: (context) {
+              final chatRepo = context.read<FirestoreChatRepository>();
+              final chatBloc = ChatBloc(chatRepo: chatRepo);
+              return chatBloc;
+            },
+          ),
         ],
         child: ChangeNotifierProvider(
           create: (context) => ThemeProvider(),

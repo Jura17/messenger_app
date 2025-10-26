@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:messenger_app/core/theme/custom_colors.dart';
 import 'package:messenger_app/core/theme/theme_provider.dart';
 
-import 'package:messenger_app/features/auth/auth_service.dart';
+import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/bloc/auth_state.dart';
 import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
 import 'package:messenger_app/features/chat/bloc/chat_event.dart';
 
@@ -23,11 +24,14 @@ class MessageListBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authService = AuthService();
-    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    bool isCurrentUser = false;
 
-    // Map<String, dynamic> data = message as Map<String, dynamic>;
-    bool isCurrentUser = message.senderId == authService.getCurrentUser()!.uid;
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final authBlocState = context.read<AuthBloc>().state;
+
+    if (authBlocState is Authenticated) {
+      isCurrentUser = message.senderId == authBlocState.user.uid;
+    }
 
     var alignment = isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
 
@@ -45,8 +49,6 @@ class MessageListBubble extends StatelessWidget {
     return GestureDetector(
       onLongPress: () {
         if (!isCurrentUser) {
-          // Map<String, dynamic> data = message.data() as Map<String, dynamic>;
-          // context.read<ChatBloc>().add(ReportMessage(message.senderId, message.id));
           _showMessageOptions(context, message.id, message.senderId);
         }
       },
@@ -87,10 +89,10 @@ class MessageListBubble extends StatelessWidget {
 
   void _showMessageOptions(BuildContext context, String messageId, String userId) {
     showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return SafeArea(
-              child: Wrap(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Wrap(
             children: [
               ListTile(
                 leading: const Icon(Icons.flag),
@@ -114,60 +116,62 @@ class MessageListBubble extends StatelessWidget {
                 onTap: () => Navigator.pop(context),
               ),
             ],
-          ));
-        });
+          ),
+        );
+      },
+    );
   }
 
   void _reportMessage(BuildContext context, String messageId, String userId) {
     showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: const Text("Report message"),
-              content: const Text("Are you sure you want to report this message?"),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("Cancel"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    // final chatService = ChatService();
-                    // chatService.reportMessage(messageId, userId);
-                    context.read<ChatBloc>().add(ReportMessage(userId, messageId));
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Message reported.")),
-                    );
-                  },
-                  child: const Text("Report"),
-                ),
-              ],
-            ));
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Report message"),
+        content: const Text("Are you sure you want to report this message?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<ChatBloc>().add(ReportMessage(userId, messageId));
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Message reported.")),
+              );
+            },
+            child: const Text("Report"),
+          ),
+        ],
+      ),
+    );
   }
 
   void _blockUser(BuildContext context, String userId) {
     showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: const Text("Block user"),
-              content: const Text("Are you sure you want to block this user?"),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("Cancel"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    context.read<UserBloc>().add(BlockUser(userId));
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("User blocked.")),
-                    );
-                  },
-                  child: const Text("Block"),
-                ),
-              ],
-            ));
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Block user"),
+        content: const Text("Are you sure you want to block this user?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<UserBloc>().add(BlockUser(userId));
+              Navigator.pop(context);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("User blocked.")),
+              );
+            },
+            child: const Text("Block"),
+          ),
+        ],
+      ),
+    );
   }
 }
