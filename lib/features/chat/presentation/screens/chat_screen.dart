@@ -22,27 +22,39 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
-  // bool _showScrollToBottom = true;
+  bool _showScrollToBottom = false;
 
-  // void _scrollListener() {
-  //   final maxScroll = _scrollController.position.maxScrollExtent;
-  //   final offset = _scrollController.offset;
+  void _scrollListener() {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final offset = _scrollController.offset;
 
-  //   if (offset < maxScroll && !_showScrollToBottom) {
-  //     setState(() {
-  //       _showScrollToBottom = true;
-  //     });
-  //   } else if (offset >= maxScroll && _showScrollToBottom) {
-  //     setState(() {
-  //       _showScrollToBottom = false;
-  //     });
-  //   }
-  // }
+    // show scroll-to-bottom if necessary
+    if (offset < maxScroll && !_showScrollToBottom) {
+      setState(() {
+        _showScrollToBottom = true;
+      });
+    } else if (offset >= maxScroll && _showScrollToBottom) {
+      setState(() {
+        _showScrollToBottom = false;
+      });
+    }
+  }
+
+  // only scroll if necessary
+  void scrollDown() {
+    if (_scrollController.hasClients && _scrollController.position.maxScrollExtent > 0) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent + 100,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // _scrollController.addListener(_scrollListener);
+    _scrollController.addListener(_scrollListener);
 
     Future.delayed(
       const Duration(milliseconds: 500),
@@ -81,28 +93,20 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
       ),
-      floatingActionButton: GestureDetector(
-        onTap: scrollDown,
-        child: Container(
-          padding: EdgeInsets.all(10),
-          margin: EdgeInsets.only(bottom: 70),
-          decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, shape: BoxShape.circle),
-          child: const Icon(
-            Icons.expand_more,
-            size: 30,
-          ),
-        ),
-      ),
+      floatingActionButton: _showScrollToBottom
+          ? GestureDetector(
+              onTap: scrollDown,
+              child: Container(
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.only(bottom: 70),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, shape: BoxShape.circle),
+                child: const Icon(
+                  Icons.expand_more,
+                  size: 30,
+                ),
+              ),
+            )
+          : null,
     );
-  }
-
-  void scrollDown() {
-    if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-    }
   }
 }

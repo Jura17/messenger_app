@@ -31,11 +31,9 @@ class SettingsScreen extends StatelessWidget {
               title: "Dark Mode",
               action: CupertinoSwitch(
                 value: context.watch<ThemeCubit>().state == ThemeMode.dark ? true : false,
-                // value: Provider.of<ThemeProvider>(context, listen: false).isDarkMode,
                 onChanged: (_) {
                   context.read<ThemeCubit>().toggleTheme();
                 },
-                // onChanged: (value) => Provider.of<ThemeProvider>(context, listen: false).toggleTheme(),
               ),
               foregroundColor: Theme.of(context).colorScheme.inversePrimary,
             ),
