@@ -3,8 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messenger_app/core/theme/dark_theme.dart';
+import 'package:messenger_app/core/theme/light_theme.dart';
+import 'package:messenger_app/core/theme/theme_cubit.dart';
 
-import 'package:messenger_app/core/theme/theme_provider.dart';
 import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
 import 'package:messenger_app/features/auth/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/data/provider/firebase_auth_api.dart';
@@ -22,12 +24,15 @@ import 'package:messenger_app/features/users/data/provider/firestore_userdata_ap
 import 'package:messenger_app/features/users/data/repositories/firestore_userdata_repository.dart';
 import 'package:messenger_app/firebase_options.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // TODO: Don't show all registered users; show chatrooms/conversations of current user
 // TODO: add Search function to find users by email address or username
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  final prefs = await SharedPreferences.getInstance();
 
   final firebaseAuth = FirebaseAuth.instance;
   final firestoreDb = FirebaseFirestore.instance;
@@ -79,11 +84,9 @@ void main() async {
               return chatBloc;
             },
           ),
+          BlocProvider<ThemeCubit>(create: (_) => ThemeCubit(prefs))
         ],
-        child: ChangeNotifierProvider(
-          create: (context) => ThemeProvider(),
-          child: MainApp(),
-        ),
+        child: MainApp(),
       ),
     ),
   );
@@ -94,10 +97,16 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const AuthGate(),
-      debugShowCheckedModeBanner: false,
-      theme: context.watch<ThemeProvider>().themeData,
+    return BlocBuilder<ThemeCubit, ThemeMode>(
+      builder: (context, themeMode) {
+        return MaterialApp(
+          home: const AuthGate(),
+          debugShowCheckedModeBanner: false,
+          themeMode: themeMode,
+          theme: lightTheme,
+          darkTheme: darkTheme,
+        );
+      },
     );
   }
 }

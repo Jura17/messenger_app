@@ -19,6 +19,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
+  String errorText = '';
 
   @override
   void initState() {
@@ -41,9 +42,12 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         body: BlocListener<LoginCubit, LoginState>(
+          // if error occurs show red text
           listener: (context, state) {
             if (state.status == LoginStatus.failure && state.errorMessage != null) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+              errorText = state.errorMessage!;
+            } else {
+              errorText = '';
             }
           },
           child: BlocBuilder<LoginCubit, LoginState>(
@@ -79,14 +83,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _emailController,
                     onChanged: cubit.emailChanged,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   CustomTextfield(
                     hintText: "Password",
                     obscureText: true,
                     controller: _passwordController,
                     onChanged: cubit.passwordChanged,
                   ),
-                  const SizedBox(height: 25),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+                    child: SizedBox(
+                      height: 50,
+                      child: Text(
+                        maxLines: 2,
+                        errorText,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.red),
+                      ),
+                    ),
+                  ),
                   CustomButton(
                     text: state.status == LoginStatus.loading ? "Loading..." : "Login",
                     onTap: state.status == LoginStatus.loading ? null : () => cubit.logIn(),

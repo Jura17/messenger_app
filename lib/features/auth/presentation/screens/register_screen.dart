@@ -21,6 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
   late final TextEditingController _confirmPasswordController;
+  String errorText = '';
 
   @override
   void initState() {
@@ -45,9 +46,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         body: BlocListener<SignUpCubit, SignUpState>(
+          // if error occurs show red text
           listener: (context, state) {
             if (state.status == SignUpStatus.failure && state.errorMessage != null) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+              errorText = state.errorMessage!;
+            } else {
+              errorText = '';
             }
           },
           child: BlocBuilder<SignUpCubit, SignUpState>(
@@ -101,7 +105,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _confirmPasswordController,
                     onChanged: cubit.confirmPasswordChanged,
                   ),
-                  const SizedBox(height: 25),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+                    child: SizedBox(
+                      height: 50,
+                      child: Text(
+                        maxLines: 2,
+                        errorText,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.red),
+                      ),
+                    ),
+                  ),
                   CustomButton(
                     text: state.status == SignUpStatus.loading ? "Loading..." : "Sign up",
                     onTap: state.status == SignUpStatus.loading ? null : () => cubit.signUp(),

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:messenger_app/core/theme/theme_provider.dart';
+import 'package:messenger_app/core/theme/theme_cubit.dart';
 
 import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
 import 'package:messenger_app/features/auth/bloc/auth_event.dart';
@@ -31,8 +30,13 @@ class SettingsScreen extends StatelessWidget {
             SettingsListTile(
               title: "Dark Mode",
               action: CupertinoSwitch(
-                value: Provider.of<ThemeProvider>(context, listen: false).isDarkMode,
-                onChanged: (value) => Provider.of<ThemeProvider>(context, listen: false).toggleTheme(),
+                value: context.watch<ThemeCubit>().state == ThemeMode.dark ? true : false,
+                // value: Provider.of<ThemeProvider>(context, listen: false).isDarkMode,
+                onChanged: (_) {
+                  context.read<ThemeCubit>().toggleTheme();
+                  print(context.read<ThemeCubit>().state);
+                },
+                // onChanged: (value) => Provider.of<ThemeProvider>(context, listen: false).toggleTheme(),
               ),
               foregroundColor: Theme.of(context).colorScheme.inversePrimary,
             ),

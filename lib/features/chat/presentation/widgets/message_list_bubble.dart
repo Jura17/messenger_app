@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/core/theme/custom_colors.dart';
-import 'package:messenger_app/core/theme/theme_provider.dart';
+import 'package:messenger_app/core/theme/theme_cubit.dart';
 
 import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
 import 'package:messenger_app/features/auth/bloc/auth_state.dart';
@@ -26,7 +26,7 @@ class MessageListBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isCurrentUser = false;
 
-    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final isDarkMode = context.read<ThemeCubit>().state == ThemeMode.dark ? true : false;
     final authBlocState = context.read<AuthBloc>().state;
 
     if (authBlocState is Authenticated) {
