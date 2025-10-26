@@ -24,10 +24,13 @@ class MessageList extends StatefulWidget {
 }
 
 class _MessageListState extends State<MessageList> {
+  String? previousMessageTime;
+  String? displayedMessageTime;
+  String? previousDate;
+  String? displayedDate;
+
   @override
   Widget build(BuildContext context) {
-    String? currentMessageTime;
-
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
         if (state is ChatLoading) {
@@ -45,13 +48,40 @@ class _MessageListState extends State<MessageList> {
               children: state.messages!.map((message) {
                 final Timestamp timestamp = message.timestamp;
                 final String dateTime = DateFormat.Hm().format(timestamp.toDate());
-                // only show the timestamp if it has changed
-                if (dateTime == currentMessageTime) {
-                  currentMessageTime = null;
+                final String date = DateFormat.MMMEd().format(timestamp.toDate());
+
+                // only show the message time if it has changed
+                if (dateTime != previousMessageTime) {
+                  displayedMessageTime = dateTime;
+                  previousMessageTime = dateTime;
                 } else {
-                  currentMessageTime = dateTime;
+                  displayedMessageTime = null;
                 }
-                return MessageListBubble(message: message, time: currentMessageTime);
+
+                // only show date if it has changed
+                if (date != previousDate) {
+                  displayedDate = date;
+                  previousDate = date;
+                } else {
+                  displayedDate = null;
+                }
+
+                return Column(
+                  children: [
+                    if (displayedDate != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: Text(
+                          displayedDate.toString(),
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                    MessageListBubble(
+                      message: message,
+                      time: displayedMessageTime,
+                    ),
+                  ],
+                );
               }).toList(),
             ),
           );

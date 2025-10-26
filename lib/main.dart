@@ -23,7 +23,7 @@ import 'package:messenger_app/features/users/data/provider/firestore_userdata_ap
 
 import 'package:messenger_app/features/users/data/repositories/firestore_userdata_repository.dart';
 import 'package:messenger_app/firebase_options.dart';
-import 'package:provider/provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 // TODO: Don't show all registered users; show chatrooms/conversations of current user

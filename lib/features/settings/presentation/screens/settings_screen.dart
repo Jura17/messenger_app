@@ -34,7 +34,6 @@ class SettingsScreen extends StatelessWidget {
                 // value: Provider.of<ThemeProvider>(context, listen: false).isDarkMode,
                 onChanged: (_) {
                   context.read<ThemeCubit>().toggleTheme();
-                  print(context.read<ThemeCubit>().state);
                 },
                 // onChanged: (value) => Provider.of<ThemeProvider>(context, listen: false).toggleTheme(),
               ),
