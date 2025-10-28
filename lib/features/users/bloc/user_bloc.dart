@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
 
 import 'package:messenger_app/features/users/bloc/user_event.dart';
 import 'package:messenger_app/features/users/bloc/user_state.dart';
@@ -7,10 +8,14 @@ import 'package:messenger_app/features/users/data/repositories/firestore_userdat
 import 'package:rxdart/rxdart.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
+  final FirebaseAuthRepository _authRepo;
   final FirestoreUserdataRepository _userRepo;
 
-  UserBloc({required FirestoreUserdataRepository userRepo})
-      : _userRepo = userRepo,
+  UserBloc({
+    required FirebaseAuthRepository authRepo,
+    required FirestoreUserdataRepository userRepo,
+  })  : _authRepo = authRepo,
+        _userRepo = userRepo,
         super(UsersInitial()) {
     on<BlockUser>(_onBlockUser);
     on<UnblockUser>(_onUnblockUser);
@@ -38,8 +43,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   Future<void> _onWatchUsers(WatchUsers _, Emitter<UserState> emit) async {
     emit(UsersLoading());
 
-    final permittedStream = _userRepo.getAllPermittedUsersStream();
-    final blockedStream = _userRepo.getBlockedUsersStream();
+    final currentUser = _authRepo.getCurrentUser();
+
+    final permittedStream = _userRepo.getAllPermittedUsersStream(currentUser);
+    final blockedStream = _userRepo.getBlockedUsersStream(currentUser);
 
     // Combining both streams into one
     await emit.forEach(

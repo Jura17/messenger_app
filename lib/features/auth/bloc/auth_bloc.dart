@@ -2,14 +2,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/bloc/auth_state.dart';
+import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
 
-import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
+import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final FirebaseAuthRepository _authRepo;
+  final AuthRepository _authRepo;
+  final UserdataRepository _userdataRepo;
 
-  AuthBloc({required FirebaseAuthRepository authRepo})
-      : _authRepo = authRepo,
+  AuthBloc({
+    required AuthRepository authRepo,
+    required UserdataRepository userdataRepo,
+  })  : _authRepo = authRepo,
+        _userdataRepo = userdataRepo,
         super(AuthInitial()) {
     on<AppStarted>(_onAppStarted);
     on<LogoutRequested>(_onLogoutRequested);
@@ -37,6 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onDeletionRequested(DeletionRequested event, Emitter<AuthState> emit) async {
     try {
       await _authRepo.deleteAccount();
+      await _userdataRepo.deleteAccount();
       emit(Unauthenticated());
     } catch (e) {
       emit(AuthError(e.toString()));

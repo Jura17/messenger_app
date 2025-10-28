@@ -6,6 +6,7 @@ import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repo
 
 import 'package:messenger_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:messenger_app/features/auth/presentation/widgets/custom_textfield.dart';
+import 'package:messenger_app/features/users/data/repositories/firestore_userdata_repository.dart';
 
 class LoginScreen extends StatefulWidget {
   final void Function()? onTap;
@@ -38,7 +39,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LoginCubit(context.read<FirebaseAuthRepository>()),
+      create: (context) => LoginCubit(
+        authRepo: context.read<FirebaseAuthRepository>(),
+        userdataRepo: context.read<FirestoreUserdataRepository>(),
+      ),
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         body: BlocListener<LoginCubit, LoginState>(

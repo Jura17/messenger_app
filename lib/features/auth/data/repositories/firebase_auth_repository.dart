@@ -1,25 +1,27 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:messenger_app/features/auth/data/models/authentication_error_handling.dart';
 import 'package:messenger_app/features/auth/data/provider/auth_api.dart';
-import 'package:messenger_app/features/users/data/provider/userdata_api.dart';
+import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
 
-class FirebaseAuthRepository {
+class FirebaseAuthRepository implements AuthRepository {
   final AuthApi _authApi;
-  final UserdataApi _userdataApi;
 
-  FirebaseAuthRepository(this._authApi, this._userdataApi);
+  FirebaseAuthRepository(this._authApi);
 
+  @override
   Stream<User?> onAuthChanged() => _authApi.onAuthChanged();
 
+  @override
   User? getCurrentUser() => _authApi.getCurrentUser();
 
+  @override
   Future<User> signIn(String email, String password) async {
     email = email.trim();
     password = password.trim();
 
     try {
       UserCredential userCredential = await _authApi.signInWithEmailPassword(email, password);
-      await _userdataApi.updateLastLogin();
+
       return userCredential.user!;
     } on FirebaseAuthException catch (e) {
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
@@ -28,12 +30,12 @@ class FirebaseAuthRepository {
     }
   }
 
+  @override
   Future<User> signUp(String email, String password) async {
     email = email.trim();
 
     try {
       UserCredential userCredential = await _authApi.signUpWithEmailPassword(email, password);
-      await _userdataApi.createUser(userCredential.user!.uid, email);
 
       return userCredential.user!;
     } on FirebaseAuthException catch (e) {
@@ -43,11 +45,10 @@ class FirebaseAuthRepository {
     }
   }
 
-  Future<void> deleteAccount() async {
-    await _userdataApi.deleteAccount();
-    await _authApi.deleteAccount();
-  }
+  @override
+  Future<void> deleteAccount() async => await _authApi.deleteAccount();
 
+  @override
   Future<void> logout() async {
     try {
       await _authApi.signOut();

@@ -47,7 +47,7 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Future<void> updateLastLogin() async {
+  Future<void> updateLastLogin(String uid) async {
     // TODO: implement updateLastLogin logic after adding property to userdata model
     debugPrint("updateLastLogin from Api");
   }

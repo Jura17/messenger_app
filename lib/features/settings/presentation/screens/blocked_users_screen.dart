@@ -36,8 +36,11 @@ class BlockedUsersScreen extends StatelessWidget {
 
           if (state is UsersLoaded) {
             if (state.blockedUsers.isEmpty) {
-              return const Center(
-                child: Text("No blocked users"),
+              return Center(
+                child: Text(
+                  "This list is empty",
+                  style: Theme.of(context).textTheme.displaySmall,
+                ),
               );
             }
             return BlockedUserListView(

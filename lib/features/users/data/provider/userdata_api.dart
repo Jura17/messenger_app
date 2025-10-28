@@ -7,7 +7,7 @@ abstract class UserdataApi {
   Stream<List<String>> getBlockedUserIdsStream();
   // Future<void> markMessagesAsRead(String receiverId);
   Future<Userdata?> getUser(String uid);
-  Future<void> updateLastLogin();
+  Future<void> updateLastLogin(String uid);
   // Stream<List<Map<String, dynamic>>> getBlockedUsers(String uid);
   Future<void> blockUser(String uid);
   Future<void> unblockUser(String uid);

@@ -29,6 +29,7 @@ class _MessageListState extends State<MessageList> {
   String? previousDate;
   String? displayedDate;
 
+  // TODO: Fix bug that makes time and date disappear on message sent
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatBloc, ChatState>(

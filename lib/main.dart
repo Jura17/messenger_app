@@ -26,6 +26,7 @@ import 'package:messenger_app/firebase_options.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+// TODO: write tests
 // TODO: Don't show all registered users; show chatrooms/conversations of current user
 // TODO: add Search function to find users by email address or username
 void main() async {
@@ -47,17 +48,15 @@ void main() async {
         }),
         RepositoryProvider(create: (context) {
           final authApi = context.read<FirebaseAuthApi>();
-          final userdataApi = context.read<FirestoreUserdataApi>();
-          return FirebaseAuthRepository(authApi, userdataApi);
+          return FirebaseAuthRepository(authApi);
         }),
         RepositoryProvider(create: (context) {
           final authRepo = context.read<FirebaseAuthRepository>();
           return FirestoreChatRepository(FirestoreChatApi(firestoreDb, authRepo));
         }),
         RepositoryProvider(create: (context) {
-          final authApi = context.read<FirebaseAuthApi>();
           final userdataApi = context.read<FirestoreUserdataApi>();
-          return FirestoreUserdataRepository(userdataApi, authApi);
+          return FirestoreUserdataRepository(userdataApi);
         })
       ],
       child: MultiBlocProvider(
@@ -65,7 +64,8 @@ void main() async {
           BlocProvider<AuthBloc>(
             create: (context) {
               final authRepo = context.read<FirebaseAuthRepository>();
-              final authBloc = AuthBloc(authRepo: authRepo);
+              final userdataRepo = context.read<FirestoreUserdataRepository>();
+              final authBloc = AuthBloc(authRepo: authRepo, userdataRepo: userdataRepo);
               authBloc.add(AppStarted());
               return authBloc;
             },
@@ -73,7 +73,8 @@ void main() async {
           BlocProvider<UserBloc>(
             create: (context) {
               final userRepo = context.read<FirestoreUserdataRepository>();
-              final userBloc = UserBloc(userRepo: userRepo);
+              final authRepo = context.read<FirebaseAuthRepository>();
+              final userBloc = UserBloc(authRepo: authRepo, userRepo: userRepo);
               return userBloc;
             },
           ),

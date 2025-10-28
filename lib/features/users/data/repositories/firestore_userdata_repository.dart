@@ -1,5 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:messenger_app/features/auth/data/provider/firebase_auth_api.dart';
 
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 import 'package:messenger_app/features/users/data/provider/firestore_userdata_api.dart';
@@ -8,9 +8,8 @@ import 'package:rxdart/rxdart.dart';
 
 class FirestoreUserdataRepository implements UserdataRepository {
   final FirestoreUserdataApi _userdataApi;
-  final FirebaseAuthApi _authApi;
 
-  FirestoreUserdataRepository(this._userdataApi, this._authApi);
+  FirestoreUserdataRepository(this._userdataApi);
 
   @override
   Future<void> createUser(String uid, String email) async {
@@ -18,8 +17,7 @@ class FirestoreUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Stream<List<Userdata>> getAllPermittedUsersStream() {
-    final currentUser = _authApi.getCurrentUser();
+  Stream<List<Userdata>> getAllPermittedUsersStream(User? currentUser) {
     if (currentUser == null) throw Stream.error("User stream error");
 
     final allUsersStream = _userdataApi.getAllUsersStream();
@@ -35,8 +33,7 @@ class FirestoreUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Stream<List<Userdata>> getBlockedUsersStream() {
-    final currentUser = _authApi.getCurrentUser();
+  Stream<List<Userdata>> getBlockedUsersStream(User? currentUser) {
     if (currentUser == null) return Stream.error("Blocked users stream error");
 
     final allUsersStream = _userdataApi.getAllUsersStream();
