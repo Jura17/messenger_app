@@ -1,17 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:messenger_app/features/chat/data/models/message.dart';
 import 'package:messenger_app/features/chat/data/provider/chat_api.dart';
 
 class FirestoreChatApi implements ChatApi {
-  final FirebaseAuthRepository authRepo;
   final FirebaseFirestore firestoreDb;
 
-  FirestoreChatApi(this.firestoreDb, this.authRepo);
+  FirestoreChatApi(this.firestoreDb);
 
   @override
-  Stream<List<Message>> getMessages(String chatPartnerId) {
-    final currentUser = authRepo.getCurrentUser();
+  Stream<List<Message>> getMessages(String chatPartnerId, User? currentUser) {
     if (currentUser == null) throw Exception('No authenticated user');
 
     final currentUserId = currentUser.uid;
@@ -30,8 +29,7 @@ class FirestoreChatApi implements ChatApi {
   }
 
   @override
-  Future<void> sendMessage(String chatPartnerId, message) async {
-    final currentUser = authRepo.getCurrentUser();
+  Future<void> sendMessage(String chatPartnerId, message, User? currentUser) async {
     if (currentUser == null) throw Exception('No authenticated user');
 
     final String currentUserId = currentUser.uid;
@@ -61,8 +59,7 @@ class FirestoreChatApi implements ChatApi {
   }
 
   @override
-  Future<void> markMessagesAsRead(String chatPartnerId) async {
-    final currentUser = authRepo.getCurrentUser();
+  Future<void> markMessagesAsRead(String chatPartnerId, User? currentUser) async {
     if (currentUser == null) throw Exception('No authenticated user');
 
     final currentUserId = currentUser.uid;
@@ -86,12 +83,11 @@ class FirestoreChatApi implements ChatApi {
   }
 
   @override
-  Future<void> reportMessage(String messageId, String userId) async {
-    final currentUser = authRepo.getCurrentUser();
+  Future<void> reportMessage(String messageId, String chatPartnerId, User? currentUser) async {
     final report = {
       'reportedBy': currentUser!.uid,
       'messageId': messageId,
-      'messageOwnerId': userId,
+      'messageOwnerId': chatPartnerId,
       'timestamp': FieldValue.serverTimestamp()
     };
 

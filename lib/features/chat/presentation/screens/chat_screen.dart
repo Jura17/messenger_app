@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
 
 import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
 
@@ -60,7 +61,11 @@ class _ChatScreenState extends State<ChatScreen> {
       const Duration(milliseconds: 500),
       () {
         scrollDown();
-        if (mounted) context.read<FirestoreChatRepository>().markMessagesAsRead(widget.chatPartnerId);
+        if (mounted) {
+          final currentUser = context.read<FirebaseAuthRepository>().getCurrentUser();
+          context.read<FirestoreChatRepository>().markMessagesAsRead(widget.chatPartnerId, currentUser);
+        }
+        ;
       },
     );
   }

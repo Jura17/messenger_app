@@ -7,7 +7,7 @@ abstract class UserdataRepository {
   Future<Userdata?> getUser(String uid);
   Future<void> updateLastLogin(String uid);
   Stream<List<Userdata>> getBlockedUsersStream(User? currentUser);
-  Future<void> blockUser(String uid);
-  Future<void> unblockUser(String uid);
-  Future<void> deleteAccount();
+  Future<void> blockUser(String uid, User? currentUser);
+  Future<void> unblockUser(String uid, User? currentUser);
+  Future<void> deleteAccount(User? currentUser);
 }

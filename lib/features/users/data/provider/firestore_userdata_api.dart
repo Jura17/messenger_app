@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
-import 'package:messenger_app/features/auth/data/provider/firebase_auth_api.dart';
+
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 import 'package:messenger_app/features/users/data/provider/userdata_api.dart';
 
 class FirestoreUserdataApi implements UserdataApi {
   final FirebaseFirestore firestoreDb;
-  final FirebaseAuthApi authApi;
 
-  FirestoreUserdataApi(this.firestoreDb, this.authApi);
+  FirestoreUserdataApi(this.firestoreDb);
 
   @override
   Future<void> createUser(String uid, String email) async {
@@ -25,8 +25,7 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Stream<List<String>> getBlockedUserIdsStream() {
-    final currentUser = authApi.getCurrentUser();
+  Stream<List<String>> getBlockedUserIdsStream(User? currentUser) {
     return firestoreDb
         .collection('users')
         .doc(currentUser!.uid)
@@ -53,20 +52,17 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Future<void> blockUser(String uid) async {
-    final currentUser = authApi.getCurrentUser();
+  Future<void> blockUser(String uid, User? currentUser) async {
     await firestoreDb.collection('users').doc(currentUser!.uid).collection('blockedUsers').doc(uid).set({});
   }
 
   @override
-  Future<void> unblockUser(String uid) async {
-    final currentUser = authApi.getCurrentUser();
+  Future<void> unblockUser(String uid, User? currentUser) async {
     await firestoreDb.collection('users').doc(currentUser!.uid).collection('blockedUsers').doc(uid).delete();
   }
 
   @override
-  Future<void> deleteAccount() async {
-    final currentUser = authApi.getCurrentUser();
+  Future<void> deleteAccount(User? currentUser) async {
     await firestoreDb.collection('users').doc(currentUser!.uid).delete();
   }
 }

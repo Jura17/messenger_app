@@ -24,7 +24,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   Future<void> _onBlockUser(BlockUser event, Emitter<UserState> emit) async {
     try {
-      await _userRepo.blockUser(event.uid);
+      await _userRepo.blockUser(event.uid, _authRepo.getCurrentUser());
       add(WatchUsers());
     } catch (e) {
       emit(UserError(e.toString()));
@@ -33,7 +33,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   Future<void> _onUnblockUser(UnblockUser event, Emitter<UserState> emit) async {
     try {
-      await _userRepo.unblockUser(event.uid);
+      await _userRepo.unblockUser(event.uid, _authRepo.getCurrentUser());
       add(WatchUsers());
     } catch (e) {
       emit(UserError(e.toString()));

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/core/theme/custom_colors.dart';
+import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
 import 'package:messenger_app/features/chat/bloc/chat_event.dart';
 
@@ -27,9 +28,13 @@ class _UserTileState extends State<UserTile> {
   @override
   Widget build(BuildContext context) {
     int unreadCount = 0;
+    final authRepo = context.read<FirebaseAuthRepository>();
+    final chatRepo = context.read<FirestoreChatRepository>();
+
+    final currentUser = authRepo.getCurrentUser();
 
     final Stream<int> unreadCountStream =
-        context.watch<FirestoreChatRepository>().watchUnreadMessageCount(widget.chatPartnerId);
+        context.watch<FirestoreChatRepository>().watchUnreadMessageCount(widget.chatPartnerId, currentUser);
 
     return GestureDetector(
       onTap: () async {
@@ -38,7 +43,7 @@ class _UserTileState extends State<UserTile> {
           MaterialPageRoute(
             builder: (context) => BlocProvider(
               create: (context) {
-                final chatBloc = ChatBloc(chatRepo: context.read<FirestoreChatRepository>());
+                final chatBloc = ChatBloc(chatRepo: chatRepo, authRepo: authRepo);
                 chatBloc.add(WatchMessages(widget.chatPartnerId));
                 return chatBloc;
               },

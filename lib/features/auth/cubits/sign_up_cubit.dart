@@ -2,17 +2,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:messenger_app/features/auth/cubits/sign_up_state.dart';
-import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
+import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
+
 import 'package:messenger_app/features/auth/data/models/authentication_error_handling.dart';
-import 'package:messenger_app/features/users/data/repositories/firestore_userdata_repository.dart';
+
+import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
-  final FirebaseAuthRepository _authRepo;
-  final FirestoreUserdataRepository _userdataRepo;
+  final AuthRepository _authRepo;
+  final UserdataRepository _userdataRepo;
 
   SignUpCubit({
-    required FirebaseAuthRepository authRepo,
-    required FirestoreUserdataRepository userdataRepo,
+    required AuthRepository authRepo,
+    required UserdataRepository userdataRepo,
   })  : _authRepo = authRepo,
         _userdataRepo = userdataRepo,
         super(const SignUpState());

@@ -42,17 +42,14 @@ void main() async {
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider(create: (_) => FirebaseAuthApi(firebaseAuth)),
-        RepositoryProvider(create: (context) {
-          final authApi = context.read<FirebaseAuthApi>();
-          return FirestoreUserdataApi(firestoreDb, authApi);
-        }),
+        RepositoryProvider(create: (context) => FirestoreUserdataApi(firestoreDb)),
         RepositoryProvider(create: (context) {
           final authApi = context.read<FirebaseAuthApi>();
           return FirebaseAuthRepository(authApi);
         }),
         RepositoryProvider(create: (context) {
-          final authRepo = context.read<FirebaseAuthRepository>();
-          return FirestoreChatRepository(FirestoreChatApi(firestoreDb, authRepo));
+          final chatApi = FirestoreChatApi(firestoreDb);
+          return FirestoreChatRepository(chatApi);
         }),
         RepositoryProvider(create: (context) {
           final userdataApi = context.read<FirestoreUserdataApi>();
@@ -64,8 +61,8 @@ void main() async {
           BlocProvider<AuthBloc>(
             create: (context) {
               final authRepo = context.read<FirebaseAuthRepository>();
-              final userdataRepo = context.read<FirestoreUserdataRepository>();
-              final authBloc = AuthBloc(authRepo: authRepo, userdataRepo: userdataRepo);
+              final userRepo = context.read<FirestoreUserdataRepository>();
+              final authBloc = AuthBloc(authRepo: authRepo, userRepo: userRepo);
               authBloc.add(AppStarted());
               return authBloc;
             },
@@ -81,7 +78,8 @@ void main() async {
           BlocProvider<ChatBloc>(
             create: (context) {
               final chatRepo = context.read<FirestoreChatRepository>();
-              final chatBloc = ChatBloc(chatRepo: chatRepo);
+              final authRepo = context.read<FirebaseAuthRepository>();
+              final chatBloc = ChatBloc(chatRepo: chatRepo, authRepo: authRepo);
               return chatBloc;
             },
           ),

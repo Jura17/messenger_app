@@ -18,10 +18,10 @@ class FirestoreUserdataRepository implements UserdataRepository {
 
   @override
   Stream<List<Userdata>> getAllPermittedUsersStream(User? currentUser) {
-    if (currentUser == null) throw Stream.error("User stream error");
+    if (currentUser == null) throw Stream.error("UserdataRepo, getAllPermittedUsersStream: Userdata stream error");
 
     final allUsersStream = _userdataApi.getAllUsersStream();
-    final blockedUsersStream = _userdataApi.getBlockedUserIdsStream();
+    final blockedUsersStream = _userdataApi.getBlockedUserIdsStream(currentUser);
 
     // merge user stream and blocked user ID stream into one (emits value when one of them changes)
     return Rx.combineLatest2(allUsersStream, blockedUsersStream, (allUsers, blockedUserIds) {
@@ -37,7 +37,7 @@ class FirestoreUserdataRepository implements UserdataRepository {
     if (currentUser == null) return Stream.error("Blocked users stream error");
 
     final allUsersStream = _userdataApi.getAllUsersStream();
-    final blockedUsersStream = _userdataApi.getBlockedUserIdsStream();
+    final blockedUsersStream = _userdataApi.getBlockedUserIdsStream(currentUser);
 
     // merge user stream and blocked user ID stream into one (emits value when one of them changes)
     return Rx.combineLatest2(allUsersStream, blockedUsersStream, (allUsers, blockedUserIds) {
@@ -60,17 +60,17 @@ class FirestoreUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Future<void> blockUser(String uid) async {
-    await _userdataApi.blockUser(uid);
+  Future<void> blockUser(String uid, User? currentUser) async {
+    await _userdataApi.blockUser(uid, currentUser);
   }
 
   @override
-  Future<void> unblockUser(String uid) async {
-    await _userdataApi.unblockUser(uid);
+  Future<void> unblockUser(String uid, User? currentUser) async {
+    await _userdataApi.unblockUser(uid, currentUser);
   }
 
   @override
-  Future<void> deleteAccount() async {
-    await _userdataApi.deleteAccount();
+  Future<void> deleteAccount(User? currentUser) async {
+    await _userdataApi.deleteAccount(currentUser);
   }
 }

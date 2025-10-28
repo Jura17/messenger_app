@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:messenger_app/features/chat/data/models/message.dart';
 import 'package:messenger_app/features/chat/data/provider/firestore_chat_api.dart';
 import 'package:messenger_app/features/chat/data/repositories/chat_repository.dart';
@@ -8,15 +9,14 @@ class FirestoreChatRepository implements ChatRepository {
   FirestoreChatRepository(this.chatApi);
 
   @override
-  Stream<List<Message>> watchChatroomMessages(String chatPartnerId) {
-    final messageStream = chatApi.getMessages(chatPartnerId);
+  Stream<List<Message>> watchChatroomMessages(String chatPartnerId, User? currentUser) {
+    final messageStream = chatApi.getMessages(chatPartnerId, currentUser);
     return messageStream;
   }
 
   // TODO: maybe move this to chat api
   @override
-  Stream<int> watchUnreadMessageCount(String chatPartnerId) {
-    final currentUser = chatApi.authRepo.getCurrentUser();
+  Stream<int> watchUnreadMessageCount(String chatPartnerId, User? currentUser) {
     if (currentUser == null) throw Exception('No authenticated user');
 
     final currentUserId = currentUser.uid;
@@ -42,17 +42,17 @@ class FirestoreChatRepository implements ChatRepository {
   }
 
   @override
-  Future<void> markMessagesAsRead(String receiverId) async {
-    await chatApi.markMessagesAsRead(receiverId);
+  Future<void> markMessagesAsRead(String chatPartnerId, User? currentUser) async {
+    await chatApi.markMessagesAsRead(chatPartnerId, currentUser);
   }
 
   @override
-  Future<void> reportMessage(String messageId, String userId) async {
-    await chatApi.reportMessage(messageId, userId);
+  Future<void> reportMessage(String messageId, String chatPartnerId, User? currentUser) async {
+    await chatApi.reportMessage(messageId, chatPartnerId, currentUser);
   }
 
   @override
-  Future<void> sendMessage(String receiverID, message) async {
-    await chatApi.sendMessage(receiverID, message);
+  Future<void> sendMessage(String chatPartnerId, String message, User? currentUser) async {
+    await chatApi.sendMessage(chatPartnerId, message, currentUser);
   }
 }

@@ -1,15 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 
 abstract class UserdataApi {
   Future<void> createUser(String uid, String email);
   Stream<List<Map<String, dynamic>>> getAllUsersStream();
-  // Stream<List<Map<String, dynamic>>> getAllPermittedUsersStream();
-  Stream<List<String>> getBlockedUserIdsStream();
-  // Future<void> markMessagesAsRead(String receiverId);
+  Stream<List<String>> getBlockedUserIdsStream(User? currentUser);
   Future<Userdata?> getUser(String uid);
   Future<void> updateLastLogin(String uid);
-  // Stream<List<Map<String, dynamic>>> getBlockedUsers(String uid);
-  Future<void> blockUser(String uid);
-  Future<void> unblockUser(String uid);
-  Future<void> deleteAccount();
+  Future<void> blockUser(String uid, User? currentUser);
+  Future<void> unblockUser(String uid, User? currentUser);
+  Future<void> deleteAccount(User? currentUser);
 }

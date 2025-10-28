@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/cubits/login_cubit.dart';
+import 'package:messenger_app/features/auth/cubits/sign_up_cubit.dart';
 
 import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
 
@@ -9,16 +11,28 @@ import 'package:messenger_app/features/users/data/repositories/userdata_reposito
 
 void main() {
   group('authentication tests', () {
+    late AuthRepository mockAuthRepo;
+    late UserdataRepository mockUserdataRepo;
     late AuthBloc authBloc;
-    final AuthRepository mockAuthRepo = MockAuthRepository();
-    final UserdataRepository mockUserdataRepo = MockUserdataRepository();
+    late LoginCubit loginCubit;
+    late SignUpCubit signUpCubit;
 
     setUp(() {
-      authBloc = AuthBloc(
-        authRepo: mockAuthRepo,
-        userdataRepo: mockUserdataRepo,
-      );
+      mockAuthRepo = MockAuthRepository();
+      mockUserdataRepo = MockUserdataRepository();
+
+      authBloc = AuthBloc(authRepo: mockAuthRepo, userRepo: mockUserdataRepo);
+      loginCubit = LoginCubit(authRepo: mockAuthRepo, userdataRepo: mockUserdataRepo);
+      signUpCubit = SignUpCubit(authRepo: mockAuthRepo, userdataRepo: mockUserdataRepo);
     });
+
+    tearDown(() async {
+      await authBloc.close();
+      await loginCubit.close();
+      await signUpCubit.close();
+    });
+
+    // test('description', body)
   });
   testWidgets('auth bloc ...', (tester) async {
     // TODO: Implement test
