@@ -27,7 +27,7 @@ class SignUpCubit extends Cubit<SignUpState> {
     if (state.email.isEmpty || state.password.isEmpty) {
       emit(state.copyWith(
         status: SignUpStatus.failure,
-        errorMessage: "Email and Password cannot be empty.",
+        errorMessage: "Email and password cannot be empty.",
       ));
       return;
     }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
 
@@ -52,9 +53,9 @@ class MockUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Future<void> updateLastLogin(String uid) {
-    // TODO: implement updateLastLogin
-    throw UnimplementedError();
+  Future<void> updateLastLogin(String uid) async {
+    // TODO: implement updateLastLogin logic after adding property to userdata model
+    debugPrint("updateLastLogin from Api");
   }
 
   @override
