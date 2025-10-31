@@ -23,6 +23,7 @@ class MockAuthRepository implements AuthRepository {
     if (shouldFail) throw LogInWithEmailAndPasswordFailure('Invalid credentials');
     if (throwUnknownError) throw Exception('Something unexpected happened');
     final mockUser = MockUser(uid: '123', email: email);
+    _currentUser = mockUser;
     _streamController.add(mockUser);
     return mockUser;
   }

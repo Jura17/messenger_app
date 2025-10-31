@@ -41,8 +41,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onDeletionRequested(DeletionRequested event, Emitter<AuthState> emit) async {
     try {
+      final currentUser = _authRepo.getCurrentUser();
+      await _userRepo.deleteAccount(currentUser);
       await _authRepo.deleteAccount();
-      await _userRepo.deleteAccount(_authRepo.getCurrentUser());
       emit(Unauthenticated());
     } catch (e) {
       emit(AuthError(e.toString()));

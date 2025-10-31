@@ -60,13 +60,13 @@ class FirestoreUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Future<void> blockUser(String uid, User? currentUser) async {
-    await _userdataApi.blockUser(uid, currentUser);
+  Future<void> blockUser(String otherUserId, User? currentUser) async {
+    await _userdataApi.blockUser(otherUserId, currentUser);
   }
 
   @override
-  Future<void> unblockUser(String uid, User? currentUser) async {
-    await _userdataApi.unblockUser(uid, currentUser);
+  Future<void> unblockUser(String otherUserId, User? currentUser) async {
+    await _userdataApi.unblockUser(otherUserId, currentUser);
   }
 
   @override

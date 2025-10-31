@@ -35,8 +35,8 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Future<Userdata?> getUser(String uid) async {
-    final userDoc = await firestoreDb.collection('users').doc(uid).get();
+  Future<Userdata?> getUser(String otherUserId) async {
+    final userDoc = await firestoreDb.collection('users').doc(otherUserId).get();
 
     if (userDoc.exists) {
       final data = userDoc.data();
@@ -46,7 +46,7 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Future<void> updateLastLogin(String uid) async {
+  Future<void> updateLastLogin(String otherUserId) async {
     // TODO: implement updateLastLogin logic after adding property to userdata model
     debugPrint("updateLastLogin from Api");
   }

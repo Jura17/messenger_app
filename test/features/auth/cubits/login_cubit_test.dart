@@ -14,16 +14,16 @@ void main() {
         return LoginCubit(authRepo: mockAuthRepo, userdataRepo: mockUserRepo);
       },
       act: (cubit) async {
-        cubit.emailChanged('test@mail.com');
+        cubit.emailChanged('test@email.com');
         cubit.passwordChanged('123456');
         await cubit.logIn();
       },
       expect: () {
         return [
-          const LoginState(email: 'test@mail.com', password: '', status: LoginStatus.initial),
-          const LoginState(email: 'test@mail.com', password: '123456', status: LoginStatus.initial),
-          const LoginState(email: 'test@mail.com', password: '123456', status: LoginStatus.loading),
-          const LoginState(email: 'test@mail.com', password: '123456', status: LoginStatus.success),
+          const LoginState(email: 'test@email.com', password: '', status: LoginStatus.initial),
+          const LoginState(email: 'test@email.com', password: '123456', status: LoginStatus.initial),
+          const LoginState(email: 'test@email.com', password: '123456', status: LoginStatus.loading),
+          const LoginState(email: 'test@email.com', password: '123456', status: LoginStatus.success),
         ];
       },
     );
