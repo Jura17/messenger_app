@@ -5,7 +5,8 @@ import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
 import 'package:messenger_app/features/auth/bloc/auth_state.dart';
 
 import 'package:messenger_app/features/auth/presentation/screens/login_or_register.dart';
-import 'package:messenger_app/features/chat/presentation/screens/home_screen.dart';
+
+import 'package:messenger_app/navigation_scaffold.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -16,7 +17,7 @@ class AuthGate extends StatelessWidget {
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           if (state is Authenticated) {
-            return const HomeScreen();
+            return const NavigationScaffold();
           } else if (state is AuthError) {
             return Center(child: Text("Error: ${state.message}"));
           } else {

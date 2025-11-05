@@ -75,10 +75,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.message,
-                    size: 60,
-                    color: Theme.of(context).colorScheme.primary,
+                  Text(
+                    "T a v e r n",
+                    style: Theme.of(context).textTheme.displayLarge,
                   ),
                   const SizedBox(height: 50),
                   Text(

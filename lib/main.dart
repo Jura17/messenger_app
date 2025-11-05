@@ -3,8 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:messenger_app/core/theme/dark_theme.dart';
-import 'package:messenger_app/core/theme/light_theme.dart';
+
 import 'package:messenger_app/core/theme/theme_cubit.dart';
 
 import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
@@ -12,7 +11,6 @@ import 'package:messenger_app/features/auth/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/data/provider/firebase_auth_api.dart';
 import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
 
-import 'package:messenger_app/features/auth/presentation/screens/auth_gate.dart';
 import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
 
 import 'package:messenger_app/features/chat/data/provider/firestore_chat_api.dart';
@@ -23,10 +21,10 @@ import 'package:messenger_app/features/users/data/provider/firestore_userdata_ap
 
 import 'package:messenger_app/features/users/data/repositories/firestore_userdata_repository.dart';
 import 'package:messenger_app/firebase_options.dart';
+import 'package:messenger_app/main_app.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-// TODO: write tests
 // TODO: Don't show all registered users; show chatrooms/conversations of current user
 // TODO: add Search function to find users by email address or username
 void main() async {
@@ -89,23 +87,4 @@ void main() async {
       ),
     ),
   );
-}
-
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeMode>(
-      builder: (context, themeMode) {
-        return MaterialApp(
-          home: const AuthGate(),
-          debugShowCheckedModeBanner: false,
-          themeMode: themeMode,
-          theme: lightTheme,
-          darkTheme: darkTheme,
-        );
-      },
-    );
-  }
 }

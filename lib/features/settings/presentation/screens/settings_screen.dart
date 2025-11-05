@@ -56,6 +56,14 @@ class SettingsScreen extends StatelessWidget {
               wholeSurfaceTapable: true,
             ),
             SettingsListTile(
+              title: "Logout",
+              action: IconButton(
+                onPressed: () => context.read<AuthBloc>().add(LogoutRequested()),
+                icon: Icon(Icons.logout),
+              ),
+              foregroundColor: Theme.of(context).colorScheme.inversePrimary,
+            ),
+            SettingsListTile(
               title: "Delete Account",
               action: IconButton(
                 onPressed: () => accountDeletionRequest(context),

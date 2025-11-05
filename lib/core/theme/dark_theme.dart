@@ -8,4 +8,8 @@ ThemeData darkTheme = ThemeData(
     tertiary: Colors.grey.shade800,
     inversePrimary: Colors.grey.shade200,
   ),
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    selectedItemColor: Colors.grey.shade200,
+    unselectedItemColor: Colors.grey.shade600,
+  ),
 );
