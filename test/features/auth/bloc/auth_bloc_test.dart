@@ -16,6 +16,12 @@ void main() {
         mockAuthRepo = MockAuthRepository();
         mockUserRepo = MockUserdataRepository();
       });
+
+      tearDown(() {
+        mockAuthRepo.dispose();
+        mockUserRepo.dispose();
+      });
+
       blocTest<AuthBloc, AuthState>(
         'emit [Unauthenticated] when AppStarted and no user is signed in',
         build: () => AuthBloc(authRepo: mockAuthRepo, userRepo: mockUserRepo),
