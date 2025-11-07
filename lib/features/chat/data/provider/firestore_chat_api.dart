@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:messenger_app/features/chat/data/models/chat_preview.dart';
 
 import 'package:messenger_app/features/chat/data/models/message.dart';
 import 'package:messenger_app/features/chat/data/provider/chat_api.dart';
@@ -25,7 +26,33 @@ class FirestoreChatApi implements ChatApi {
         .collection('messages')
         .orderBy('timestamp', descending: false)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((messageDoc) => Message.fromDocument(messageDoc)).toList());
+        .map((snapshot) => snapshot.docs.map((messageDoc) {
+              return Message.fromDocument(messageDoc);
+            }).toList());
+  }
+
+  Stream<List<ChatPreview>> watchChatroom(User? currentUser) {
+    if (currentUser == null) throw Exception('No authenticated user');
+
+    final currentUserId = currentUser.uid;
+
+    return firestoreDb
+        .collection('chatrooms')
+        .where('participants', arrayContains: currentUserId)
+        .orderBy('lastMessageTimestamp', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs.map((doc) {
+            final data = doc.data();
+            return ChatPreview(
+              chatroomId: doc.id,
+              lastMessageText: data['lastMessageText'] ?? '',
+              lastMessageTimestamp: data['lastMessageTimestamp'],
+              lastMessageSenderId: data['lastMessageSenderId'] ?? '',
+              participants: List<String>.from(data['participants'] ?? []),
+            );
+          }).toList(),
+        );
   }
 
   @override
@@ -56,6 +83,12 @@ class FirestoreChatApi implements ChatApi {
 
     // add new message to database
     await firestoreDb.collection('chatrooms').doc(chatroomId).collection('messages').add(newMessage.toMap());
+    await firestoreDb.collection('chatrooms').doc(chatroomId).set({
+      'participants': [currentUserId, chatPartnerId],
+      'lastMessageText': newMessage.message,
+      'lastMessageTimestamp': FieldValue.serverTimestamp(),
+      'lastMessageSenderId': currentUserId,
+    }, SetOptions(merge: true));
   }
 
   @override

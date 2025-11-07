@@ -4,30 +4,32 @@ import 'package:messenger_app/core/theme/custom_colors.dart';
 import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
 import 'package:messenger_app/features/chat/bloc/chat_event.dart';
+import 'package:messenger_app/features/chat/data/models/chat_preview.dart';
+import 'package:messenger_app/features/chat/data/models/message.dart';
 
 import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
 import 'package:messenger_app/features/chat/presentation/screens/chat_screen.dart';
 
-class UserTile extends StatefulWidget {
-  const UserTile({
+class ChatTile extends StatefulWidget {
+  const ChatTile({
     super.key,
-    required this.email,
     required this.chatPartnerEmail,
     required this.chatPartnerId,
   });
 
-  final String email;
   final String chatPartnerEmail;
   final String chatPartnerId;
 
   @override
-  State<UserTile> createState() => _UserTileState();
+  State<ChatTile> createState() => _ChatTileState();
 }
 
-class _UserTileState extends State<UserTile> {
+class _ChatTileState extends State<ChatTile> {
   @override
   Widget build(BuildContext context) {
     int unreadCount = 0;
+
+    Message? mostRecentMessage;
     final authRepo = context.read<FirebaseAuthRepository>();
     final chatRepo = context.read<FirestoreChatRepository>();
 
@@ -35,6 +37,9 @@ class _UserTileState extends State<UserTile> {
 
     final Stream<int> unreadCountStream =
         context.watch<FirestoreChatRepository>().watchUnreadMessageCount(widget.chatPartnerId, currentUser);
+
+    final Stream<List<ChatPreview>> chatRoomStream =
+        context.watch<FirestoreChatRepository>().watchChatroom(currentUser);
 
     return GestureDetector(
       onTap: () async {
@@ -56,20 +61,53 @@ class _UserTileState extends State<UserTile> {
         );
       },
       child: Container(
-        height: 80,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
-          borderRadius: BorderRadius.circular(12),
-        ),
+        height: 85,
         margin: EdgeInsets.symmetric(vertical: 5, horizontal: 25),
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.symmetric(vertical: 20),
         child: Row(
           children: [
-            Icon(Icons.person, color: Theme.of(context).colorScheme.inversePrimary),
-            Text(
-              widget.email,
-              style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
+            Container(
+              height: double.infinity,
+              width: 50,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              child: Center(child: Text("TW")),
             ),
+            SizedBox(width: 10),
+            StreamBuilder(
+                stream: chatRoomStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    debugPrint(snapshot.error.toString());
+                    debugPrint("Error fetching chatroom preview");
+                    return SizedBox.shrink();
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+
+                  if (snapshot.data != null) {
+                    final previews = snapshot.data!;
+                    print(previews);
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.chatPartnerEmail,
+                        style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
+                      ),
+                      Text(
+                        mostRecentMessage != null ? mostRecentMessage.message : "Most recent message",
+                        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                      ),
+                    ],
+                  );
+                }),
             Spacer(),
             StreamBuilder<int>(
               stream: unreadCountStream,

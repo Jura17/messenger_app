@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:messenger_app/features/chat/data/models/chat_preview.dart';
 import 'package:messenger_app/features/chat/data/models/message.dart';
 import 'package:messenger_app/features/chat/data/provider/firestore_chat_api.dart';
 import 'package:messenger_app/features/chat/data/repositories/chat_repository.dart';
@@ -39,6 +40,10 @@ class FirestoreChatRepository implements ChatRepository {
 
       return count;
     });
+  }
+
+  Stream<List<ChatPreview>> watchChatroom(User? currentUser) {
+    return chatApi.watchChatroom(currentUser);
   }
 
   @override

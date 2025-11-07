@@ -7,20 +7,19 @@ import 'package:messenger_app/features/users/bloc/user_bloc.dart';
 
 import 'package:messenger_app/features/users/bloc/user_state.dart';
 
-import 'package:messenger_app/features/users/presentation/widgets/user_tile.dart';
+import 'package:messenger_app/features/users/presentation/widgets/chat_tile.dart';
 
-class UserListView extends StatefulWidget {
-  const UserListView({super.key});
+class ChatListView extends StatefulWidget {
+  const ChatListView({super.key});
 
   @override
-  State<UserListView> createState() => _UserListViewState();
+  State<ChatListView> createState() => _ChatListViewState();
 }
 
-class _UserListViewState extends State<UserListView> {
+class _ChatListViewState extends State<ChatListView> {
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;
-
     String? currentUserEmail;
 
     if (authState is Authenticated) {
@@ -47,8 +46,7 @@ class _UserListViewState extends State<UserListView> {
             children: state.permittedUsers.map<Widget>(
               (userData) {
                 if (userData.email == currentUserEmail) return SizedBox.shrink();
-                return UserTile(
-                  email: userData.email,
+                return ChatTile(
                   chatPartnerEmail: userData.email,
                   chatPartnerId: userData.uid,
                 );
