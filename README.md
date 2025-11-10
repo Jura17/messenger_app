@@ -1,3 +1,5 @@
-# messenger_app
+# Firebase Messenger App
 
-A new Flutter project.
+- a small messenger app inspired by Signal and WhatsApp
+- uses Firebase and Bloc 
+- more infos soon...

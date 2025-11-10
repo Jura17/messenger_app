@@ -4,8 +4,10 @@ import 'package:messenger_app/core/theme/theme_cubit.dart';
 
 import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
 import 'package:messenger_app/features/auth/bloc/auth_event.dart';
+import 'package:messenger_app/features/auth/bloc/auth_state.dart';
 import 'package:messenger_app/features/settings/presentation/screens/blocked_users_screen.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/settings_list_tile.dart';
+import 'package:messenger_app/features/settings/presentation/widgets/user_settings_tile.dart';
 
 import 'package:provider/provider.dart';
 
@@ -14,6 +16,13 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authBlocState = context.read<AuthBloc>().state;
+    String? currentUserEmail;
+
+    if (authBlocState is Authenticated) {
+      currentUserEmail = authBlocState.user.email;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -26,6 +35,8 @@ class SettingsScreen extends StatelessWidget {
         child: Column(
           spacing: 10,
           children: [
+            // Profile image, email address, display name, ...
+            UserSettingsTile(currentUserEmail: currentUserEmail),
             // Dark mode
             SettingsListTile(
               title: "Dark Mode",
@@ -48,7 +59,7 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ),
                 icon: Icon(
-                  Icons.arrow_forward_rounded,
+                  Icons.arrow_forward_ios_rounded,
                   color: Theme.of(context).colorScheme.inversePrimary,
                 ),
               ),
@@ -68,7 +79,7 @@ class SettingsScreen extends StatelessWidget {
               action: IconButton(
                 onPressed: () => accountDeletionRequest(context),
                 icon: Icon(
-                  Icons.arrow_forward_rounded,
+                  Icons.arrow_forward_ios_rounded,
                   color: Colors.white,
                 ),
               ),
