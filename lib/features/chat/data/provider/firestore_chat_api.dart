@@ -36,6 +36,7 @@ class FirestoreChatApi implements ChatApi {
 
     final currentUserId = currentUser.uid;
 
+    // create ChatPreview for each chatroom of current user
     return firestoreDb
         .collection('chatrooms')
         .where('participants', arrayContains: currentUserId)

@@ -9,6 +9,7 @@ import 'package:messenger_app/features/chat/data/models/message.dart';
 import 'package:messenger_app/features/chat/data/models/message_with_date_time_marker.dart';
 
 import 'package:messenger_app/features/chat/presentation/widgets/message_list_bubble.dart';
+import 'package:messenger_app/utils/format_chat_date.dart';
 
 class MessageList extends StatelessWidget {
   const MessageList({
@@ -68,14 +69,6 @@ class MessageList extends StatelessWidget {
         return SizedBox.shrink();
       },
     );
-  }
-
-  String formatChatDate(DateTime datetime) {
-    final now = DateTime.now();
-    final difference = now.difference(datetime).inDays;
-    if (difference == 0) return 'Today';
-    if (difference == 1) return 'Yesterday';
-    return DateFormat.MMMEd().format(datetime);
   }
 
   // decide if time & date needs to be shown in advance
