@@ -18,9 +18,11 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final authBlocState = context.read<AuthBloc>().state;
     String? currentUserEmail;
+    String? username;
 
     if (authBlocState is Authenticated) {
       currentUserEmail = authBlocState.user.email;
+      username = authBlocState.user.displayName;
     }
 
     return Scaffold(
@@ -36,7 +38,10 @@ class SettingsScreen extends StatelessWidget {
           spacing: 10,
           children: [
             // Profile image, email address, display name, ...
-            UserSettingsTile(currentUserEmail: currentUserEmail),
+            UserSettingsTile(
+              currentUserEmail: currentUserEmail,
+              username: username,
+            ),
             // Dark mode
             SettingsListTile(
               title: "Dark Mode",
@@ -119,7 +124,6 @@ class SettingsScreen extends StatelessWidget {
 
     if (confirm) {
       try {
-        Navigator.pop(context);
         context.read<AuthBloc>().add(DeletionRequested());
       } catch (e) {
         debugPrint("Deleting account failed: $e");

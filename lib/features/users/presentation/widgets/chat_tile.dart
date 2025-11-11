@@ -9,6 +9,7 @@ import 'package:messenger_app/features/chat/bloc/chat_event.dart';
 import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
 import 'package:messenger_app/features/chat/presentation/screens/chat_screen.dart';
 import 'package:messenger_app/utils/format_chat_date.dart';
+import 'package:messenger_app/utils/get_username_initials.dart';
 
 class ChatTile extends StatefulWidget {
   const ChatTile({
@@ -37,6 +38,7 @@ class _ChatTileState extends State<ChatTile> {
     final chatRepo = context.read<FirestoreChatRepository>();
 
     final currentUser = authRepo.getCurrentUser();
+    final usernameInitials = getUsernameInitials(widget.chatPartnerName);
 
     final Stream<int> unreadCountStream =
         context.watch<FirestoreChatRepository>().watchUnreadMessageCount(widget.chatPartnerId, currentUser);
@@ -73,23 +75,29 @@ class _ChatTileState extends State<ChatTile> {
                 shape: BoxShape.circle,
                 color: Theme.of(context).colorScheme.secondary,
               ),
-              child: Center(child: Text("TW")),
+              child: Center(child: Text(usernameInitials ?? "PH")),
             ),
             SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.chatPartnerName,
-                  style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
-                ),
-                Text(
-                  widget.lastMessageText,
-                  style: TextStyle(color: Theme.of(context).colorScheme.primary),
-                ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.chatPartnerName,
+                    style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
+                  ),
+                  Text(
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    widget.lastMessageText.isEmpty ? "No messages between you two yet." : widget.lastMessageText,
+                    style: widget.lastMessageText.isEmpty
+                        ? TextStyle(color: Theme.of(context).colorScheme.primary).copyWith(fontStyle: FontStyle.italic)
+                        : TextStyle(color: Theme.of(context).colorScheme.primary),
+                  ),
+                ],
+              ),
             ),
-            Spacer(),
             StreamBuilder<int>(
               stream: unreadCountStream,
               builder: (context, snapshot) {

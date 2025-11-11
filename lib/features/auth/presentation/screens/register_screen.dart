@@ -75,86 +75,90 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 _confirmPasswordController.text = state.confirmPassword;
               }
 
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "T a v e r n",
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
-                  const SizedBox(height: 50),
-                  Text(
-                    "Let's create an account",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontSize: 16,
+              return SafeArea(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 50),
+                    Text(
+                      "T a v e r n \n C h a t",
+                      style: Theme.of(context).textTheme.displayLarge,
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  const SizedBox(height: 25),
-                  SizedBox(height: 10),
-                  CustomTextfield(
-                    hintText: "Username",
-                    controller: _usernameController,
-                    onChanged: cubit.usernameChanged,
-                  ),
-                  SizedBox(height: 10),
-                  CustomTextfield(
-                    hintText: "Email",
-                    controller: _emailController,
-                    onChanged: cubit.emailChanged,
-                  ),
-                  SizedBox(height: 10),
-                  CustomTextfield(
-                    hintText: "Password",
-                    obscureText: true,
-                    controller: _passwordController,
-                    onChanged: cubit.passwordChanged,
-                  ),
-                  SizedBox(height: 10),
-                  CustomTextfield(
-                    hintText: "Confirm password",
-                    obscureText: true,
-                    controller: _confirmPasswordController,
-                    onChanged: cubit.confirmPasswordChanged,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
-                    child: SizedBox(
-                      height: 50,
-                      child: Text(
-                        maxLines: 2,
-                        errorText,
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.red),
+                    const SizedBox(height: 50),
+                    Text(
+                      "Let's create an account",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 16,
                       ),
                     ),
-                  ),
-                  CustomButton(
-                    text: state.status == SignUpStatus.loading ? "Loading..." : "Sign up",
-                    onTap: state.status == SignUpStatus.loading ? null : () => cubit.signUp(),
-                  ),
-                  const SizedBox(height: 25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Already a member? ",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
+                    const SizedBox(height: 25),
+                    SizedBox(height: 10),
+                    CustomTextfield(
+                      hintText: "Username",
+                      controller: _usernameController,
+                      onChanged: cubit.usernameChanged,
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextfield(
+                      hintText: "Email",
+                      controller: _emailController,
+                      onChanged: cubit.emailChanged,
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextfield(
+                      hintText: "Password",
+                      obscureText: true,
+                      controller: _passwordController,
+                      onChanged: cubit.passwordChanged,
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextfield(
+                      hintText: "Confirm password",
+                      obscureText: true,
+                      controller: _confirmPasswordController,
+                      onChanged: cubit.confirmPasswordChanged,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+                      child: SizedBox(
+                        height: 50,
+                        child: Text(
+                          maxLines: 2,
+                          errorText,
+                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.red),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: widget.onTap,
-                        child: Text(
-                          "Login now",
+                    ),
+                    CustomButton(
+                      text: state.status == SignUpStatus.loading ? "Loading..." : "Sign up",
+                      onTap: state.status == SignUpStatus.loading ? null : () => cubit.signUp(),
+                    ),
+                    const SizedBox(height: 25),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Already a member? ",
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        GestureDetector(
+                          onTap: widget.onTap,
+                          child: Text(
+                            "Login now",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               );
             },
           ),

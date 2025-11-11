@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:messenger_app/utils/get_username_initials.dart';
 
 class UserSettingsTile extends StatelessWidget {
   const UserSettingsTile({
     super.key,
     required this.currentUserEmail,
+    required this.username,
   });
 
   final String? currentUserEmail;
+  final String? username;
 
   @override
   Widget build(BuildContext context) {
+    final usernameInitials = getUsernameInitials(username);
+
     return GestureDetector(
       onTap: () {},
       child: Container(
@@ -29,14 +34,14 @@ class UserSettingsTile extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: Theme.of(context).colorScheme.tertiary,
               ),
-              child: Center(child: Text("TW")),
+              child: Center(child: Text(usernameInitials ?? "PH")),
             ),
             SizedBox(width: 15),
             Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Current User"),
+                Text(username ?? "Current User"),
                 Text(
                   currentUserEmail!,
                   style: TextStyle(
