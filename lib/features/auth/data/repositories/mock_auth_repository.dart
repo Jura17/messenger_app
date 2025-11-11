@@ -29,7 +29,7 @@ class MockAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<User> signUp(String email, String password) async {
+  Future<User> signUp({required email, required username, required password}) async {
     await Future.delayed(Duration(milliseconds: 50));
     if (shouldFail) throw SignUpWithEmailAndPasswordFailure('Invalid credentials');
     if (throwUnknownError) throw Exception('Something unexpected happened');

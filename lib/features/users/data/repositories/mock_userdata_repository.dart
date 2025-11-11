@@ -20,9 +20,9 @@ class MockUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Future<void> createUser(String uid, String email) async {
+  Future<void> createUser(String uid, String username, String email) async {
     await Future.delayed(Duration(milliseconds: 200));
-    _mockUserDb.add(Userdata(uid: uid, email: email));
+    _mockUserDb.add(Userdata(uid: uid, username: username, email: email));
     _emitUserUpdates();
   }
 

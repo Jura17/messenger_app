@@ -18,9 +18,9 @@ void main() {
     userBloc = UserBloc(authRepo: mockAuthRepo, userRepo: mockUserRepo);
 
     // Populate the mock DB
-    await mockUserRepo.createUser('main_uid', 'main@test.com');
-    await mockUserRepo.createUser('user_a', 'a@test.com');
-    await mockUserRepo.createUser('user_b', 'b@test.com');
+    await mockUserRepo.createUser('main_uid', 'mainUser', 'main@test.com');
+    await mockUserRepo.createUser('user_a', 'userA', 'a@test.com');
+    await mockUserRepo.createUser('user_b', 'userB', 'b@test.com');
 
     // Sign in a mock user
     await mockAuthRepo.signIn('main@test.com', '123456');

@@ -13,13 +13,13 @@ import 'package:messenger_app/utils/format_chat_date.dart';
 class ChatTile extends StatefulWidget {
   const ChatTile({
     super.key,
-    required this.chatPartnerEmail,
+    required this.chatPartnerName,
     required this.chatPartnerId,
     required this.lastMessageText,
     required this.lastMessageTimestamp,
   });
 
-  final String chatPartnerEmail;
+  final String chatPartnerName;
   final String chatPartnerId;
   final String lastMessageText;
   final Timestamp? lastMessageTimestamp;
@@ -53,7 +53,7 @@ class _ChatTileState extends State<ChatTile> {
                 return chatBloc;
               },
               child: ChatScreen(
-                chatPartnerEmail: widget.chatPartnerEmail,
+                chatPartnerEmail: widget.chatPartnerName,
                 chatPartnerId: widget.chatPartnerId,
               ),
             ),
@@ -80,7 +80,7 @@ class _ChatTileState extends State<ChatTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.chatPartnerEmail,
+                  widget.chatPartnerName,
                   style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
                 ),
                 Text(

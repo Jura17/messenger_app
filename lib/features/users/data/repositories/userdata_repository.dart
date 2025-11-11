@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 
 abstract class UserdataRepository {
-  Future<void> createUser(String uid, String email);
+  Future<void> createUser(String uid, String username, String email);
   Stream<List<Userdata>> getAllPermittedUsersStream(User? currentUser);
   Future<Userdata?> getUser(String uid);
   Future<void> updateLastLogin(String uid);

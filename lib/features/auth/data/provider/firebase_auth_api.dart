@@ -15,9 +15,10 @@ class FirebaseAuthApi implements AuthApi {
   }
 
   @override
-  Future<UserCredential> signUpWithEmailPassword(String email, String password) async {
+  Future<UserCredential> signUpWithEmailPassword({required email, required username, required password}) async {
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(email: email, password: password);
+      userCredential.user?.updateDisplayName(username);
       return userCredential;
     } on FirebaseAuthException {
       rethrow;

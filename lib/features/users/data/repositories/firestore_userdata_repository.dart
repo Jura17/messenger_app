@@ -12,8 +12,8 @@ class FirestoreUserdataRepository implements UserdataRepository {
   FirestoreUserdataRepository(this._userdataApi);
 
   @override
-  Future<void> createUser(String uid, String email) async {
-    await _userdataApi.createUser(uid, email);
+  Future<void> createUser(String uid, String username, String email) async {
+    await _userdataApi.createUser(uid, username, email);
   }
 
   @override

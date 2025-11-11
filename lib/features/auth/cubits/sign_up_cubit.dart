@@ -20,6 +20,7 @@ class SignUpCubit extends Cubit<SignUpState> {
         super(const SignUpState());
 
   void emailChanged(String value) => emit(state.copyWith(email: value, errorMessage: null));
+  void usernameChanged(String value) => emit(state.copyWith(username: value, errorMessage: null));
   void passwordChanged(String value) => emit(state.copyWith(password: value, errorMessage: null));
   void confirmPasswordChanged(String value) => emit(state.copyWith(confirmPassword: value, errorMessage: null));
 
@@ -43,8 +44,9 @@ class SignUpCubit extends Cubit<SignUpState> {
     emit(state.copyWith(status: SignUpStatus.loading, errorMessage: null));
 
     try {
-      User user = await _authRepo.signUp(state.email, state.password);
-      await _userdataRepo.createUser(user.uid, state.email);
+      User user = await _authRepo.signUp(email: state.email, username: state.username, password: state.password);
+
+      await _userdataRepo.createUser(user.uid, state.username, state.email);
       emit(state.copyWith(status: SignUpStatus.success));
     } on SignUpWithEmailAndPasswordFailure catch (e) {
       emit(state.copyWith(status: SignUpStatus.failure, errorMessage: e.message));

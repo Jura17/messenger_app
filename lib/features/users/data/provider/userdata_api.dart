@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 
 abstract class UserdataApi {
-  Future<void> createUser(String uid, String email);
+  Future<void> createUser(String uid, String username, String email);
   Stream<List<Map<String, dynamic>>> getAllUsersStream();
   Stream<List<String>> getBlockedUserIdsStream(User? currentUser);
   Future<Userdata?> getUser(String otherUserId);

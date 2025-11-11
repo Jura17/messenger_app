@@ -20,6 +20,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   late final TextEditingController _emailController;
+  late final TextEditingController _usernameController;
   late final TextEditingController _passwordController;
   late final TextEditingController _confirmPasswordController;
   String errorText = '';
@@ -28,6 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void initState() {
     super.initState();
     _emailController = TextEditingController();
+    _usernameController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
   }
@@ -35,6 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void dispose() {
     _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -88,6 +91,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(height: 25),
+                  SizedBox(height: 10),
+                  CustomTextfield(
+                    hintText: "Username",
+                    controller: _usernameController,
+                    onChanged: cubit.usernameChanged,
+                  ),
                   SizedBox(height: 10),
                   CustomTextfield(
                     hintText: "Email",

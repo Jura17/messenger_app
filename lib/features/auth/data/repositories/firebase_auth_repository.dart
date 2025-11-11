@@ -31,12 +31,12 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<User> signUp(String email, String password) async {
+  Future<User> signUp({required email, required username, required password}) async {
     email = email.trim();
 
     try {
-      UserCredential userCredential = await _authApi.signUpWithEmailPassword(email, password);
-
+      UserCredential userCredential =
+          await _authApi.signUpWithEmailPassword(email: email, username: username, password: password);
       return userCredential.user!;
     } on FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);

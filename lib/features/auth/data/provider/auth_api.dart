@@ -5,7 +5,7 @@ abstract class AuthApi {
 
   User? getCurrentUser();
   Future<UserCredential> signInWithEmailPassword(String email, String password);
-  Future<UserCredential> signUpWithEmailPassword(String email, String password);
+  Future<UserCredential> signUpWithEmailPassword({required email, required username, required password});
   Future<void> signOut();
   Future<void> deleteAccount();
 }

@@ -59,7 +59,7 @@ class _ChatListViewState extends State<ChatListView> {
                     if (userData.email == currentUser?.email) return SizedBox.shrink();
                     final preview = previewByPartner[userData.uid];
                     return ChatTile(
-                      chatPartnerEmail: userData.email,
+                      chatPartnerName: userData.username,
                       chatPartnerId: userData.uid,
                       lastMessageText: preview?.lastMessageText ?? '',
                       lastMessageTimestamp: preview?.lastMessageTimestamp,

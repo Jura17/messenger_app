@@ -11,8 +11,8 @@ class FirestoreUserdataApi implements UserdataApi {
   FirestoreUserdataApi(this.firestoreDb);
 
   @override
-  Future<void> createUser(String uid, String email) async {
-    final newUser = Userdata(uid: uid, email: email);
+  Future<void> createUser(String uid, String username, String email) async {
+    final newUser = Userdata(uid: uid, username: username, email: email);
     await firestoreDb.collection('users').doc(uid).set(newUser.toMap());
   }
 
