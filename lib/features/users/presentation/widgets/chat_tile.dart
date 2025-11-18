@@ -120,15 +120,15 @@ class _ChatTileState extends State<ChatTile> {
                     // show last message
                     if (widget.lastMessageTimestamp != null)
                       Text(formatChatDate(widget.lastMessageTimestamp!.toDate())),
-                    // show unread count as green circle
+                    // show unread count as highlighted circle
                     if (unreadCount != 0)
                       Container(
                         padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.lightGreen),
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).highlightColor),
                         child: Text(
                           snapshot.data.toString(),
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.tertiary,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

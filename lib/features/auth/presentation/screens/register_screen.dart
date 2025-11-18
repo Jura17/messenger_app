@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/cubits/sign_up_cubit.dart';
 import 'package:messenger_app/features/auth/cubits/sign_up_state.dart';
 import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
+import 'package:messenger_app/features/auth/presentation/widgets/app_title.dart';
 
 import 'package:messenger_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:messenger_app/features/auth/presentation/widgets/custom_textfield.dart';
@@ -51,7 +52,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         userdataRepo: context.read<FirestoreUserdataRepository>(),
       ),
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
         body: BlocListener<SignUpCubit, SignUpState>(
           // if error occurs show red text
           listener: (context, state) {
@@ -80,11 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(height: 50),
-                    Text(
-                      "T a v e r n \n C h a t",
-                      style: Theme.of(context).textTheme.displayLarge,
-                      textAlign: TextAlign.center,
-                    ),
+                    AppTitle(),
                     const SizedBox(height: 50),
                     Text(
                       "Let's create an account",

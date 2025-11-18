@@ -37,7 +37,6 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       User user = await _authRepo.signIn(state.email, state.password);
       await _userdataRepo.updateLastLogin(user.uid);
-      emit(state.copyWith(status: LoginStatus.success));
     } on LogInWithEmailAndPasswordFailure catch (e) {
       emit(state.copyWith(status: LoginStatus.failure, errorMessage: e.message));
     } catch (e) {

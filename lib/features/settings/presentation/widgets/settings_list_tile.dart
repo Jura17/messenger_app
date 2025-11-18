@@ -4,29 +4,25 @@ class SettingsListTile extends StatelessWidget {
   const SettingsListTile({
     super.key,
     required this.title,
-    required this.action,
-    required this.foregroundColor,
-    this.backgroundColor,
-    this.fontWeight,
-    this.wholeSurfaceTapable = false,
+    this.action,
+    this.onTap,
+    this.currentValue,
   });
 
   final String title;
-  final Widget action;
-  final Color foregroundColor;
-  final Color? backgroundColor;
-  final FontWeight? fontWeight;
-  final bool wholeSurfaceTapable;
+  final Widget? action;
+  final Function()? onTap;
+  final String? currentValue;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: wholeSurfaceTapable ? () => action : null,
+      onTap: onTap,
       child: Container(
-        height: 80,
+        height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: backgroundColor ?? Theme.of(context).colorScheme.secondary,
+          color: Theme.of(context).colorScheme.secondary,
         ),
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -34,9 +30,18 @@ class SettingsListTile extends StatelessWidget {
           children: [
             Text(
               title,
-              style: TextStyle(color: foregroundColor, fontWeight: fontWeight ?? FontWeight.normal),
+              style:
+                  Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.inversePrimary),
             ),
-            action
+            Spacer(),
+            if (currentValue != null) Text(currentValue!),
+            SizedBox(width: 10),
+            action ??
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                  size: 20,
+                ),
           ],
         ),
       ),

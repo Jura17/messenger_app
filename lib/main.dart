@@ -25,8 +25,8 @@ import 'package:messenger_app/main_app.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-// TODO: Don't show all registered users; show chatrooms/conversations of current user
-// TODO: add Search function to find users by email address or username
+// TODO: show chatrooms/conversations with actual contacts of current user
+// TODO: add Search function to filter chat list by email address or username
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

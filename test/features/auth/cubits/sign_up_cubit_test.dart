@@ -27,8 +27,6 @@ void main() {
         return [
           const SignUpState(
               email: 'test@mail.com', password: '123456', confirmPassword: '123456', status: SignUpStatus.loading),
-          const SignUpState(
-              email: 'test@mail.com', password: '123456', confirmPassword: '123456', status: SignUpStatus.success),
         ];
       },
     );

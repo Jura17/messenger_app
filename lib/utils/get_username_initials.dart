@@ -6,5 +6,5 @@ String? getUsernameInitials(String? username) {
   List<String> parts = username.split(' ');
   initals.add(parts[0][0]);
   if (parts.length > 1) initals.add(parts[parts.length - 1][0]);
-  return initals.join('');
+  return initals.join('').toUpperCase();
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:messenger_app/core/theme/theme_cubit.dart';
 
 import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
@@ -7,7 +8,7 @@ import 'package:messenger_app/features/auth/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/bloc/auth_state.dart';
 import 'package:messenger_app/features/settings/presentation/screens/blocked_users_screen.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/settings_list_tile.dart';
-import 'package:messenger_app/features/settings/presentation/widgets/user_settings_tile.dart';
+import 'package:messenger_app/features/settings/presentation/widgets/user_profile_header.dart';
 
 import 'package:provider/provider.dart';
 
@@ -34,66 +35,99 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          spacing: 10,
-          children: [
-            // Profile image, email address, display name, ...
-            UserSettingsTile(
-              currentUserEmail: currentUserEmail,
-              username: username,
-            ),
-            // Dark mode
-            SettingsListTile(
-              title: "Dark Mode",
-              action: CupertinoSwitch(
-                value: context.watch<ThemeCubit>().state == ThemeMode.dark ? true : false,
-                onChanged: (_) {
-                  context.read<ThemeCubit>().toggleTheme();
-                },
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
+            children: [
+              Align(
+                alignment: AlignmentGeometry.center,
+                child: UserProfileHeader(username: username, email: currentUserEmail),
               ),
-              foregroundColor: Theme.of(context).colorScheme.inversePrimary,
-            ),
-            // Blocked Users
-            SettingsListTile(
-              title: "Blocked Users",
-              action: IconButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BlockedUsersScreen(),
+              SizedBox(height: 40),
+              Row(
+                spacing: 5,
+                children: [
+                  Icon(
+                    Icons.person,
+                    color: Theme.of(context).highlightColor,
+                    size: 30,
                   ),
+                  Text(
+                    "User profile",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                ],
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
-                icon: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: Theme.of(context).colorScheme.inversePrimary,
+                child: Column(
+                  children: [
+                    SettingsListTile(
+                      title: "Username",
+                      onTap: () {},
+                      currentValue: username ?? "Current User",
+                    ),
+                    SettingsListTile(
+                      title: "Email",
+                      onTap: () {},
+                      currentValue: currentUserEmail,
+                    ),
+                    SettingsListTile(
+                      title: "Change password",
+                      onTap: () => debugPrint("Change password..."),
+                    ),
+                    SettingsListTile(
+                      title: "Blocked users",
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlockedUsersScreen(),
+                        ),
+                      ),
+                    ),
+                    SettingsListTile(
+                      title: "Logout",
+                      onTap: () => context.read<AuthBloc>().add(LogoutRequested()),
+                    ),
+                    SettingsListTile(
+                      title: "Delete account",
+                      onTap: () {
+                        accountDeletionRequest(context);
+                      },
+                    ),
+                  ],
                 ),
               ),
-              foregroundColor: Theme.of(context).colorScheme.inversePrimary,
-              wholeSurfaceTapable: true,
-            ),
-            SettingsListTile(
-              title: "Logout",
-              action: IconButton(
-                onPressed: () => context.read<AuthBloc>().add(LogoutRequested()),
-                icon: Icon(Icons.logout),
+              SizedBox(height: 40),
+              Row(
+                spacing: 5,
+                children: [
+                  Icon(
+                    Icons.color_lens,
+                    color: Theme.of(context).highlightColor,
+                    size: 30,
+                  ),
+                  Text(
+                    "App theme",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                ],
               ),
-              foregroundColor: Theme.of(context).colorScheme.inversePrimary,
-            ),
-            SettingsListTile(
-              title: "Delete Account",
-              action: IconButton(
-                onPressed: () => accountDeletionRequest(context),
-                icon: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: Colors.white,
+              // Dark mode
+              SettingsListTile(
+                title: "Dark Mode",
+                action: CupertinoSwitch(
+                  activeTrackColor: Theme.of(context).highlightColor,
+                  value: context.watch<ThemeCubit>().state == ThemeMode.dark ? true : false,
+                  onChanged: (_) => context.read<ThemeCubit>().toggleTheme(),
                 ),
               ),
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.red,
-              fontWeight: FontWeight.bold,
-              wholeSurfaceTapable: true,
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -104,6 +138,7 @@ class SettingsScreen extends StatelessWidget {
             context: context,
             builder: (context) {
               return AlertDialog(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
                 title: const Text("Confirm Delete"),
                 content: Text("This will delete your account permanently. Are you sure you want to proceed?"),
                 actions: [
@@ -115,7 +150,10 @@ class SettingsScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop(true);
                     },
-                    child: const Text("Delete"),
+                    child: const Text(
+                      "Delete",
+                      style: TextStyle(color: Colors.red),
+                    ),
                   ),
                 ],
               );

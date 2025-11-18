@@ -23,7 +23,6 @@ void main() {
           const LoginState(email: 'test@email.com', password: '', status: LoginStatus.initial),
           const LoginState(email: 'test@email.com', password: '123456', status: LoginStatus.initial),
           const LoginState(email: 'test@email.com', password: '123456', status: LoginStatus.loading),
-          const LoginState(email: 'test@email.com', password: '123456', status: LoginStatus.success),
         ];
       },
     );

@@ -61,7 +61,7 @@ class MessageListBubble extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                   color: isCurrentUser
-                      ? AppColors.lightGreen
+                      ? AppColors.highlight
                       : (isDarkMode ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.tertiary),
                   borderRadius: borderRadius),
               padding: EdgeInsets.all(10),

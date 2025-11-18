@@ -47,7 +47,6 @@ class SignUpCubit extends Cubit<SignUpState> {
       User user = await _authRepo.signUp(email: state.email, username: state.username, password: state.password);
 
       await _userdataRepo.createUser(user.uid, state.username, state.email);
-      emit(state.copyWith(status: SignUpStatus.success));
     } on SignUpWithEmailAndPasswordFailure catch (e) {
       emit(state.copyWith(status: SignUpStatus.failure, errorMessage: e.message));
     } catch (e) {

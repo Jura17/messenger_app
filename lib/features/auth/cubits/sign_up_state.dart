@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum SignUpStatus { initial, loading, success, failure }
+enum SignUpStatus { initial, loading, failure }
 
 class SignUpState extends Equatable {
   final String email;

@@ -25,6 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onAppStarted(AppStarted event, Emitter<AuthState> emit) async {
     return emit.onEach<User?>(
       _authRepo.onAuthChanged(),
+      // if Firebase says we have a user -> emit Authenticated
       onData: (user) => user != null ? emit(Authenticated(user)) : emit(Unauthenticated()),
       onError: (_, __) => AuthError("Error loading auth state"),
     );
@@ -45,7 +46,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _userRepo.deleteAccount(currentUser);
       await _authRepo.deleteAccount();
       emit(Unauthenticated());
-      print("test");
     } catch (e) {
       emit(AuthError(e.toString()));
     }
