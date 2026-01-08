@@ -35,7 +35,7 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Future<Userdata?> getUser(String otherUserId) async {
+  Future<Userdata?> getUserById(String otherUserId) async {
     final userDoc = await firestoreDb.collection('users').doc(otherUserId).get();
 
     if (userDoc.exists) {

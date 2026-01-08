@@ -5,7 +5,7 @@ abstract class UserdataApi {
   Future<void> createUser(String uid, String username, String email);
   Stream<List<Map<String, dynamic>>> getAllUsersStream();
   Stream<List<String>> getBlockedUserIdsStream(User? currentUser);
-  Future<Userdata?> getUser(String otherUserId);
+  Future<Userdata?> getUserById(String otherUserId);
   Future<void> updateLastLogin(String otherUserId);
   Future<void> blockUser(String uid, User? currentUser);
   Future<void> unblockUser(String uid, User? currentUser);

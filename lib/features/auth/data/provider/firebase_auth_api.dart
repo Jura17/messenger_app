@@ -18,7 +18,7 @@ class FirebaseAuthApi implements AuthApi {
   Future<UserCredential> signUpWithEmailPassword({required email, required username, required password}) async {
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(email: email, password: password);
-      userCredential.user?.updateDisplayName(username);
+      await userCredential.user?.updateDisplayName(username);
       return userCredential;
     } on FirebaseAuthException {
       rethrow;

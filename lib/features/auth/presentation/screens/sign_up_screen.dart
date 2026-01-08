@@ -10,16 +10,16 @@ import 'package:messenger_app/features/auth/presentation/widgets/custom_button.d
 import 'package:messenger_app/features/auth/presentation/widgets/custom_textfield.dart';
 import 'package:messenger_app/features/users/data/repositories/firestore_userdata_repository.dart';
 
-class RegisterScreen extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
   final void Function()? onTap;
 
-  const RegisterScreen({super.key, required this.onTap});
+  const SignUpScreen({super.key, required this.onTap});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   late final TextEditingController _emailController;
   late final TextEditingController _usernameController;
   late final TextEditingController _passwordController;
@@ -63,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           },
           child: BlocBuilder<SignUpCubit, SignUpState>(
             builder: (context, state) {
-              final cubit = context.read<SignUpCubit>();
+              final signUpCubit = context.read<SignUpCubit>();
 
               if (_emailController.text != state.email) {
                 _emailController.text = state.email;
@@ -94,27 +94,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     CustomTextfield(
                       hintText: "Username",
                       controller: _usernameController,
-                      onChanged: cubit.usernameChanged,
+                      onChanged: signUpCubit.usernameChanged,
                     ),
                     SizedBox(height: 10),
                     CustomTextfield(
                       hintText: "Email",
                       controller: _emailController,
-                      onChanged: cubit.emailChanged,
+                      onChanged: signUpCubit.emailChanged,
                     ),
                     SizedBox(height: 10),
                     CustomTextfield(
                       hintText: "Password",
                       obscureText: true,
                       controller: _passwordController,
-                      onChanged: cubit.passwordChanged,
+                      onChanged: signUpCubit.passwordChanged,
                     ),
                     SizedBox(height: 10),
                     CustomTextfield(
                       hintText: "Confirm password",
                       obscureText: true,
                       controller: _confirmPasswordController,
-                      onChanged: cubit.confirmPasswordChanged,
+                      onChanged: signUpCubit.confirmPasswordChanged,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
@@ -129,7 +129,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     CustomButton(
                       text: state.status == SignUpStatus.loading ? "Loading..." : "Sign up",
-                      onTap: state.status == SignUpStatus.loading ? null : () => cubit.signUp(),
+                      onTap: state.status == SignUpStatus.loading ? null : () => signUpCubit.signUp(),
                     ),
                     const SizedBox(height: 25),
                     Row(

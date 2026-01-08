@@ -20,8 +20,8 @@ final class UsersLoaded extends UserState {
 }
 
 final class UserActionSuccess extends UserState {
-  final String? text;
-  const UserActionSuccess([this.text]);
+  final String text;
+  const UserActionSuccess(this.text);
 
   @override
   List<Object?> get props => [text];

@@ -49,8 +49,8 @@ class FirestoreUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Future<Userdata?> getUser(String uid) {
-    return _userdataApi.getUser(uid);
+  Future<Userdata?> getUserById(String uid) {
+    return _userdataApi.getUserById(uid);
   }
 
   @override

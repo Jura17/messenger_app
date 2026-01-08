@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:messenger_app/core/theme/theme_cubit.dart';
 
@@ -9,6 +10,8 @@ import 'package:messenger_app/features/auth/bloc/auth_state.dart';
 import 'package:messenger_app/features/settings/presentation/screens/blocked_users_screen.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/settings_list_tile.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/user_profile_header.dart';
+import 'package:messenger_app/features/users/cubits/current_user_cubit.dart';
+import 'package:messenger_app/features/users/cubits/current_user_state.dart';
 
 import 'package:provider/provider.dart';
 
@@ -18,12 +21,18 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authBlocState = context.read<AuthBloc>().state;
+    final currentUserState = context.read<CurrentUserCubit>().state;
     String? currentUserEmail;
     String? username;
 
     if (authBlocState is Authenticated) {
       currentUserEmail = authBlocState.user.email;
-      username = authBlocState.user.displayName;
+    }
+
+    if (currentUserState is CurrentUserLoaded) {
+      username = currentUserState.currentUser.username;
+    } else {
+      print("state: ${currentUserState}");
     }
 
     return Scaffold(
@@ -33,101 +42,117 @@ class SettingsScreen extends StatelessWidget {
           style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 10,
-            children: [
-              Align(
-                alignment: AlignmentGeometry.center,
-                child: UserProfileHeader(username: username, email: currentUserEmail),
-              ),
-              SizedBox(height: 40),
-              Row(
-                spacing: 5,
-                children: [
-                  Icon(
-                    Icons.person,
-                    color: Theme.of(context).highlightColor,
-                    size: 30,
-                  ),
-                  Text(
-                    "User profile",
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                ],
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                child: Column(
-                  children: [
-                    SettingsListTile(
-                      title: "Username",
-                      onTap: () {},
-                      currentValue: username ?? "Current User",
-                    ),
-                    SettingsListTile(
-                      title: "Email",
-                      onTap: () {},
-                      currentValue: currentUserEmail,
-                    ),
-                    SettingsListTile(
-                      title: "Change password",
-                      onTap: () => debugPrint("Change password..."),
-                    ),
-                    SettingsListTile(
-                      title: "Blocked users",
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BlockedUsersScreen(),
+      body: Center(
+        child: BlocBuilder<CurrentUserCubit, CurrentUserState>(
+          builder: (context, state) {
+            if (state is CurrentUserLoading) {
+              return CircularProgressIndicator();
+            }
+            if (state is CurrentUserError) {
+              return Text(state.message);
+            }
+            if (state is CurrentUserLoaded) {
+              username = state.currentUser.username;
+              return Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 10,
+                    children: [
+                      Align(
+                        alignment: AlignmentGeometry.center,
+                        child: UserProfileHeader(username: username, email: currentUserEmail),
+                      ),
+                      SizedBox(height: 40),
+                      Row(
+                        spacing: 5,
+                        children: [
+                          Icon(
+                            Icons.person,
+                            color: Theme.of(context).highlightColor,
+                            size: 30,
+                          ),
+                          Text(
+                            "User profile",
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                        ],
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                        child: Column(
+                          children: [
+                            SettingsListTile(
+                              title: "Username",
+                              onTap: () {},
+                              currentValue: username ?? "Current User",
+                            ),
+                            SettingsListTile(
+                              title: "Email",
+                              onTap: () {},
+                              currentValue: currentUserEmail,
+                            ),
+                            SettingsListTile(
+                              title: "Change password",
+                              onTap: () => debugPrint("Change password..."),
+                            ),
+                            SettingsListTile(
+                              title: "Blocked users",
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BlockedUsersScreen(),
+                                ),
+                              ),
+                            ),
+                            SettingsListTile(
+                              title: "Logout",
+                              onTap: () => context.read<AuthBloc>().add(LogoutRequested()),
+                            ),
+                            SettingsListTile(
+                              title: "Delete account",
+                              onTap: () {
+                                accountDeletionRequest(context);
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    SettingsListTile(
-                      title: "Logout",
-                      onTap: () => context.read<AuthBloc>().add(LogoutRequested()),
-                    ),
-                    SettingsListTile(
-                      title: "Delete account",
-                      onTap: () {
-                        accountDeletionRequest(context);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 40),
-              Row(
-                spacing: 5,
-                children: [
-                  Icon(
-                    Icons.color_lens,
-                    color: Theme.of(context).highlightColor,
-                    size: 30,
+                      SizedBox(height: 40),
+                      Row(
+                        spacing: 5,
+                        children: [
+                          Icon(
+                            Icons.color_lens,
+                            color: Theme.of(context).highlightColor,
+                            size: 30,
+                          ),
+                          Text(
+                            "App theme",
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                        ],
+                      ),
+                      // Dark mode
+                      SettingsListTile(
+                        title: "Dark Mode",
+                        action: CupertinoSwitch(
+                          activeTrackColor: Theme.of(context).highlightColor,
+                          value: context.watch<ThemeCubit>().state == ThemeMode.dark ? true : false,
+                          onChanged: (_) => context.read<ThemeCubit>().toggleTheme(),
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    "App theme",
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                ],
-              ),
-              // Dark mode
-              SettingsListTile(
-                title: "Dark Mode",
-                action: CupertinoSwitch(
-                  activeTrackColor: Theme.of(context).highlightColor,
-                  value: context.watch<ThemeCubit>().state == ThemeMode.dark ? true : false,
-                  onChanged: (_) => context.read<ThemeCubit>().toggleTheme(),
                 ),
-              ),
-            ],
-          ),
+              );
+            }
+            return Text("Unknown error");
+          },
         ),
       ),
     );

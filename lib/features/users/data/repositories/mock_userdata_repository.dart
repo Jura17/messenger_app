@@ -60,7 +60,7 @@ class MockUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Future<Userdata?> getUser(String uid) async {
+  Future<Userdata?> getUserById(String uid) async {
     try {
       return _mockUserDb.firstWhere((user) => user.uid == uid);
     } catch (e) {
