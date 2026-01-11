@@ -112,4 +112,10 @@ class MockUserdataRepository implements UserdataRepository {
     // ==> Matches Firestore semeantics
     _allUsersStreamController.add(List.unmodifiable(_mockUserDb));
   }
+
+  @override
+  Future<String?> getProfileImage(String uid) {
+    // TODO: implement getProfileImage
+    throw UnimplementedError();
+  }
 }

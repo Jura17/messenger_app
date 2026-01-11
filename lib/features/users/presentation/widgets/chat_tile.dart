@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:messenger_app/core/theme/custom_colors.dart';
+
 import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
 import 'package:messenger_app/features/chat/bloc/chat_event.dart';
@@ -18,12 +18,14 @@ class ChatTile extends StatefulWidget {
     required this.chatPartnerId,
     required this.lastMessageText,
     required this.lastMessageTimestamp,
+    required this.profileImage,
   });
 
   final String chatPartnerName;
   final String chatPartnerId;
   final String lastMessageText;
   final Timestamp? lastMessageTimestamp;
+  final String profileImage;
 
   @override
   State<ChatTile> createState() => _ChatTileState();
@@ -32,6 +34,7 @@ class ChatTile extends StatefulWidget {
 class _ChatTileState extends State<ChatTile> {
   @override
   Widget build(BuildContext context) {
+    print(widget.profileImage);
     int unreadCount = 0;
 
     final authRepo = context.read<FirebaseAuthRepository>();
@@ -75,7 +78,15 @@ class _ChatTileState extends State<ChatTile> {
                 shape: BoxShape.circle,
                 color: Theme.of(context).colorScheme.secondary,
               ),
-              child: Center(child: Text(usernameInitials ?? "PH")),
+              child: Center(
+                child: widget.profileImage.isNotEmpty
+                    // TODO: make whole parent container a CircleAvatar?
+                    ? CircleAvatar(
+                        backgroundImage: NetworkImage(widget.profileImage),
+                        radius: 25,
+                      )
+                    : Text(usernameInitials ?? 'User'),
+              ),
             ),
             SizedBox(width: 10),
             Expanded(

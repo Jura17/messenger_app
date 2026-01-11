@@ -31,8 +31,6 @@ class SettingsScreen extends StatelessWidget {
 
     if (currentUserState is CurrentUserLoaded) {
       username = currentUserState.currentUser.username;
-    } else {
-      print("state: ${currentUserState}");
     }
 
     return Scaffold(

@@ -63,6 +63,7 @@ class _ChatListViewState extends State<ChatListView> {
                       chatPartnerId: userData.uid,
                       lastMessageText: preview?.lastMessageText ?? '',
                       lastMessageTimestamp: preview?.lastMessageTimestamp,
+                      profileImage: userData.profileImage,
                     );
                   },
                 ).toList(),

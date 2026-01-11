@@ -73,4 +73,10 @@ class FirestoreUserdataRepository implements UserdataRepository {
   Future<void> deleteAccount(User? currentUser) async {
     await _userdataApi.deleteAccount(currentUser);
   }
+
+  @override
+  Future<String?> getProfileImage(String uid) async {
+    final image = await _userdataApi.getProfileImage(uid);
+    return image;
+  }
 }

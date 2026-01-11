@@ -35,8 +35,8 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Future<Userdata?> getUserById(String otherUserId) async {
-    final userDoc = await firestoreDb.collection('users').doc(otherUserId).get();
+  Future<Userdata?> getUserById(String uid) async {
+    final userDoc = await firestoreDb.collection('users').doc(uid).get();
 
     if (userDoc.exists) {
       final data = userDoc.data();
@@ -65,4 +65,7 @@ class FirestoreUserdataApi implements UserdataApi {
   Future<void> deleteAccount(User? currentUser) async {
     await firestoreDb.collection('users').doc(currentUser!.uid).delete();
   }
+
+  @override
+  Future<String?> getProfileImage(String uid) async {}
 }

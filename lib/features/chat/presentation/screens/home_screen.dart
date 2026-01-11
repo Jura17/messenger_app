@@ -22,7 +22,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Chats")),
+      appBar: AppBar(
+        title: Text("Chats"),
+        actions: [
+          Container(
+            height: double.infinity,
+            width: 40,
+            decoration: BoxDecoration(shape: BoxShape.circle),
+          )
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
         child: ChatListView(),

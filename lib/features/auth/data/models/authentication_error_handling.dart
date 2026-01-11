@@ -24,6 +24,10 @@ class LogInWithEmailAndPasswordFailure implements Exception {
         return const LogInWithEmailAndPasswordFailure(
           'Email is not found, please create an account.',
         );
+      case 'network-request-failed':
+        return const LogInWithEmailAndPasswordFailure(
+          'A network error occurred.\nPlease check your internet connection.',
+        );
       case 'wrong-password':
         return const LogInWithEmailAndPasswordFailure(
           'Incorrect password, please try again.',
@@ -43,6 +47,7 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
   final String message;
 
   factory SignUpWithEmailAndPasswordFailure.fromCode(String code) {
+    print(code);
     switch (code) {
       case 'invalid-email':
         return const SignUpWithEmailAndPasswordFailure(
@@ -59,6 +64,10 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
       case 'operation-not-allowed':
         return const SignUpWithEmailAndPasswordFailure(
           'Operation is not allowed.  Please contact support.',
+        );
+      case 'network-request-failed':
+        return const SignUpWithEmailAndPasswordFailure(
+          'A network error occurred.\nPlease check your internet connection.',
         );
       case 'weak-password':
         return const SignUpWithEmailAndPasswordFailure(

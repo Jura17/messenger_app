@@ -80,7 +80,12 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.chatPartnerEmail),
+        title: Column(
+          children: [
+            Text(widget.chatPartnerEmail),
+            // Text(widget.lastSeen),
+          ],
+        ),
       ),
       body: SafeArea(
         child: Column(
