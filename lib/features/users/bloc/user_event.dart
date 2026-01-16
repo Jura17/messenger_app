@@ -26,3 +26,11 @@ final class UnblockUser extends UserEvent {
 }
 
 final class WatchUsers extends UserEvent {}
+
+final class WatchUserdata extends UserEvent {
+  final String uid;
+
+  const WatchUserdata(this.uid);
+  @override
+  List<Object?> get props => [uid];
+}

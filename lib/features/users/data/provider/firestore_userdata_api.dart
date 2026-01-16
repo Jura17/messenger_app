@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 import 'package:messenger_app/features/users/data/provider/userdata_api.dart';
@@ -53,6 +52,14 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
+  Stream<Userdata?> watchUserdata(String uid) {
+    return firestoreDb.collection('users').doc(uid).snapshots().map((doc) {
+      if (!doc.exists) return null;
+      return Userdata.fromMap(doc.data()!);
+    });
+  }
+
+  @override
   Future<void> updateOnlineStatus(String uid) async {
     Userdata? user = await getUserById(uid);
     if (user == null) {
@@ -61,7 +68,6 @@ class FirestoreUserdataApi implements UserdataApi {
     final updatedUser = user.copyWith(lastSeen: DateTime.now()).toMap();
     await firestoreDb.collection('users').doc(uid).set(updatedUser, SetOptions(merge: true));
     // shorter alternative: await firestoreDb.collection('users').doc(uid).update({'lastSeen': FieldValue.serverTimestamp()});
-    print("lastSeen run");
   }
 
   @override

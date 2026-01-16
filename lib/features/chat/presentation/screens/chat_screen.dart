@@ -7,6 +7,8 @@ import 'package:messenger_app/features/chat/data/repositories/firestore_chat_rep
 
 import 'package:messenger_app/features/chat/presentation/widgets/message_list.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/message_input.dart';
+import 'package:messenger_app/features/users/bloc/userdata_bloc.dart';
+import 'package:messenger_app/features/users/bloc/userdata_state.dart';
 
 class ChatScreen extends StatefulWidget with WidgetsBindingObserver {
   final String chatPartnerEmail;
@@ -90,6 +92,24 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         title: Column(
           children: [
             Text(widget.chatPartnerEmail),
+            BlocBuilder<UserdataBloc, UserdataState>(builder: (context, state) {
+              if (state is UserdataLoading) {
+                return Text("Loading user status...");
+              }
+              if (state is UserdataError) {
+                debugPrint(state.errorText);
+              }
+              if (state is UserdataLoaded) {
+                return Text(
+                  state.userdata!.lastSeen.toString(),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                );
+              }
+              return Text(
+                "Unknown user status error",
+                style: Theme.of(context).textTheme.bodyMedium,
+              );
+            }),
             Text(
               onlineStatus,
               style: Theme.of(context).textTheme.bodyMedium,

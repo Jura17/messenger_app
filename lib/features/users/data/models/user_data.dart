@@ -24,6 +24,7 @@ class Userdata {
       uid: map['uid'] as String,
       username: map['username'],
       email: map['email'] as String,
+      // TODO: check if unreadCount can be removed (bc it's handled by chatBloc)
       unreadCount: map['unreadCount'] ?? 0,
       profileImage: map['profileImage'] ?? '',
       /*

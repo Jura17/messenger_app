@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 import 'package:messenger_app/features/users/data/provider/firestore_userdata_api.dart';
@@ -51,6 +50,11 @@ class FirestoreUserdataRepository implements UserdataRepository {
   @override
   Future<Userdata?> getUserById(String uid) {
     return _userdataApi.getUserById(uid);
+  }
+
+  @override
+  Stream<Userdata?> watchUserStream(String uid) {
+    return _userdataApi.watchUserdata(uid);
   }
 
   @override

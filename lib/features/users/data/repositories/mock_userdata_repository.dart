@@ -126,4 +126,10 @@ class MockUserdataRepository implements UserdataRepository {
     // TODO: implement getProfileImage
     throw UnimplementedError();
   }
+
+  @override
+  Stream<Userdata?> watchUserStream(String uid) {
+    // TODO: implement watchUserStream
+    throw UnimplementedError();
+  }
 }

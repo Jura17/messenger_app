@@ -8,6 +8,9 @@ import 'package:messenger_app/features/chat/bloc/chat_event.dart';
 
 import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
 import 'package:messenger_app/features/chat/presentation/screens/chat_screen.dart';
+import 'package:messenger_app/features/users/bloc/userdata_bloc.dart';
+import 'package:messenger_app/features/users/bloc/userdata_event.dart';
+import 'package:messenger_app/features/users/data/repositories/firestore_userdata_repository.dart';
 import 'package:messenger_app/utils/format_chat_date.dart';
 import 'package:messenger_app/utils/get_username_initials.dart';
 
@@ -40,6 +43,7 @@ class _ChatTileState extends State<ChatTile> {
 
     final authRepo = context.read<FirebaseAuthRepository>();
     final chatRepo = context.read<FirestoreChatRepository>();
+    final userRepo = context.read<FirestoreUserdataRepository>();
 
     final currentUser = authRepo.getCurrentUser();
     final usernameInitials = getUsernameInitials(widget.chatPartnerName);
@@ -52,12 +56,19 @@ class _ChatTileState extends State<ChatTile> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) {
-                final chatBloc = ChatBloc(chatRepo: chatRepo, authRepo: authRepo);
-                chatBloc.add(WatchMessages(widget.chatPartnerId));
-                return chatBloc;
-              },
+            builder: (context) => MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (BuildContext context) {
+                  final chatBloc = ChatBloc(chatRepo: chatRepo, authRepo: authRepo);
+                  chatBloc.add(WatchMessages(widget.chatPartnerId));
+                  return chatBloc;
+                }),
+                BlocProvider(create: (BuildContext context) {
+                  final userdataBloc = UserdataBloc(userRepo: userRepo);
+                  userdataBloc.add(WatchUserdata(widget.chatPartnerId));
+                  return userdataBloc;
+                }),
+              ],
               child: ChatScreen(
                 chatPartnerEmail: widget.chatPartnerName,
                 chatPartnerId: widget.chatPartnerId,
