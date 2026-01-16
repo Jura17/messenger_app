@@ -41,4 +41,15 @@ class CurrentUserCubit extends Cubit<CurrentUserState> {
       emit(CurrentUserError(e.toString()));
     }
   }
+
+  Future<void> updateLastSeen() async {
+    final currentFirebaseUser = _authRepo.getCurrentUser();
+
+    if (currentFirebaseUser == null) {
+      emit(CurrentUserUnauthenticated());
+      return;
+    }
+
+    await _userdataRepo.updateLastSeen(currentFirebaseUser.uid);
+  }
 }

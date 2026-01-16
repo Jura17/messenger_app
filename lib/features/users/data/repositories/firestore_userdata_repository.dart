@@ -54,9 +54,8 @@ class FirestoreUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Future<void> updateLastLogin(String uid) async {
-    // TODO: implement updateLastLogin logic after adding property to userdata model
-    debugPrint("updateLastLogin from Api");
+  Future<void> updateLastSeen(String uid) async {
+    await _userdataApi.updateOnlineStatus(uid);
   }
 
   @override

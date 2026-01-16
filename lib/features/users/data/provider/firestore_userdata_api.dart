@@ -12,8 +12,15 @@ class FirestoreUserdataApi implements UserdataApi {
 
   @override
   Future<void> createUser(String uid, String username, String email) async {
-    final newUser = Userdata(uid: uid, username: username, email: email);
-    await firestoreDb.collection('users').doc(uid).set(newUser.toMap());
+    await firestoreDb.collection('users').doc(uid).set({
+      'uid': uid,
+      'username': username,
+      'email': email,
+      'profileImage': '',
+      'unreadCount': 0,
+      'createdAt': FieldValue.serverTimestamp(),
+      'lastSeen': FieldValue.serverTimestamp(),
+    });
   }
 
   @override
@@ -46,9 +53,15 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Future<void> updateLastLogin(String otherUserId) async {
-    // TODO: implement updateLastLogin logic after adding property to userdata model
-    debugPrint("updateLastLogin from Api");
+  Future<void> updateOnlineStatus(String uid) async {
+    Userdata? user = await getUserById(uid);
+    if (user == null) {
+      return;
+    }
+    final updatedUser = user.copyWith(lastSeen: DateTime.now()).toMap();
+    await firestoreDb.collection('users').doc(uid).set(updatedUser, SetOptions(merge: true));
+    // shorter alternative: await firestoreDb.collection('users').doc(uid).update({'lastSeen': FieldValue.serverTimestamp()});
+    print("lastSeen run");
   }
 
   @override

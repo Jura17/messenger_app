@@ -5,8 +5,18 @@ import 'package:messenger_app/core/theme/light_theme.dart';
 import 'package:messenger_app/core/theme/theme_cubit.dart';
 import 'package:messenger_app/features/auth/presentation/screens/auth_gate.dart';
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
+
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -22,7 +22,15 @@ class MockUserdataRepository implements UserdataRepository {
   @override
   Future<void> createUser(String uid, String username, String email) async {
     await Future.delayed(Duration(milliseconds: 200));
-    _mockUserDb.add(Userdata(uid: uid, username: username, email: email));
+    _mockUserDb.add(
+      Userdata(
+        uid: uid,
+        username: username,
+        email: email,
+        createdAt: DateTime.now(),
+        lastSeen: DateTime.now(),
+      ),
+    );
     _emitUserUpdates();
   }
 
@@ -70,7 +78,7 @@ class MockUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Future<void> updateLastLogin(String uid) async {
+  Future<void> updateLastSeen(String uid) async {
     // TODO: implement updateLastLogin logic after adding property to userdata model
     debugPrint("updateLastLogin from Api");
   }

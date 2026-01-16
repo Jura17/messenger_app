@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
 
 import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
@@ -7,21 +8,23 @@ import 'package:messenger_app/features/chat/data/repositories/firestore_chat_rep
 import 'package:messenger_app/features/chat/presentation/widgets/message_list.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/message_input.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatScreen extends StatefulWidget with WidgetsBindingObserver {
   final String chatPartnerEmail;
   final String chatPartnerId;
+  final DateTime lastSeen;
 
   const ChatScreen({
     super.key,
     required this.chatPartnerEmail,
     required this.chatPartnerId,
+    required this.lastSeen,
   });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
   bool _showScrollToBottom = false;
 
@@ -42,7 +45,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // only scroll if necessary
-  void scrollDown() {
+  void _scrollDown() {
     if (_scrollController.hasClients && _scrollController.position.maxScrollExtent > 0) {
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent + 100,
@@ -60,12 +63,11 @@ class _ChatScreenState extends State<ChatScreen> {
     Future.delayed(
       const Duration(milliseconds: 500),
       () {
-        scrollDown();
+        _scrollDown();
         if (mounted) {
           final currentUser = context.read<FirebaseAuthRepository>().getCurrentUser();
           context.read<FirestoreChatRepository>().markMessagesAsRead(widget.chatPartnerId, currentUser);
         }
-        ;
       },
     );
   }
@@ -73,17 +75,25 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final onlineStatus = DateTime.now().second - widget.lastSeen.second < 15
+        ? "online"
+        : "last seen at ${DateFormat.Hms().format(widget.lastSeen)}";
+
     return Scaffold(
       appBar: AppBar(
         title: Column(
           children: [
             Text(widget.chatPartnerEmail),
-            // Text(widget.lastSeen),
+            Text(
+              onlineStatus,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ],
         ),
       ),
@@ -97,7 +107,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             MessageInput(
-              scrollDown: scrollDown,
+              scrollDown: _scrollDown,
               receiverId: widget.chatPartnerId,
             )
           ],
@@ -105,7 +115,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       floatingActionButton: _showScrollToBottom
           ? GestureDetector(
-              onTap: scrollDown,
+              onTap: _scrollDown,
               child: Container(
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.only(bottom: 70),

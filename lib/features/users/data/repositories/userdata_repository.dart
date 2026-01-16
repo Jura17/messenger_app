@@ -6,7 +6,7 @@ abstract class UserdataRepository {
   Stream<List<Userdata>> getAllPermittedUsersStream(User? currentUser);
   Future<Userdata?> getUserById(String uid);
   Future<String?> getProfileImage(String uid);
-  Future<void> updateLastLogin(String uid);
+  Future<void> updateLastSeen(String uid);
   Stream<List<Userdata>> getBlockedUsersStream(User? currentUser);
   Future<void> blockUser(String otherUserId, User? currentUser);
   Future<void> unblockUser(String otherUserId, User? currentUser);

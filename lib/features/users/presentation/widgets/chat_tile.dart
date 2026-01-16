@@ -19,12 +19,14 @@ class ChatTile extends StatefulWidget {
     required this.lastMessageText,
     required this.lastMessageTimestamp,
     required this.profileImage,
+    required this.lastSeen,
   });
 
   final String chatPartnerName;
   final String chatPartnerId;
   final String lastMessageText;
   final Timestamp? lastMessageTimestamp;
+  final DateTime lastSeen;
   final String profileImage;
 
   @override
@@ -34,7 +36,6 @@ class ChatTile extends StatefulWidget {
 class _ChatTileState extends State<ChatTile> {
   @override
   Widget build(BuildContext context) {
-    print(widget.profileImage);
     int unreadCount = 0;
 
     final authRepo = context.read<FirebaseAuthRepository>();
@@ -60,6 +61,7 @@ class _ChatTileState extends State<ChatTile> {
               child: ChatScreen(
                 chatPartnerEmail: widget.chatPartnerName,
                 chatPartnerId: widget.chatPartnerId,
+                lastSeen: widget.lastSeen,
               ),
             ),
           ),

@@ -7,7 +7,7 @@ abstract class UserdataApi {
   Stream<List<String>> getBlockedUserIdsStream(User? currentUser);
   Future<Userdata?> getUserById(String otherUserId);
   Future<String?> getProfileImage(String uid);
-  Future<void> updateLastLogin(String otherUserId);
+  Future<void> updateOnlineStatus(String uid);
   Future<void> blockUser(String uid, User? currentUser);
   Future<void> unblockUser(String uid, User? currentUser);
   Future<void> deleteAccount(User? currentUser);
