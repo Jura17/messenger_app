@@ -61,10 +61,6 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
           }
           return Text("Unknown error");
         }),
-        // Text(
-        //   widget.username ?? "Current User",
-        //   style: Theme.of(context).textTheme.displaySmall,
-        // ),
         Text(widget.email!, style: Theme.of(context).textTheme.bodyLarge),
       ],
     );

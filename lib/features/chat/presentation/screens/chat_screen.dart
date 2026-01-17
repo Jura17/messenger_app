@@ -13,13 +13,11 @@ import 'package:messenger_app/features/users/bloc/userdata_state.dart';
 class ChatScreen extends StatefulWidget with WidgetsBindingObserver {
   final String chatPartnerEmail;
   final String chatPartnerId;
-  final DateTime lastSeen;
 
   const ChatScreen({
     super.key,
     required this.chatPartnerEmail,
     required this.chatPartnerId,
-    required this.lastSeen,
   });
 
   @override
@@ -29,6 +27,7 @@ class ChatScreen extends StatefulWidget with WidgetsBindingObserver {
 class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
   bool _showScrollToBottom = false;
+  String onlineStatus = "online";
 
   void _scrollListener() {
     final maxScroll = _scrollController.position.maxScrollExtent;
@@ -83,10 +82,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final onlineStatus = DateTime.now().second - widget.lastSeen.second < 15
-        ? "online"
-        : "last seen at ${DateFormat.Hms().format(widget.lastSeen)}";
-
     return Scaffold(
       appBar: AppBar(
         title: Column(
@@ -100,8 +95,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 debugPrint(state.errorText);
               }
               if (state is UserdataLoaded) {
+                final lastSeen = state.userdata!.lastSeen;
+
+                onlineStatus = DateTime.now().second - lastSeen.second < 5
+                    ? "online"
+                    : "last seen at ${DateFormat.Hms().format(lastSeen)}";
+
                 return Text(
-                  state.userdata!.lastSeen.toString(),
+                  onlineStatus,
                   style: Theme.of(context).textTheme.bodyMedium,
                 );
               }
@@ -110,10 +111,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 style: Theme.of(context).textTheme.bodyMedium,
               );
             }),
-            Text(
-              onlineStatus,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
           ],
         ),
       ),
@@ -129,7 +126,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             MessageInput(
               scrollDown: _scrollDown,
               receiverId: widget.chatPartnerId,
-            )
+            ),
+            SizedBox(height: 10),
           ],
         ),
       ),

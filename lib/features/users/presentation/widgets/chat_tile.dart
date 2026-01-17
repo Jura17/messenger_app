@@ -72,7 +72,6 @@ class _ChatTileState extends State<ChatTile> {
               child: ChatScreen(
                 chatPartnerEmail: widget.chatPartnerName,
                 chatPartnerId: widget.chatPartnerId,
-                lastSeen: widget.lastSeen,
               ),
             ),
           ),

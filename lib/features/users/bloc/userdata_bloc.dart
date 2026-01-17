@@ -14,8 +14,21 @@ class UserdataBloc extends Bloc<UserdataEvent, UserdataState> {
     on<WatchUserdata>(_onWatchUserdata);
   }
 
+  @override
+  void onChange(Change<UserdataState> change) {
+    print(change);
+    super.onChange(change);
+  }
+
+  @override
+  Future<void> close() {
+    print("CLOSED");
+    return super.close();
+  }
+
   Future<void> _onWatchUserdata(WatchUserdata event, Emitter<UserdataState> emit) async {
     emit(UserdataLoading());
+    print("on watch");
     return emit.forEach<Userdata?>(
       _userRepo.watchUserStream(event.uid),
       onData: (userdata) => UserdataLoaded(userdata),
