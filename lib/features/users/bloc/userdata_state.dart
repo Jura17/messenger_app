@@ -16,6 +16,9 @@ final class UserdataLoaded extends UserdataState {
   final Userdata? userdata;
 
   const UserdataLoaded(this.userdata);
+
+  @override
+  List<Object?> get props => [userdata];
 }
 
 final class UserdataError extends UserdataState {

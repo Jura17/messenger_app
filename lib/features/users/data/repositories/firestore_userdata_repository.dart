@@ -58,8 +58,8 @@ class FirestoreUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Future<void> updateLastSeen(String uid) async {
-    await _userdataApi.updateOnlineStatus(uid);
+  Future<void> updateOnlineStatus(String uid, bool onlineStatus) async {
+    await _userdataApi.updateOnlineStatus(uid, onlineStatus);
   }
 
   @override
@@ -79,7 +79,7 @@ class FirestoreUserdataRepository implements UserdataRepository {
 
   @override
   Future<String?> getProfileImage(String uid) async {
-    final image = await _userdataApi.getProfileImage(uid);
-    return image;
+    // TODO: add getProfileImage logic
+    return null;
   }
 }

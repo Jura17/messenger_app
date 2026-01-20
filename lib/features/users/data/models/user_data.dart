@@ -8,6 +8,7 @@ class Userdata {
   final String profileImage;
   final DateTime createdAt;
   final DateTime lastSeen;
+  final bool isOnline;
 
   Userdata({
     required this.uid,
@@ -17,6 +18,7 @@ class Userdata {
     this.profileImage = '',
     required this.createdAt,
     required this.lastSeen,
+    this.isOnline = true,
   });
 
   factory Userdata.fromMap(Map<String, dynamic> map) {
@@ -24,16 +26,12 @@ class Userdata {
       uid: map['uid'] as String,
       username: map['username'],
       email: map['email'] as String,
-      // TODO: check if unreadCount can be removed (bc it's handled by chatBloc)
+      // TODO: check if unreadCount can be removed (handled by chatBloc already?)
       unreadCount: map['unreadCount'] ?? 0,
       profileImage: map['profileImage'] ?? '',
-      /*
-      - Firestore returns Timestamp, so we need to convert it 
-      - using "as DateTime" does NOT convert anything, 
-      - 'as DateTime' just tells Dart "Hey, this is a DateTime object, trust me..." even if it's not
-      */
       createdAt: (map['createdAt'] as Timestamp).toDate(),
       lastSeen: (map['lastSeen'] as Timestamp).toDate(),
+      isOnline: map['isOnline'],
     );
   }
 
@@ -45,10 +43,11 @@ class Userdata {
       'profileImage': profileImage,
       'lastSeen': Timestamp.fromDate(lastSeen),
       'createdAt': Timestamp.fromDate(createdAt),
+      'isOnline': isOnline,
     };
   }
 
-  Userdata copyWith({int? unreadCount, String? profileImage, DateTime? lastSeen}) {
+  Userdata copyWith({int? unreadCount, String? profileImage, DateTime? lastSeen, bool? isOnline}) {
     return Userdata(
       uid: uid,
       username: username,
@@ -57,6 +56,7 @@ class Userdata {
       profileImage: profileImage ?? this.profileImage,
       createdAt: createdAt,
       lastSeen: lastSeen ?? this.lastSeen,
+      isOnline: isOnline ?? this.isOnline,
     );
   }
 }

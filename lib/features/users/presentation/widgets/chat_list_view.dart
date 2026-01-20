@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
-import 'package:messenger_app/features/auth/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/bloc/auth_state.dart';
 import 'package:messenger_app/features/chat/data/models/chat_preview.dart';
 import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
@@ -25,8 +24,6 @@ class _ChatListViewState extends State<ChatListView> {
     final authState = context.watch<AuthBloc>().state;
     final currentUser = authState is Authenticated ? authState.user : null;
     final previewsStream = context.read<FirestoreChatRepository>().watchChatroom(currentUser);
-
-    // context.read<AuthBloc>().add(LogoutRequested());
 
     return StreamBuilder(
       stream: previewsStream,

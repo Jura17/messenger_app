@@ -60,14 +60,19 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Future<void> updateOnlineStatus(String uid) async {
+  Future<void> updateOnlineStatus(String uid, bool isOnline) async {
     Userdata? user = await getUserById(uid);
+    Map<String, dynamic> updatedUser;
     if (user == null) {
       return;
     }
-    final updatedUser = user.copyWith(lastSeen: DateTime.now()).toMap();
+    // if isOnline is true -> update only the bool, if false -> update also the lastSeen timestamp
+    if (isOnline) {
+      updatedUser = user.copyWith(isOnline: isOnline).toMap();
+    } else {
+      updatedUser = user.copyWith(lastSeen: DateTime.now(), isOnline: isOnline).toMap();
+    }
     await firestoreDb.collection('users').doc(uid).set(updatedUser, SetOptions(merge: true));
-    // shorter alternative: await firestoreDb.collection('users').doc(uid).update({'lastSeen': FieldValue.serverTimestamp()});
   }
 
   @override
@@ -86,5 +91,8 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Future<String?> getProfileImage(String uid) async {}
+  Future<String?> getProfileImage(String uid) async {
+    // TODO: add getProfileImage logic
+    return null;
+  }
 }

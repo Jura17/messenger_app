@@ -21,9 +21,11 @@ class _NavigationScaffoldState extends State<NavigationScaffold> with WidgetsBin
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed || state == AppLifecycleState.paused) {
-      print("update");
-      context.read<CurrentUserCubit>().updateLastSeen();
+    if (state == AppLifecycleState.resumed) {
+      context.read<CurrentUserCubit>().updateOnlineStatus(true);
+    }
+    if (state == AppLifecycleState.paused) {
+      context.read<CurrentUserCubit>().updateOnlineStatus(false);
     }
   }
 

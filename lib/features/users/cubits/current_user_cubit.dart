@@ -42,7 +42,7 @@ class CurrentUserCubit extends Cubit<CurrentUserState> {
     }
   }
 
-  Future<void> updateLastSeen() async {
+  Future<void> updateOnlineStatus(bool onlineStatus) async {
     final currentFirebaseUser = _authRepo.getCurrentUser();
 
     if (currentFirebaseUser == null) {
@@ -50,6 +50,6 @@ class CurrentUserCubit extends Cubit<CurrentUserState> {
       return;
     }
 
-    await _userdataRepo.updateLastSeen(currentFirebaseUser.uid);
+    await _userdataRepo.updateOnlineStatus(currentFirebaseUser.uid, onlineStatus);
   }
 }
