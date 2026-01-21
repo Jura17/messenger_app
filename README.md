@@ -2,12 +2,12 @@
 
 A Flutter-based messaging application built with Firebase Authentication, Cloud Firestore, and the BLoC state management pattern. The project is structured around a modular feature-based architecture, providing clear separation between authentication, chat, user management, settings, notifications, and theming.
 
-This repository represents an in-progress messaging platform. It currently supports core functionality such as account creation, login, chat messaging, and user blocking. Future iterations will integrate contact-based discovery so users can chat with people from their phone address book who also use the app.
+This repository represents an in-progress messaging platform. It currently supports core functionality such as account creation, login, chat messaging, message reporting and user blocking. It also shows the chat partner's current online status or the last time they were online. Future iterations will integrate profile pictures so users can upload an image from their gallery via an image picker. Also planned: A contact-based discovery so users can chat with people from their phone address book who also use the app.
 
 ## Features
 
 ### Authentication
-- Create an account using username, email, and password (phone number authentication planned for later versions).
+- Create an account using username, email, and password (might be replaced with phone number authentication in later versions).
 - Log in and log out.
 - Delete an account.
 - Real-time authentication state handling via Firebase Auth and AuthBloc.
@@ -26,8 +26,8 @@ This repository represents an in-progress messaging platform. It currently suppo
 ### Chat
 - One-to-one messaging built on top of Cloud Firestore.
 - Real-time updates for new messages and unread message counts.
-- Message timestamps, date grouping, and read indicators.
-- Displays all users for now, but will later show only contacts who use the app.
+- Message timestamps, date grouping, and online status/"last time online at"
+- Displays all users for now, but will later show only contacts who use the app
 
 <table>
 <tr>
@@ -41,15 +41,16 @@ This repository represents an in-progress messaging platform. It currently suppo
 <p></p>
 
 ### User Management
-- Fetch user data from Firestore.
-- Display users in the chat list.
-- Block and unblock users.
-- User profiles with name and email.
+- Fetch user data from Firestore
+- Display users in the chat list
+- Block and unblock users
+- Report messages
+- User profiles with name and email
 
 ### Settings
-- Adjustable theme (light and dark mode).
-- User profile screen including username and email.
-- Section for blocked users.
+- Adjustable theme (light and dark mode)
+- User profile screen including username and email
+- Section for blocked users
 
 <table>
 <tr>
@@ -63,11 +64,11 @@ This repository represents an in-progress messaging platform. It currently suppo
 <p></p>
 
 ### Theming and UI
-- Custom theme configuration (light and dark themes).
-- Centralized color definitions.
-- Reusable widgets such as input fields, buttons, tiles, and list views.
-- Scaffold with drawer navigation.
-- Clean feature-based architecture.
+- Custom theme configuration (light and dark themes)
+- Centralized color definitions
+- Reusable widgets such as input fields, buttons, tiles, and list views
+- Scaffold with drawer navigation
+- Clean feature-based architecture
 
 ## Project Structure
 
@@ -135,13 +136,13 @@ This approach improves code organization, scalability, and testability as the ap
 3. Run the application  
    `flutter run`
 
-Ensure that your Firebase project is correctly linked before running the app.
+Ensure that your Firebase project is correctly linked before running the app
 
 ## Future Plans
 
-- Profile customization.
-- Media sharing (images, videos).
-- Group chats.
-- Replace email/password login with phone number authentication.
-- Contact discovery to show only users from the device address book.
-- Push notifications for messages.
+- Profile customization
+- Media sharing (images, videos)
+- Group chats
+- Replace email/password login with phone number authentication
+- Contact discovery to show only users from the device address book
+- Push notifications for messages

@@ -99,7 +99,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 final lastSeen = state.userdata!.lastSeen;
 
                 if (!isOnline) {
-                  onlineStatus = "last seen at ${DateFormat.Hms().format(lastSeen)}";
+                  onlineStatus = "last seen at ${DateFormat.Hm().format(lastSeen)}";
                 } else {
                   onlineStatus = "online";
                 }

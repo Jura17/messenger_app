@@ -13,8 +13,6 @@ import 'package:messenger_app/features/settings/presentation/widgets/user_profil
 import 'package:messenger_app/features/users/cubits/current_user_cubit.dart';
 import 'package:messenger_app/features/users/cubits/current_user_state.dart';
 
-import 'package:provider/provider.dart';
-
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
@@ -47,6 +45,7 @@ class SettingsScreen extends StatelessWidget {
               return CircularProgressIndicator();
             }
             if (state is CurrentUserError) {
+              debugPrint(state.message);
               return Text(state.message);
             }
             if (state is CurrentUserLoaded) {
@@ -109,7 +108,10 @@ class SettingsScreen extends StatelessWidget {
                             ),
                             SettingsListTile(
                               title: "Logout",
-                              onTap: () => context.read<AuthBloc>().add(LogoutRequested()),
+                              onTap: () {
+                                context.read<CurrentUserCubit>().updateOnlineStatus(false);
+                                context.read<AuthBloc>().add(LogoutRequested());
+                              },
                             ),
                             SettingsListTile(
                               title: "Delete account",

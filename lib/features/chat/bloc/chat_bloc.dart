@@ -26,7 +26,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(ChatLoading());
     await emit.forEach<List<Message>>(
       _chatRepo.watchChatroomMessages(event.chatPartnerId, _authRepo.getCurrentUser()),
-      onData: (messages) => ChatLoaded(messages),
+      onData: (messages) {
+        return ChatLoaded(messages);
+      },
       onError: (error, stackTrace) => ChatError(error.toString()),
     );
   }

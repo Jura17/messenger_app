@@ -19,6 +19,7 @@ class FirestoreUserdataApi implements UserdataApi {
       'unreadCount': 0,
       'createdAt': FieldValue.serverTimestamp(),
       'lastSeen': FieldValue.serverTimestamp(),
+      'isOnline': true,
     });
   }
 

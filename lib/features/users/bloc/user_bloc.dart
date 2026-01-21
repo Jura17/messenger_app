@@ -54,7 +54,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         Rx.combineLatest2<List<Userdata>, List<Userdata>, UsersLoaded>(
           permittedStream,
           blockedStream,
-          (permitted, blocked) => UsersLoaded(permitted, blocked),
+          (permitted, blocked) {
+            return UsersLoaded(permitted, blocked);
+          },
         ),
         onData: (state) => state,
         onError: (error, stackTrace) => UserError(error.toString()),

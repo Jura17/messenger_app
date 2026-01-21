@@ -60,10 +60,11 @@ class MessageListBubble extends StatelessWidget {
             constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.66),
             child: Container(
               decoration: BoxDecoration(
-                  color: isCurrentUser
-                      ? AppColors.highlight
-                      : (isDarkMode ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.tertiary),
-                  borderRadius: borderRadius),
+                color: isCurrentUser
+                    ? AppColors.highlight
+                    : (isDarkMode ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.tertiary),
+                borderRadius: borderRadius,
+              ),
               padding: EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -138,7 +139,13 @@ class MessageListBubble extends StatelessWidget {
               context.read<ChatBloc>().add(ReportMessage(userId, messageId));
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Message reported.")),
+                const SnackBar(
+                  content: Text(
+                    "Message reported.",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: AppColors.highlight,
+                ),
               );
             },
             child: const Text("Report"),

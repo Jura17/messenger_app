@@ -2,7 +2,7 @@ import 'dart:ui';
 
 class AppColors {
   // light theme
-  static const Color highlight = Color.fromRGBO(237, 171, 158, 1);
+  static const Color highlight = Color.fromRGBO(209, 151, 140, 1);
   static const Color lightAppBackground = Color.fromRGBO(255, 238, 235, 1);
   static const Color secondaryLight = Color.fromRGBO(236, 207, 201, 1);
   static const Color tertiaryLight = Color.fromRGBO(242, 221, 217, 1);

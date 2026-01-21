@@ -15,7 +15,7 @@ class CustomButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: Material(
-        color: Theme.of(context).colorScheme.secondary,
+        color: Theme.of(context).highlightColor,
         borderRadius: BorderRadius.circular(8),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
