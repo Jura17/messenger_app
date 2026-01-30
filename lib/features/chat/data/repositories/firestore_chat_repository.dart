@@ -42,6 +42,12 @@ class FirestoreChatRepository implements ChatRepository {
     });
   }
 
+  @override
+  Future<void> sendMessage(String chatPartnerId, String message, User? currentUser) async {
+    await chatApi.sendMessage(chatPartnerId, message, currentUser);
+  }
+
+  @override
   Stream<List<ChatPreview>> watchChatroom(User? currentUser) {
     return chatApi.watchChatroom(currentUser);
   }
@@ -54,10 +60,5 @@ class FirestoreChatRepository implements ChatRepository {
   @override
   Future<void> reportMessage(String messageId, String chatPartnerId, User? currentUser) async {
     await chatApi.reportMessage(messageId, chatPartnerId, currentUser);
-  }
-
-  @override
-  Future<void> sendMessage(String chatPartnerId, String message, User? currentUser) async {
-    await chatApi.sendMessage(chatPartnerId, message, currentUser);
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
+import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
 
-import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
+import 'package:messenger_app/features/chat/data/repositories/chat_repository.dart';
 
 import 'package:messenger_app/features/chat/presentation/widgets/message_list.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/message_input.dart';
@@ -59,16 +59,17 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    final authRepo = context.read<AuthRepository>();
+    final chatRepo = context.read<ChatRepository>();
     _scrollController.addListener(_scrollListener);
 
     Future.delayed(
       const Duration(milliseconds: 500),
       () {
         _scrollDown();
-        if (mounted) {
-          final currentUser = context.read<FirebaseAuthRepository>().getCurrentUser();
-          context.read<FirestoreChatRepository>().markMessagesAsRead(widget.chatPartnerId, currentUser);
-        }
+
+        final currentUser = authRepo.getCurrentUser();
+        chatRepo.markMessagesAsRead(widget.chatPartnerId, currentUser);
       },
     );
   }

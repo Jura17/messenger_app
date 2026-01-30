@@ -79,7 +79,6 @@ class MockUserdataRepository implements UserdataRepository {
 
   @override
   Future<void> updateOnlineStatus(String uid, bool onlineStatus) async {
-    // TODO: implement updateLastLogin logic after adding property to userdata model
     debugPrint("updateLastLogin from Api");
   }
 

@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
 
-import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
 import 'package:messenger_app/features/chat/bloc/chat_event.dart';
+import 'package:messenger_app/features/chat/data/repositories/chat_repository.dart';
 
-import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
 import 'package:messenger_app/features/chat/presentation/screens/chat_screen.dart';
 import 'package:messenger_app/features/users/bloc/userdata_bloc.dart';
 import 'package:messenger_app/features/users/bloc/userdata_event.dart';
-import 'package:messenger_app/features/users/data/repositories/firestore_userdata_repository.dart';
+
+import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
 import 'package:messenger_app/utils/format_chat_date.dart';
 import 'package:messenger_app/utils/get_username_initials.dart';
 
@@ -41,15 +42,15 @@ class _ChatTileState extends State<ChatTile> {
   Widget build(BuildContext context) {
     int unreadCount = 0;
 
-    final authRepo = context.read<FirebaseAuthRepository>();
-    final chatRepo = context.read<FirestoreChatRepository>();
-    final userRepo = context.read<FirestoreUserdataRepository>();
+    final authRepo = context.read<AuthRepository>();
+    final chatRepo = context.read<ChatRepository>();
+    final userRepo = context.read<UserdataRepository>();
 
     final currentUser = authRepo.getCurrentUser();
     final usernameInitials = getUsernameInitials(widget.chatPartnerName);
 
     final Stream<int> unreadCountStream =
-        context.watch<FirestoreChatRepository>().watchUnreadMessageCount(widget.chatPartnerId, currentUser);
+        context.watch<ChatRepository>().watchUnreadMessageCount(widget.chatPartnerId, currentUser);
 
     return GestureDetector(
       onTap: () async {

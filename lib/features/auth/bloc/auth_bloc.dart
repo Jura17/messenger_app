@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/bloc/auth_state.dart';
+
 import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
 
 import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
@@ -19,6 +21,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AppStarted>(_onAppStarted);
     on<LogoutRequested>(_onLogoutRequested);
     on<DeletionRequested>(_onDeletionRequested);
+    on<ReauthenticationDoneOrCancelled>(_onReauthentcationDoneOrCancelled);
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    print('$error, $stackTrace');
+    super.onError(error, stackTrace);
   }
 
   // Event handlers
@@ -35,6 +44,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       await _authRepo.logout();
       emit(Unauthenticated());
+    } on FirebaseAuthException catch (e) {
+      emit(AuthError(e.message ?? 'Logout failed'));
     } catch (e) {
       emit(AuthError(e.toString()));
     }
@@ -42,12 +53,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onDeletionRequested(DeletionRequested event, Emitter<AuthState> emit) async {
     try {
+      debugPrint("Trying to delete");
+      // throw FirebaseAuthException(code: 'requires-recent-login');
       final currentUser = _authRepo.getCurrentUser();
-      await _userRepo.deleteAccount(currentUser);
       await _authRepo.deleteAccount();
+      await _userRepo.deleteAccount(currentUser);
       emit(Unauthenticated());
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        final currentState = state;
+        if (currentState is Authenticated) {
+          emit(Authenticated(currentState.user, needsReauthentication: true));
+          debugPrint("from bloc: recent login required exception was thrown");
+        }
+      }
     } catch (e) {
       emit(AuthError(e.toString()));
+    }
+  }
+
+  Future<void> _onReauthentcationDoneOrCancelled(ReauthenticationDoneOrCancelled event, Emitter<AuthState> emit) async {
+    final user = _authRepo.getCurrentUser();
+    if (user != null) {
+      emit(Authenticated(user));
     }
   }
 }

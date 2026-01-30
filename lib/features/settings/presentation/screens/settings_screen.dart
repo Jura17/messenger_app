@@ -7,17 +7,21 @@ import 'package:messenger_app/core/theme/theme_cubit.dart';
 import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
 import 'package:messenger_app/features/auth/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/bloc/auth_state.dart';
+import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
+
 import 'package:messenger_app/features/settings/presentation/screens/blocked_users_screen.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/settings_list_tile.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/user_profile_header.dart';
 import 'package:messenger_app/features/users/cubits/current_user_cubit.dart';
 import 'package:messenger_app/features/users/cubits/current_user_state.dart';
 
+// TODO: refactor SettingsScreen (too large!)
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authBloc = context.read<AuthBloc>();
     final authBlocState = context.read<AuthBloc>().state;
     final currentUserState = context.read<CurrentUserCubit>().state;
     String? currentUserEmail;
@@ -110,14 +114,32 @@ class SettingsScreen extends StatelessWidget {
                               title: "Logout",
                               onTap: () {
                                 context.read<CurrentUserCubit>().updateOnlineStatus(false);
-                                context.read<AuthBloc>().add(LogoutRequested());
+                                authBloc.add(LogoutRequested());
                               },
                             ),
-                            SettingsListTile(
-                              title: "Delete account",
-                              onTap: () {
-                                accountDeletionRequest(context);
+                            BlocListener<AuthBloc, AuthState>(
+                              listenWhen: (previous, current) =>
+                                  current is Authenticated && current.needsReauthentication,
+                              listener: (context, state) async {
+                                debugPrint("Show reauthentication dialog");
+                                final reauthenticationSucceeded = await showReauthenticationDialog(context);
+                                if (!reauthenticationSucceeded) {
+                                  authBloc.add(ReauthenticationDoneOrCancelled());
+                                  return;
+                                }
+
+                                authBloc.add(DeletionRequested());
                               },
+                              child: SettingsListTile(
+                                title: "Delete account",
+                                onTap: () async {
+                                  final isDeleting = await accountDeletionRequest(context);
+
+                                  if (isDeleting) {
+                                    authBloc.add(DeletionRequested());
+                                  }
+                                },
+                              ),
                             ),
                           ],
                         ),
@@ -158,7 +180,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  void accountDeletionRequest(BuildContext context) async {
+  Future<bool> accountDeletionRequest(BuildContext context) async {
     bool confirm = await showDialog(
             context: context,
             builder: (context) {
@@ -184,13 +206,77 @@ class SettingsScreen extends StatelessWidget {
               );
             }) ??
         false;
-
-    if (confirm) {
-      try {
-        context.read<AuthBloc>().add(DeletionRequested());
-      } catch (e) {
-        debugPrint("Deleting account failed: $e");
-      }
-    }
+    return confirm;
   }
+}
+
+Future<bool> showReauthenticationDialog(BuildContext context) async {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  return await showDialog<bool>(
+        context: context,
+        builder: (context) {
+          final navigator = Navigator.of(context);
+          String errorText = "";
+
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              title: const Text("Re-authentication needed"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("This action is sensitive and requires recent authentication. Please login again to proceed."),
+                  TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(labelText: "Email"),
+                  ),
+                  TextField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(labelText: "Password"),
+                  ),
+                  // TODO: check docs about ...[] inside widget tree
+                  if (errorText.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      errorText,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ],
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    navigator.pop(false);
+                  },
+                  child: const Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    try {
+                      await context
+                          .read<AuthRepository>()
+                          .reauthenticateUser(emailController.text.trim(), passwordController.text.trim());
+                      navigator.pop(true);
+                    } catch (e) {
+                      setState(() {
+                        errorText = "Please check your login details";
+                      });
+                      debugPrint("Login details error occurred");
+                    }
+                  },
+                  child: const Text(
+                    "Confirm",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ],
+            );
+          });
+        },
+      ) ??
+      false;
 }

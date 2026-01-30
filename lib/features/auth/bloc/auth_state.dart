@@ -19,10 +19,14 @@ final class AuthInitial extends AuthState {}
 // user successfully authenticated
 final class Authenticated extends AuthState {
   final User user;
-  const Authenticated(this.user);
+  final bool needsReauthentication;
+  const Authenticated(
+    this.user, {
+    this.needsReauthentication = false,
+  });
 
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [user, needsReauthentication];
 }
 
 // no user signed in

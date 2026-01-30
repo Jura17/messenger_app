@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:messenger_app/features/auth/data/models/authentication_error_handling.dart';
+import 'package:messenger_app/features/auth/data/models/error_handling_authentication.dart';
 import 'package:messenger_app/features/auth/data/provider/auth_api.dart';
 import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
 
@@ -46,14 +46,17 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<void> deleteAccount() async => await _authApi.deleteAccount();
+  Future<void> deleteAccount() async {
+    await _authApi.deleteAccount();
+  }
 
   @override
   Future<void> logout() async {
-    try {
-      await _authApi.signOut();
-    } catch (_) {
-      throw LogOutFailure();
-    }
+    await _authApi.signOut();
+  }
+
+  @override
+  Future<void> reauthenticateUser(String email, String password) async {
+    await _authApi.reauthenticateUser(email, password);
   }
 }

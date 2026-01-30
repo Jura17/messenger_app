@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:messenger_app/features/users/data/models/user_data.dart';
-import 'package:messenger_app/features/users/data/provider/firestore_userdata_api.dart';
+
+import 'package:messenger_app/features/users/data/provider/userdata_api.dart';
 import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class FirestoreUserdataRepository implements UserdataRepository {
-  final FirestoreUserdataApi _userdataApi;
+  final UserdataApi _userdataApi;
 
   FirestoreUserdataRepository(this._userdataApi);
 

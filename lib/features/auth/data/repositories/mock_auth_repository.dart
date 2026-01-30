@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:messenger_app/features/auth/data/models/authentication_error_handling.dart';
+import 'package:messenger_app/features/auth/data/models/error_handling_authentication.dart';
 import 'package:messenger_app/features/auth/data/models/mock_user.dart';
 import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
 
@@ -52,4 +52,10 @@ class MockAuthRepository implements AuthRepository {
   }
 
   void dispose() => _streamController.close();
+
+  @override
+  Future<void> reauthenticateUser(String email, String password) {
+    // TODO: implement reauthenticateUser
+    throw UnimplementedError();
+  }
 }

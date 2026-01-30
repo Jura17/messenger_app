@@ -44,8 +44,20 @@ class FirebaseAuthApi implements AuthApi {
   @override
   Future<void> deleteAccount() async {
     User? currentUser = getCurrentUser();
+
     if (currentUser != null) {
       await currentUser.delete();
     }
+  }
+
+  @override
+  Future<void> reauthenticateUser(String email, String password) async {
+    final user = auth.currentUser!;
+    final credential = EmailAuthProvider.credential(
+      email: email,
+      password: password,
+    );
+
+    await user.reauthenticateWithCredential(credential);
   }
 }

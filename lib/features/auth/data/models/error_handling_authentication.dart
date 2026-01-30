@@ -47,7 +47,6 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
   final String message;
 
   factory SignUpWithEmailAndPasswordFailure.fromCode(String code) {
-    print(code);
     switch (code) {
       case 'invalid-email':
         return const SignUpWithEmailAndPasswordFailure(
@@ -78,5 +77,3 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
     }
   }
 }
-
-class LogOutFailure implements Exception {}
