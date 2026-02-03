@@ -16,7 +16,6 @@ class FirestoreUserdataApi implements UserdataApi {
       'username': username,
       'email': email,
       'profileImage': '',
-      'unreadCount': 0,
       'createdAt': FieldValue.serverTimestamp(),
       'lastSeen': FieldValue.serverTimestamp(),
       'isOnline': true,

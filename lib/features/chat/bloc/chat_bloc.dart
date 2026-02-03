@@ -1,11 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
-import 'package:messenger_app/features/auth/data/repositories/firebase_auth_repository.dart';
+
 import 'package:messenger_app/features/chat/bloc/chat_event.dart';
 import 'package:messenger_app/features/chat/bloc/chat_state.dart';
 import 'package:messenger_app/features/chat/data/models/message.dart';
 import 'package:messenger_app/features/chat/data/repositories/chat_repository.dart';
-import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatRepository _chatRepo;

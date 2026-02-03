@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/bloc/auth_state.dart';
@@ -22,12 +21,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogoutRequested>(_onLogoutRequested);
     on<DeletionRequested>(_onDeletionRequested);
     on<ReauthenticationDoneOrCancelled>(_onReauthentcationDoneOrCancelled);
-  }
-
-  @override
-  void onError(Object error, StackTrace stackTrace) {
-    print('$error, $stackTrace');
-    super.onError(error, stackTrace);
   }
 
   // Event handlers
@@ -53,7 +46,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onDeletionRequested(DeletionRequested event, Emitter<AuthState> emit) async {
     try {
-      debugPrint("Trying to delete");
       // throw FirebaseAuthException(code: 'requires-recent-login');
       final currentUser = _authRepo.getCurrentUser();
       await _authRepo.deleteAccount();
@@ -64,7 +56,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final currentState = state;
         if (currentState is Authenticated) {
           emit(Authenticated(currentState.user, needsReauthentication: true));
-          debugPrint("from bloc: recent login required exception was thrown");
         }
       }
     } catch (e) {

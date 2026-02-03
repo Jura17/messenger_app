@@ -54,19 +54,30 @@ class _ChatListViewState extends State<ChatListView> {
 
             if (state is UsersLoaded) {
               return ListView(
-                children: state.permittedUsers.map<Widget>(
-                  (userData) {
-                    if (userData.email == currentUser?.email) return SizedBox.shrink();
-                    final preview = previewByPartner[userData.uid];
-                    return ChatTile(
-                        chatPartnerName: userData.username,
-                        chatPartnerId: userData.uid,
-                        lastMessageText: preview?.lastMessageText ?? '',
-                        lastMessageTimestamp: preview?.lastMessageTimestamp,
-                        profileImage: userData.profileImage,
-                        lastSeen: userData.lastSeen);
-                  },
-                ).toList(),
+                children: state.permittedUsers.isEmpty
+                    ? [
+                        Center(
+                          child: Text(
+                            "There is no one to talk to just yet...",
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        Icon(Icons.no_accounts, size: 100)
+                      ]
+                    : state.permittedUsers.map<Widget>(
+                        (userData) {
+                          if (userData.email == currentUser?.email) return SizedBox.shrink();
+                          final preview = previewByPartner[userData.uid];
+                          return ChatTile(
+                              chatPartnerName: userData.username,
+                              chatPartnerId: userData.uid,
+                              lastMessageText: preview?.lastMessageText ?? '',
+                              lastMessageTimestamp: preview?.lastMessageTimestamp,
+                              profileImage: userData.profileImage,
+                              lastSeen: userData.lastSeen);
+                        },
+                      ).toList(),
               );
             }
             return SizedBox.shrink();

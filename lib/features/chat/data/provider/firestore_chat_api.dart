@@ -127,4 +127,30 @@ class FirestoreChatApi implements ChatApi {
 
     await firestoreDb.collection('reports').add(report);
   }
+
+  @override
+  Stream<int> watchUnreadMessageCount(String chatPartnerId, User? currentUser) {
+    if (currentUser == null) throw Exception('No authenticated user');
+
+    final currentUserId = currentUser.uid;
+
+    // build consistent chatroom ID
+    List<String> userIds = [currentUserId, chatPartnerId];
+    userIds.sort();
+    final String chatroomId = userIds.join('_');
+
+    // watch only unread messages
+    return firestoreDb
+        .collection('chatrooms')
+        .doc(chatroomId)
+        .collection('messages')
+        .where('receiverId', isEqualTo: currentUserId)
+        .where('isRead', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) {
+      final count = snapshot.docs.length;
+
+      return count;
+    });
+  }
 }
