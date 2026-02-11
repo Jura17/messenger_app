@@ -9,6 +9,7 @@ class MockAuthRepository implements AuthRepository {
   final _streamController = StreamController<User?>.broadcast();
   User? _currentUser;
   bool shouldFail = false;
+  bool requiresRecentLogin = false;
   bool throwUnknownError = false;
 
   @override
@@ -41,6 +42,9 @@ class MockAuthRepository implements AuthRepository {
 
   @override
   Future<void> deleteAccount() async {
+    if (requiresRecentLogin) {
+      throw FirebaseAuthException(code: 'requires-recent-login');
+    }
     _currentUser = null;
     _streamController.add(null);
   }
@@ -54,8 +58,10 @@ class MockAuthRepository implements AuthRepository {
   void dispose() => _streamController.close();
 
   @override
-  Future<void> reauthenticateUser(String email, String password) {
-    // TODO: implement reauthenticateUser
-    throw UnimplementedError();
+  Future<void> reauthenticateUser(String email, String password) async {
+    final mockUser = MockUser(uid: '456', email: email);
+    _currentUser = mockUser;
+    final credentials = EmailAuthProvider.credential(email: email, password: password);
+    await _currentUser!.reauthenticateWithCredential(credentials);
   }
 }

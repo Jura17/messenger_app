@@ -27,6 +27,7 @@ void main() {
   });
 
   tearDown(() {
+    mockAuthRepo.dispose();
     mockUserRepo.dispose();
     userBloc.close();
   });

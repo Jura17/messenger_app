@@ -1,8 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
 import 'package:messenger_app/features/auth/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/bloc/auth_state.dart';
+import 'package:messenger_app/features/auth/data/models/mock_user.dart';
 import 'package:messenger_app/features/auth/data/repositories/mock_auth_repository.dart';
 import 'package:messenger_app/features/users/data/repositories/mock_userdata_repository.dart';
 
@@ -57,7 +59,7 @@ void main() {
       );
 
       blocTest<AuthBloc, AuthState>(
-        'emits [Unauthenticated when DeletionRequested is added]',
+        'emits [Unauthenticated] when DeletionRequested is added',
         build: () => AuthBloc(authRepo: mockAuthRepo, userRepo: mockUserRepo),
         act: (bloc) async {
           await mockAuthRepo.signIn('test@email.com', '123456');
@@ -67,6 +69,27 @@ void main() {
           await Future.delayed(const Duration(milliseconds: 50));
         },
         expect: () => [isA<Unauthenticated>()],
+      );
+
+      blocTest<AuthBloc, AuthState>(
+        'emits [Authenticated(needsReauthentication: true)] when re-authenticate is required on account deletion request',
+        build: () {
+          mockAuthRepo.requiresRecentLogin = true;
+          return AuthBloc(authRepo: mockAuthRepo, userRepo: mockUserRepo);
+        },
+        seed: () => Authenticated(MockUser(uid: '123', email: 'test@email.com')),
+        act: (bloc) async {
+          await mockAuthRepo.signIn('test@email.com', '123456');
+          await Future.delayed(const Duration(milliseconds: 50));
+          bloc.add(DeletionRequested());
+        },
+        expect: () => [
+          isA<Authenticated>().having(
+            (s) => s.needsReauthentication,
+            'needsReauthentication',
+            true,
+          ),
+        ],
       );
     },
   );

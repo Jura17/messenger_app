@@ -46,7 +46,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onDeletionRequested(DeletionRequested event, Emitter<AuthState> emit) async {
     try {
-      // throw FirebaseAuthException(code: 'requires-recent-login');
       final currentUser = _authRepo.getCurrentUser();
       await _authRepo.deleteAccount();
       await _userRepo.deleteAccount(currentUser);
