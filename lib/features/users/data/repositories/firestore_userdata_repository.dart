@@ -54,8 +54,8 @@ class FirestoreUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Stream<Userdata?> watchUserStream(String uid) {
-    return _userdataApi.watchUserdata(uid);
+  Stream<Userdata?> watchCurrentUser(String uid) {
+    return _userdataApi.watchCurrentUser(uid);
   }
 
   @override

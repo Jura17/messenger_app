@@ -52,7 +52,7 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Stream<Userdata?> watchUserdata(String uid) {
+  Stream<Userdata?> watchCurrentUser(String uid) {
     return firestoreDb.collection('users').doc(uid).snapshots().map((doc) {
       if (!doc.exists) return null;
       return Userdata.fromMap(doc.data()!);

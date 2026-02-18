@@ -5,7 +5,7 @@ abstract class UserdataRepository {
   Future<void> createUser(String uid, String username, String email);
   Stream<List<Userdata>> getAllPermittedUsersStream(User? currentUser);
   Future<Userdata?> getUserById(String uid);
-  Stream<Userdata?> watchUserStream(String uid);
+  Stream<Userdata?> watchCurrentUser(String uid);
   Future<String?> getProfileImage(String uid);
   Future<void> updateOnlineStatus(String uid, bool onlineStatus);
   Stream<List<Userdata>> getBlockedUsersStream(User? currentUser);

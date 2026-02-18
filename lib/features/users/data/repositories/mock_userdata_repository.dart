@@ -127,7 +127,7 @@ class MockUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Stream<Userdata?> watchUserStream(String uid) {
+  Stream<Userdata?> watchCurrentUser(String uid) {
     // TODO: implement watchUserStream
     throw UnimplementedError();
   }

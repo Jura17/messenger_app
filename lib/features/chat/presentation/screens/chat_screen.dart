@@ -7,8 +7,8 @@ import 'package:messenger_app/features/chat/data/repositories/chat_repository.da
 
 import 'package:messenger_app/features/chat/presentation/widgets/message_list.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/message_input.dart';
-import 'package:messenger_app/features/users/bloc/userdata_bloc.dart';
-import 'package:messenger_app/features/users/bloc/userdata_state.dart';
+import 'package:messenger_app/features/users/bloc/current_user_bloc.dart';
+import 'package:messenger_app/features/users/bloc/current_user_state.dart';
 
 class ChatScreen extends StatefulWidget with WidgetsBindingObserver {
   final String chatPartnerEmail;
@@ -88,14 +88,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         title: Column(
           children: [
             Text(widget.chatPartnerEmail),
-            BlocBuilder<UserdataBloc, UserdataState>(builder: (context, state) {
-              if (state is UserdataLoading) {
+            BlocBuilder<CurrentUserBloc, CurrentUserState>(builder: (context, state) {
+              if (state is CurrentUserLoading) {
                 return Text("Loading user status...");
               }
-              if (state is UserdataError) {
+              if (state is CurrentUserError) {
                 debugPrint(state.errorText);
               }
-              if (state is UserdataLoaded) {
+              if (state is CurrentUserLoaded) {
                 final isOnline = state.userdata!.isOnline;
                 final lastSeen = state.userdata!.lastSeen;
 
