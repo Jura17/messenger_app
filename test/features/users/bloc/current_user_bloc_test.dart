@@ -9,12 +9,12 @@ import 'package:messenger_app/features/users/data/repositories/mock_userdata_rep
 void main() {
   late MockAuthRepository mockAuthRepository;
   late MockUserdataRepository mockUserdataRepository;
-  late CurrentUserBloc userdataBloc;
+  late CurrentUserBloc currentUserBloc;
 
   setUp(() async {
     mockAuthRepository = MockAuthRepository();
     mockUserdataRepository = MockUserdataRepository();
-    userdataBloc = CurrentUserBloc(userRepo: mockUserdataRepository);
+    currentUserBloc = CurrentUserBloc(userRepo: mockUserdataRepository);
 
     await mockUserdataRepository.createUser('user_a', 'userA', 'a@test.com');
     await mockAuthRepository.signIn('a@test.com', '123456');
@@ -23,12 +23,12 @@ void main() {
   tearDown(() {
     mockAuthRepository.dispose();
     mockUserdataRepository.dispose();
-    userdataBloc.close();
+    currentUserBloc.close();
   });
 
   blocTest<CurrentUserBloc, CurrentUserState>(
-    'emits [UserdataLoading, UserdataLoaded] with current user information when WatchUserStream is added',
-    build: () => userdataBloc,
+    'emits [CurrentUserLoading, CurrentUserLoaded] with current user information when WatchUserStream is added',
+    build: () => currentUserBloc,
     act: (bloc) => bloc.add(WatchCurrentUser('user_a')),
     wait: const Duration(milliseconds: 100),
     expect: () => [

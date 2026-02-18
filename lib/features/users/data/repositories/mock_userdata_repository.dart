@@ -78,6 +78,21 @@ class MockUserdataRepository implements UserdataRepository {
   }
 
   @override
+  Stream<Userdata?> watchCurrentUser(String uid) {
+    // makes stream behave like a firestore state stream, instead of a normal dart event stream,
+    // meaning: right after subscription we want to emit the latest state of our data
+    Future.microtask(_emitUserUpdates);
+
+    return _allUsersStreamController.stream.map((allUsers) {
+      try {
+        return allUsers.firstWhere((user) => user.uid == uid);
+      } catch (_) {
+        return null;
+      }
+    });
+  }
+
+  @override
   Future<void> updateOnlineStatus(String uid, bool onlineStatus) async {
     debugPrint("updateLastLogin from Api");
   }
@@ -123,12 +138,6 @@ class MockUserdataRepository implements UserdataRepository {
   @override
   Future<String?> getProfileImage(String uid) {
     // TODO: implement getProfileImage
-    throw UnimplementedError();
-  }
-
-  @override
-  Stream<Userdata?> watchCurrentUser(String uid) {
-    // TODO: implement watchUserStream
     throw UnimplementedError();
   }
 }
