@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
-import 'package:messenger_app/features/users/cubits/current_user_state.dart';
+import 'package:messenger_app/features/users/cubits/current_user_cubit_state.dart';
 import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
 
-class CurrentUserCubit extends Cubit<CurrentUserState> {
+class CurrentUserCubit extends Cubit<CurrentUserCubitState> {
   final UserdataRepository _userdataRepo;
   final AuthRepository _authRepo;
 
@@ -12,17 +12,17 @@ class CurrentUserCubit extends Cubit<CurrentUserState> {
     required UserdataRepository userdataRepo,
   })  : _authRepo = authRepo,
         _userdataRepo = userdataRepo,
-        super(CurrentUserInitial());
+        super(CurrentUserCubitInitial());
 
   Future<void> loadCurrentUser() async {
     final currentFirebaseUser = _authRepo.getCurrentUser();
 
     if (currentFirebaseUser == null) {
-      emit(CurrentUserUnauthenticated());
+      emit(CurrentUserCubitUnauthenticated());
       return;
     }
 
-    emit(CurrentUserLoading());
+    emit(CurrentUserCubitLoading());
 
     // firestore user document might need some time to get created even though the firebase user is already authenticated
     // retry fetching user 5 times
@@ -30,26 +30,26 @@ class CurrentUserCubit extends Cubit<CurrentUserState> {
       for (int i = 0; i < 5; i++) {
         final user = await _userdataRepo.getUserById(currentFirebaseUser.uid);
         if (user != null) {
-          emit(CurrentUserLoaded(user));
+          emit(CurrentUserCubitLoaded(user));
           return;
         }
         await Future.delayed(const Duration(milliseconds: 300));
       }
 
-      emit(CurrentUserError('User document not found'));
+      emit(CurrentUserCubitError('User document not found'));
     } catch (e) {
-      emit(CurrentUserError(e.toString()));
+      emit(CurrentUserCubitError(e.toString()));
     }
   }
 
-  Future<void> updateOnlineStatus(bool onlineStatus) async {
+  Future<void> updateOnlineStatus(bool isOnline) async {
     final currentFirebaseUser = _authRepo.getCurrentUser();
 
     if (currentFirebaseUser == null) {
-      emit(CurrentUserUnauthenticated());
+      emit(CurrentUserCubitUnauthenticated());
       return;
     }
 
-    await _userdataRepo.updateOnlineStatus(currentFirebaseUser.uid, onlineStatus);
+    await _userdataRepo.updateOnlineStatus(currentFirebaseUser.uid, isOnline);
   }
 }

@@ -8,7 +8,7 @@ import 'package:messenger_app/features/auth/bloc/auth_state.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/settings_options.dart';
 
 import 'package:messenger_app/features/users/cubits/current_user_cubit.dart';
-import 'package:messenger_app/features/users/cubits/current_user_state.dart';
+import 'package:messenger_app/features/users/cubits/current_user_cubit_state.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -25,7 +25,7 @@ class SettingsScreen extends StatelessWidget {
       currentUserEmail = authBlocState.user.email;
     }
 
-    if (currentUserState is CurrentUserLoaded) {
+    if (currentUserState is CurrentUserCubitLoaded) {
       username = currentUserState.currentUser.username;
     }
 
@@ -37,16 +37,16 @@ class SettingsScreen extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: BlocBuilder<CurrentUserCubit, CurrentUserState>(
+        child: BlocBuilder<CurrentUserCubit, CurrentUserCubitState>(
           builder: (context, state) {
-            if (state is CurrentUserLoading) {
+            if (state is CurrentUserCubitLoading) {
               return CircularProgressIndicator();
             }
-            if (state is CurrentUserError) {
+            if (state is CurrentUserCubitError) {
               debugPrint(state.message);
               return Text(state.message);
             }
-            if (state is CurrentUserLoaded) {
+            if (state is CurrentUserCubitLoaded) {
               username = state.currentUser.username;
               return SettingsOptions(
                 authBloc: authBloc,

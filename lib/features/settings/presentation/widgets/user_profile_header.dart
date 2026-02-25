@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/users/cubits/current_user_cubit.dart';
-import 'package:messenger_app/features/users/cubits/current_user_state.dart';
+import 'package:messenger_app/features/users/cubits/current_user_cubit_state.dart';
 
 import 'package:messenger_app/utils/get_username_initials.dart';
 
@@ -46,14 +46,14 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
             ),
           ),
         ),
-        BlocBuilder<CurrentUserCubit, CurrentUserState>(builder: (context, state) {
-          if (state is CurrentUserLoading) {
+        BlocBuilder<CurrentUserCubit, CurrentUserCubitState>(builder: (context, state) {
+          if (state is CurrentUserCubitLoading) {
             return CircularProgressIndicator();
           }
-          if (state is CurrentUserError) {
+          if (state is CurrentUserCubitError) {
             return Text(state.message);
           }
-          if (state is CurrentUserLoaded) {
+          if (state is CurrentUserCubitLoaded) {
             return Text(
               state.currentUser.username,
               style: Theme.of(context).textTheme.displaySmall,

@@ -5,8 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:messenger_app/features/users/bloc/user_state.dart';
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
+import 'package:mocktail/mocktail.dart';
 
-class MockUserdataRepository implements UserdataRepository {
+class MockUserdataRepository extends Mock implements UserdataRepository {
   final List<Userdata> _mockUserDb = [];
   final Map<String, Set<String>> _blockedUsersMap = {};
   final _allUsersStreamController = StreamController<List<Userdata>>.broadcast();
@@ -70,6 +71,7 @@ class MockUserdataRepository implements UserdataRepository {
   @override
   Future<Userdata?> getUserById(String uid) async {
     try {
+      Future.delayed(Duration(milliseconds: 500));
       return _mockUserDb.firstWhere((user) => user.uid == uid);
     } catch (e) {
       debugPrint("from mock userdata repo, getUser: $e");
@@ -93,8 +95,22 @@ class MockUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Future<void> updateOnlineStatus(String uid, bool onlineStatus) async {
-    debugPrint("updateLastLogin from Api");
+  Future<void> updateOnlineStatus(String uid, bool isOnline) async {
+    final Userdata? currentUser = await getUserById(uid);
+    Map<String, dynamic> updatedUser;
+    if (currentUser == null) {
+      debugPrint("Test user not found");
+      return;
+    }
+    final currentUserIndex = _mockUserDb.indexWhere((user) => currentUser.uid == uid);
+
+    if (isOnline) {
+      updatedUser = currentUser.copyWith(isOnline: isOnline).toMap();
+    } else {
+      updatedUser = currentUser.copyWith(lastSeen: DateTime.now(), isOnline: isOnline).toMap();
+    }
+
+    _mockUserDb[currentUserIndex] = Userdata.fromMap(updatedUser);
   }
 
   @override
