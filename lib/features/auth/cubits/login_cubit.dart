@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
+
+import 'package:messenger_app/features/auth/cubits/login_state.dart';
+
 import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
 
 import 'package:messenger_app/features/auth/data/models/error_handling_authentication.dart';
 
 import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
-
-part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final AuthRepository _authRepo;

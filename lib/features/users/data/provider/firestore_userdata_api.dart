@@ -95,4 +95,10 @@ class FirestoreUserdataApi implements UserdataApi {
     // TODO: add getProfileImage logic
     return null;
   }
+
+  @override
+  Future<void> updateUser(String uid, Userdata updatedUser) {
+    // TODO: implement updateUser
+    throw UnimplementedError();
+  }
 }

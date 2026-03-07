@@ -8,6 +8,7 @@ abstract class UserdataApi {
   Stream<Userdata?> watchCurrentUser(String uid);
   Future<Userdata?> getUserById(String otherUserId);
   Future<String?> getProfileImage(String uid);
+  Future<void> updateUser(String uid, Userdata updatedUser);
   Future<void> updateOnlineStatus(String uid, bool isOnline);
   Future<void> blockUser(String uid, User? currentUser);
   Future<void> unblockUser(String uid, User? currentUser);

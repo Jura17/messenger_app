@@ -1,4 +1,4 @@
-part of 'login_cubit.dart';
+import 'package:equatable/equatable.dart';
 
 enum LoginStatus { initial, loading, failure }
 
