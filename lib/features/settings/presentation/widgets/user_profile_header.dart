@@ -31,58 +31,43 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
   Widget build(BuildContext context) {
     final usernameInitials = getUsernameInitials(widget.username);
 
-    return BlocProvider(
-      create: (context) => ImagePickerCubit(userdataRepo: context.read<UserdataRepository>()),
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () async => context.read<ImagePickerCubit>().pickImage(),
-            child: Container(
-              height: 100,
-              width: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Theme.of(context).highlightColor,
-              ),
-              child: Center(
-                // show image available show it, otherwise show username initials
-                child: BlocBuilder<ImagePickerCubit, ImagePickerState>(builder: (context, state) {
-                  if (state.pickedImage == null) {
-                    return Text(
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () async => context.read<ImagePickerCubit>().pickImage(),
+          child: BlocBuilder<ImagePickerCubit, ImagePickerState>(builder: (context, state) {
+            return CircleAvatar(
+              radius: 50,
+              backgroundColor: Theme.of(context).highlightColor,
+              backgroundImage: state.pickedImage != null ? FileImage(File(state.imagePath)) : null,
+              child: state.pickedImage == null
+                  ? Text(
                       usernameInitials ?? "PH",
-                      style: Theme.of(context)
-                          .textTheme
-                          .displaySmall
-                          ?.copyWith(color: Theme.of(context).colorScheme.tertiary),
-                    );
-                  }
-
-                  if (state.pickedImage != null) {
-                    return Image.file(File(state.imagePath));
-                  }
-                  return Container();
-                }),
-              ),
-            ),
-          ),
-          BlocBuilder<CurrentUserCubit, CurrentUserCubitState>(builder: (context, state) {
-            if (state is CurrentUserCubitLoading) {
-              return CircularProgressIndicator();
-            }
-            if (state is CurrentUserCubitError) {
-              return Text(state.message);
-            }
-            if (state is CurrentUserCubitLoaded) {
-              return Text(
-                state.currentUser.username,
-                style: Theme.of(context).textTheme.displaySmall,
-              );
-            }
-            return Text("Unknown error");
+                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
+                    )
+                  : null,
+            );
           }),
-          Text(widget.email!, style: Theme.of(context).textTheme.bodyLarge),
-        ],
-      ),
+        ),
+        BlocBuilder<CurrentUserCubit, CurrentUserCubitState>(builder: (context, state) {
+          if (state is CurrentUserCubitLoading) {
+            return CircularProgressIndicator();
+          }
+          if (state is CurrentUserCubitError) {
+            return Text(state.message);
+          }
+          if (state is CurrentUserCubitLoaded) {
+            return Text(
+              state.currentUser.username,
+              style: Theme.of(context).textTheme.displaySmall,
+            );
+          }
+          return Text("Unknown error");
+        }),
+        Text(widget.email!, style: Theme.of(context).textTheme.bodyLarge),
+      ],
     );
   }
 }

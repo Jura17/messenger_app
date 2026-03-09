@@ -21,10 +21,11 @@ class ImagePickerCubit extends Cubit<ImagePickerState> {
       final XFile? pickedImage = await imagePicker.pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
         final imagePath = (await saveImagePermanently(pickedImage)).path;
-
+        debugPrint("from cubit, pickedImage not null: ${pickedImage}");
         emit(state.copyWith(pickedImage: pickedImage, imagePath: imagePath));
       }
     } catch (e) {
+      emit(state.copyWith(currentStatus: ImagePickerStatus.error));
       if (e is PlatformException) {
         debugPrint("Show permission dialog");
       }
