@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' hide BuildContext;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/core/theme/theme_cubit.dart';
 import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
 import 'package:messenger_app/features/settings/cubits/image_picker_cubit.dart';
 
 import 'package:messenger_app/features/settings/presentation/widgets/settings_list_tile.dart';
@@ -34,8 +35,12 @@ class SettingsOptions extends StatelessWidget {
             Align(
               alignment: AlignmentGeometry.center,
               child: BlocProvider(
-                  create: (context) => ImagePickerCubit(userdataRepo: context.read<UserdataRepository>()),
-                  child: UserProfileHeader(username: username, email: currentUserEmail)),
+                create: (context) => ImagePickerCubit(
+                  userdataRepo: context.read<UserdataRepository>(),
+                  authRepo: context.read<AuthRepository>(),
+                ),
+                child: UserProfileHeader(username: username, email: currentUserEmail),
+              ),
             ),
             SizedBox(height: 40),
             Row(

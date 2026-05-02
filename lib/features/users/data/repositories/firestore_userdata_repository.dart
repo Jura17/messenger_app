@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 
@@ -76,6 +78,12 @@ class FirestoreUserdataRepository implements UserdataRepository {
   @override
   Future<void> deleteAccount(User? currentUser) async {
     await _userdataApi.deleteAccount(currentUser);
+  }
+
+  @override
+  Future<void> saveProfileImage(XFile imageFile, User? currentUser) async {
+    debugPrint("from userdata api saveProfileImage");
+    await _userdataApi.saveProfileImage(imageFile, currentUser);
   }
 
   @override

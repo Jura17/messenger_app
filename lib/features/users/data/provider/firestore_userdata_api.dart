@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 import 'package:messenger_app/features/users/data/provider/userdata_api.dart';
@@ -88,6 +94,26 @@ class FirestoreUserdataApi implements UserdataApi {
   @override
   Future<void> deleteAccount(User? currentUser) async {
     await firestoreDb.collection('users').doc(currentUser!.uid).delete();
+  }
+
+  @override
+  Future<void> saveProfileImage(XFile imageFile, User? currentUser) async {
+    if (currentUser == null) return Future.delayed(Duration(milliseconds: 0));
+    try {
+      //   final storageRef = FirebaseStorage.instance.ref();
+      //   final imageRef = storageRef.child('profile_images').child('${currentUser.uid}.jpg');
+      //   var metadata = SettableMetadata(contentType: "image/jpeg");
+
+      //   await imageRef.putFile(File(imageFile.path), metadata);
+      //   debugPrint('Upload complete');
+
+      //   final downloadImageUrl = await imageRef.getDownloadURL();
+      // await FirebaseFirestore.instance.collection('users').doc(currentUser.uid).update({
+      //   'profileImageUrl': downloadImageUrl,
+      // });
+    } catch (e) {
+      debugPrint("From Firestore UserdataApi saveProfileImage: Uploading image failed: \n$e");
+    }
   }
 
   @override

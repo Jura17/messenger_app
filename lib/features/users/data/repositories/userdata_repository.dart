@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 
 abstract class UserdataRepository {
@@ -6,6 +7,7 @@ abstract class UserdataRepository {
   Stream<List<Userdata>> getAllPermittedUsersStream(User? currentUser);
   Future<Userdata?> getUserById(String uid);
   Stream<Userdata?> watchCurrentUser(String uid);
+  Future<void> saveProfileImage(XFile imageFile, User? currentUser);
   Future<String?> getProfileImage(String uid);
   Future<void> updateOnlineStatus(String uid, bool onlineStatus);
   Future<void> updateUser(String uid, Userdata updatedUser);

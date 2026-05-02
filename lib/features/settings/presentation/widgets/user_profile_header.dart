@@ -8,7 +8,6 @@ import 'package:messenger_app/features/settings/cubits/image_picker_state.dart';
 
 import 'package:messenger_app/features/users/cubits/current_user_cubit.dart';
 import 'package:messenger_app/features/users/cubits/current_user_cubit_state.dart';
-import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
 
 import 'package:messenger_app/utils/get_username_initials.dart';
 

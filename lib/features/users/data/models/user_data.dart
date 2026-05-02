@@ -5,7 +5,7 @@ class Userdata {
   final String username;
   final String email;
 
-  final String profileImage;
+  final String profileImageUrl;
   final DateTime createdAt;
   final DateTime lastSeen;
   final bool isOnline;
@@ -14,7 +14,7 @@ class Userdata {
     required this.uid,
     required this.email,
     required this.username,
-    this.profileImage = '',
+    this.profileImageUrl = '',
     required this.createdAt,
     required this.lastSeen,
     this.isOnline = true,
@@ -25,7 +25,7 @@ class Userdata {
       uid: map['uid'] as String,
       username: map['username'],
       email: map['email'] as String,
-      profileImage: map['profileImage'] ?? '',
+      profileImageUrl: map['profileImageUrl'] ?? '',
       createdAt: (map['createdAt'] as Timestamp).toDate(),
       lastSeen: (map['lastSeen'] as Timestamp).toDate(),
       isOnline: map['isOnline'],
@@ -37,7 +37,7 @@ class Userdata {
       'uid': uid,
       'username': username,
       'email': email,
-      'profileImage': profileImage,
+      'profileImageUrl': profileImageUrl,
       'lastSeen': Timestamp.fromDate(lastSeen),
       'createdAt': Timestamp.fromDate(createdAt),
       'isOnline': isOnline,
@@ -49,7 +49,7 @@ class Userdata {
       uid: uid,
       username: username,
       email: email,
-      profileImage: profileImage ?? this.profileImage,
+      profileImageUrl: profileImage ?? this.profileImageUrl,
       createdAt: createdAt,
       lastSeen: lastSeen ?? this.lastSeen,
       isOnline: isOnline ?? this.isOnline,
