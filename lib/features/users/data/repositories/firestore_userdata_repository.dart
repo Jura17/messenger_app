@@ -85,16 +85,4 @@ class FirestoreUserdataRepository implements UserdataRepository {
     debugPrint("from userdata api saveProfileImage");
     await _userdataApi.saveProfileImage(imageFile, currentUser);
   }
-
-  @override
-  Future<String?> getProfileImage(String uid) async {
-    // TODO: add getProfileImage logic
-    return null;
-  }
-
-  @override
-  Future<void> updateUser(String uid, Userdata updatedUser) {
-    // TODO: implement updateUser
-    throw UnimplementedError();
-  }
 }

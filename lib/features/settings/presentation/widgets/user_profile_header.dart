@@ -26,6 +26,15 @@ class UserProfileHeader extends StatefulWidget {
 }
 
 class _UserProfileHeaderState extends State<UserProfileHeader> {
+  late String? imagePath;
+
+  @override
+  void initState() {
+    super.initState();
+    // load locally saved profile image
+    context.read<ImagePickerCubit>().loadSavedImagePathForCurrentUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     final usernameInitials = getUsernameInitials(widget.username);
@@ -38,8 +47,8 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
             return CircleAvatar(
               radius: 50,
               backgroundColor: Theme.of(context).highlightColor,
-              backgroundImage: state.pickedImage != null ? FileImage(File(state.imagePath)) : null,
-              child: state.pickedImage == null
+              backgroundImage: state.imagePath == '' ? null : FileImage(File(state.imagePath)),
+              child: state.imagePath == ''
                   ? Text(
                       usernameInitials ?? "PH",
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(

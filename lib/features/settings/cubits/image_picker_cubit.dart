@@ -24,16 +24,14 @@ class ImagePickerCubit extends Cubit<ImagePickerState> {
 
   Future<void> pickImage() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
       final ImagePicker imagePicker = ImagePicker();
       final XFile? pickedImage = await imagePicker.pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
         final imagePath = (await saveImagePermanently(pickedImage)).path;
         final currentUser = _authRepository.getCurrentUser();
-        final uidKey = currentUser!.uid;
-        // await _userdataRepository.saveProfileImage(pickedImage, currentUser);
+
+        await _userdataRepository.saveProfileImage(pickedImage, currentUser);
         emit(state.copyWith(pickedImage: pickedImage, imagePath: imagePath));
-        prefs.setString(uidKey, imagePath);
       }
     } catch (e) {
       emit(state.copyWith(currentStatus: ImagePickerStatus.error));
@@ -48,5 +46,17 @@ class ImagePickerCubit extends Cubit<ImagePickerState> {
     final name = imageFile.name; // Keep original name
     final imagePath = File('${directory.path}/$name');
     return File(imageFile.path).copy(imagePath.path);
+  }
+
+  Future<void> loadSavedImagePathForCurrentUser() async {
+    final currentUser = _authRepository.getCurrentUser();
+    if (currentUser == null) return;
+
+    final prefs = await SharedPreferences.getInstance();
+
+    final imagePath = prefs.getString(currentUser.uid) ?? '';
+    if (imagePath.isEmpty) return;
+
+    emit(state.copyWith(imagePath: imagePath));
   }
 }
