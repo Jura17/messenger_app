@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
+import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 
 import 'package:messenger_app/features/users/bloc/user_event.dart';
 import 'package:messenger_app/features/users/bloc/user_state.dart';

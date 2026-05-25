@@ -49,7 +49,7 @@ class Userdata {
       uid: uid,
       username: username,
       email: email,
-      profileImageUrl: profileImage ?? this.profileImageUrl,
+      profileImageUrl: profileImage ?? profileImageUrl,
       createdAt: createdAt,
       lastSeen: lastSeen ?? this.lastSeen,
       isOnline: isOnline ?? this.isOnline,

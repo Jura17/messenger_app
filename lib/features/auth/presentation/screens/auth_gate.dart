@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
 
 import 'package:messenger_app/features/auth/bloc/auth_state.dart';
-import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
+import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 
 import 'package:messenger_app/features/auth/presentation/screens/login_or_signup.dart';
 import 'package:messenger_app/features/users/cubits/current_user_cubit.dart';

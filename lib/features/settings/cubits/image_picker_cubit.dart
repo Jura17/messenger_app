@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:messenger_app/features/auth/data/repositories/auth_repository.dart';
+import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:messenger_app/features/settings/cubits/image_picker_state.dart';
 
 import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
