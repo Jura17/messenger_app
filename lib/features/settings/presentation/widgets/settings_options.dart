@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide BuildContext;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/core/theme/theme_cubit.dart';
-import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:messenger_app/features/settings/cubits/image_picker_cubit.dart';
 
 import 'package:messenger_app/features/settings/presentation/widgets/settings_list_tile.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/settings_list_tiles.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/user_profile_header.dart';
-import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
+import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 
 class SettingsOptions extends StatelessWidget {
   const SettingsOptions({

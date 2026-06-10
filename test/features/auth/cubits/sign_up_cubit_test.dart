@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:messenger_app/features/auth/cubits/sign_up_cubit.dart';
-import 'package:messenger_app/features/auth/cubits/sign_up_state.dart';
+import 'package:messenger_app/features/auth/presentation/cubits/sign_up_cubit.dart';
+import 'package:messenger_app/features/auth/presentation/cubits/sign_up_state.dart';
 import 'package:messenger_app/features/auth/data/repositories/mock_auth_repository.dart';
 import 'package:messenger_app/features/users/data/repositories/mock_userdata_repository.dart';
 

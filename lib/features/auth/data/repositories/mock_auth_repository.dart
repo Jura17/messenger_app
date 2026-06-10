@@ -3,24 +3,28 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:messenger_app/features/auth/data/models/error_handling_authentication.dart';
 import 'package:messenger_app/features/auth/data/models/mock_user.dart';
+import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
+// Fake repo for tests; never communicates with Firebase
 class MockAuthRepository extends Mock implements AuthRepository {
-  final _streamController = StreamController<User?>.broadcast();
-  User? currentUser;
+  final _streamController = StreamController<AuthUser?>.broadcast();
+  AuthUser? currentUser;
   bool shouldFail = false;
   bool requiresRecentLogin = false;
   bool throwUnknownError = false;
 
   @override
-  Stream<User?> onAuthChanged() => _streamController.stream;
+  Stream<AuthUser?> onAuthChanged() {
+    return _streamController.stream;
+  }
 
   @override
-  User? getCurrentUser() => currentUser;
+  AuthUser? getCurrentUser() => currentUser;
 
   @override
-  Future<User> signIn(String email, String password) async {
+  Future<AuthUser> signIn(String email, String password) async {
     await Future.delayed(Duration(milliseconds: 50));
     if (shouldFail) throw LogInWithEmailAndPasswordFailure('Invalid credentials');
     if (throwUnknownError) throw Exception('Something unexpected happened');
@@ -31,7 +35,7 @@ class MockAuthRepository extends Mock implements AuthRepository {
   }
 
   @override
-  Future<User> signUp({required email, required username, required password}) async {
+  Future<AuthUser> signUp({required email, required username, required password}) async {
     await Future.delayed(Duration(milliseconds: 50));
     if (shouldFail) throw SignUpWithEmailAndPasswordFailure('Invalid credentials');
     if (throwUnknownError) throw Exception('Something unexpected happened');
@@ -61,8 +65,6 @@ class MockAuthRepository extends Mock implements AuthRepository {
   @override
   Future<void> reauthenticateUser(String email, String password) async {
     final mockUser = MockUser(uid: '456', email: email);
-    currentUser = mockUser;
-    final credentials = EmailAuthProvider.credential(email: email, password: password);
-    await currentUser!.reauthenticateWithCredential(credentials);
+    currentUser = currentUser ?? mockUser;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 
 // sealed = only classes in this file can extend this class
 sealed class AuthState extends Equatable {
@@ -18,7 +19,7 @@ final class AuthInitial extends AuthState {}
 
 // user successfully authenticated
 final class Authenticated extends AuthState {
-  final User user;
+  final AuthUser user;
   final bool needsReauthentication;
   const Authenticated(
     this.user, {

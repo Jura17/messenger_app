@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:messenger_app/features/users/bloc/user_state.dart';
+import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
+import 'package:messenger_app/features/users/presentation/bloc/user_state.dart';
 import 'package:messenger_app/features/users/data/models/user_data.dart';
-import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
+import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockUserdataRepository extends Mock implements UserdataRepository {
@@ -43,7 +43,7 @@ class MockUserdataRepository extends Mock implements UserdataRepository {
   }
 
   @override
-  Stream<List<Userdata>> getAllPermittedUsersStream(User? currentUser) {
+  Stream<List<Userdata>> getAllPermittedUsersStream(AuthUser? currentUser) {
     if (currentUser == null) throw UserError("No current user");
 
     // Emit immediately before returning stream so that combineLatest2() actually returns sth
@@ -58,7 +58,7 @@ class MockUserdataRepository extends Mock implements UserdataRepository {
   }
 
   @override
-  Stream<List<Userdata>> getBlockedUsersStream(User? currentUser) {
+  Stream<List<Userdata>> getBlockedUsersStream(AuthUser? currentUser) {
     if (currentUser == null) throw UserError("No current user");
 
     // listen to all user updates, and dynamically filter for blocked ones
@@ -114,7 +114,7 @@ class MockUserdataRepository extends Mock implements UserdataRepository {
   }
 
   @override
-  Future<void> blockUser(String otherUserId, User? currentUser) async {
+  Future<void> blockUser(String otherUserId, AuthUser? currentUser) async {
     if (currentUser == null) throw Exception("No current user");
     // get the existing set of blocked user IDs or create a new set for the given user
     final blocked = _blockedUsersMap.putIfAbsent(currentUser.uid, () => <String>{});
@@ -123,7 +123,7 @@ class MockUserdataRepository extends Mock implements UserdataRepository {
   }
 
   @override
-  Future<void> unblockUser(String otherUserId, User? currentUser) async {
+  Future<void> unblockUser(String otherUserId, AuthUser? currentUser) async {
     if (currentUser == null) throw Exception("No current user");
     final blocked = _blockedUsersMap[currentUser.uid];
     blocked?.remove(otherUserId);
@@ -131,7 +131,7 @@ class MockUserdataRepository extends Mock implements UserdataRepository {
   }
 
   @override
-  Future<void> deleteAccount(User? currentUser) async {
+  Future<void> deleteAccount(AuthUser? currentUser) async {
     if (currentUser == null) throw Exception("No user to delete");
     _mockUserDb.removeWhere((user) => user.uid == currentUser.uid);
 

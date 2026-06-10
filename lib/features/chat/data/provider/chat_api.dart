@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 import 'package:messenger_app/features/chat/data/models/message.dart';
 
 abstract class ChatApi {
-  Stream<List<Message>> getMessages(String chatPartnerId, User? currentUser);
-  Future<void> sendMessage(String chatPartnerId, message, User? currentUser);
-  Stream<int> watchUnreadMessageCount(String chatPartnerId, User? currentUser);
-  Future<void> markMessagesAsRead(String chatPartnerId, User? currentUser);
-  Future<void> reportMessage(String messageId, String userId, User? currentUser);
+  Stream<List<Message>> getMessages(String chatPartnerId, AuthUser? currentUser);
+  Future<void> sendMessage(String chatPartnerId, message, AuthUser? currentUser);
+  Stream<int> watchUnreadMessageCount(String chatPartnerId, AuthUser? currentUser);
+  Future<void> markMessagesAsRead(String chatPartnerId, AuthUser? currentUser);
+  Future<void> reportMessage(String messageId, String userId, AuthUser? currentUser);
 }

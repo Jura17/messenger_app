@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:messenger_app/core/theme/custom_colors.dart';
 import 'package:messenger_app/core/theme/theme_cubit.dart';
 
-import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
-import 'package:messenger_app/features/auth/bloc/auth_state.dart';
-import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
-import 'package:messenger_app/features/chat/bloc/chat_event.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
+import 'package:messenger_app/features/chat/presentation/bloc/chat_bloc.dart';
+import 'package:messenger_app/features/chat/presentation/bloc/chat_event.dart';
 
 import 'package:messenger_app/features/chat/data/models/message.dart';
-import 'package:messenger_app/features/users/bloc/user_bloc.dart';
-import 'package:messenger_app/features/users/bloc/user_event.dart';
+import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
+import 'package:messenger_app/features/users/presentation/bloc/user_event.dart';
 import 'package:provider/provider.dart';
 
 class MessageListBubble extends StatelessWidget {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
-import 'package:messenger_app/features/auth/bloc/auth_event.dart';
-import 'package:messenger_app/features/auth/bloc/auth_state.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_event.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:messenger_app/features/settings/presentation/dialogs/settings_dialogs.dart';
 import 'package:messenger_app/features/settings/presentation/screens/blocked_users_screen.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/settings_list_tile.dart';
-import 'package:messenger_app/features/users/cubits/current_user_cubit.dart';
+import 'package:messenger_app/features/users/presentation/cubits/current_user_cubit.dart';
 
 class SettingsListTiles extends StatelessWidget {
   const SettingsListTiles({

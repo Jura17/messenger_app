@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
-import 'package:messenger_app/features/auth/bloc/auth_state.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:messenger_app/features/chat/data/models/chat_preview.dart';
-import 'package:messenger_app/features/chat/data/repositories/chat_repository.dart';
+import 'package:messenger_app/features/chat/domain/repositories/chat_repository.dart';
 
-import 'package:messenger_app/features/users/bloc/user_bloc.dart';
+import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
 
-import 'package:messenger_app/features/users/bloc/user_state.dart';
+import 'package:messenger_app/features/users/presentation/bloc/user_state.dart';
 
 import 'package:messenger_app/features/users/presentation/widgets/chat_tile.dart';
 

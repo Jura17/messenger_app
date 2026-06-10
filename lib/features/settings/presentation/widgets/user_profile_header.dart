@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/settings/cubits/image_picker_cubit.dart';
 import 'package:messenger_app/features/settings/cubits/image_picker_state.dart';
 
-import 'package:messenger_app/features/users/cubits/current_user_cubit.dart';
-import 'package:messenger_app/features/users/cubits/current_user_cubit_state.dart';
+import 'package:messenger_app/features/users/presentation/cubits/current_user_cubit.dart';
+import 'package:messenger_app/features/users/presentation/cubits/current_user_cubit_state.dart';
 
 import 'package:messenger_app/utils/get_username_initials.dart';
 

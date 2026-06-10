@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:messenger_app/features/settings/cubits/image_picker_state.dart';
 
-import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
+import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

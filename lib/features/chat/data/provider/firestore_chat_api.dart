@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 import 'package:messenger_app/features/chat/data/models/chat_preview.dart';
 
 import 'package:messenger_app/features/chat/data/models/message.dart';
@@ -11,7 +12,7 @@ class FirestoreChatApi implements ChatApi {
   FirestoreChatApi(this.firestoreDb);
 
   @override
-  Stream<List<Message>> getMessages(String chatPartnerId, User? currentUser) {
+  Stream<List<Message>> getMessages(String chatPartnerId, AuthUser? currentUser) {
     if (currentUser == null) throw Exception('No authenticated user');
 
     final currentUserId = currentUser.uid;
@@ -31,7 +32,7 @@ class FirestoreChatApi implements ChatApi {
             }).toList());
   }
 
-  Stream<List<ChatPreview>> watchChatroom(User? currentUser) {
+  Stream<List<ChatPreview>> watchChatroom(AuthUser? currentUser) {
     if (currentUser == null) throw Exception('No authenticated user');
 
     final currentUserId = currentUser.uid;
@@ -57,7 +58,7 @@ class FirestoreChatApi implements ChatApi {
   }
 
   @override
-  Future<void> sendMessage(String chatPartnerId, message, User? currentUser) async {
+  Future<void> sendMessage(String chatPartnerId, message, AuthUser? currentUser) async {
     if (currentUser == null) throw Exception('No authenticated user');
 
     final String currentUserId = currentUser.uid;
@@ -93,7 +94,7 @@ class FirestoreChatApi implements ChatApi {
   }
 
   @override
-  Future<void> markMessagesAsRead(String chatPartnerId, User? currentUser) async {
+  Future<void> markMessagesAsRead(String chatPartnerId, AuthUser? currentUser) async {
     if (currentUser == null) throw Exception('No authenticated user');
 
     final currentUserId = currentUser.uid;
@@ -117,7 +118,7 @@ class FirestoreChatApi implements ChatApi {
   }
 
   @override
-  Future<void> reportMessage(String messageId, String chatPartnerId, User? currentUser) async {
+  Future<void> reportMessage(String messageId, String chatPartnerId, AuthUser? currentUser) async {
     final report = {
       'reportedBy': currentUser!.uid,
       'messageId': messageId,
@@ -129,7 +130,7 @@ class FirestoreChatApi implements ChatApi {
   }
 
   @override
-  Stream<int> watchUnreadMessageCount(String chatPartnerId, User? currentUser) {
+  Stream<int> watchUnreadMessageCount(String chatPartnerId, AuthUser? currentUser) {
     if (currentUser == null) throw Exception('No authenticated user');
 
     final currentUserId = currentUser.uid;

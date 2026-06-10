@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 import 'package:messenger_app/features/users/data/provider/userdata_api.dart';
@@ -36,7 +35,7 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Stream<List<String>> getBlockedUserIdsStream(User? currentUser) {
+  Stream<List<String>> getBlockedUserIdsStream(AuthUser? currentUser) {
     return firestoreDb
         .collection('users')
         .doc(currentUser!.uid)
@@ -81,23 +80,23 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Future<void> blockUser(String uid, User? currentUser) async {
+  Future<void> blockUser(String uid, AuthUser? currentUser) async {
     await firestoreDb.collection('users').doc(currentUser!.uid).collection('blockedUsers').doc(uid).set({});
   }
 
   @override
-  Future<void> unblockUser(String uid, User? currentUser) async {
+  Future<void> unblockUser(String uid, AuthUser? currentUser) async {
     await firestoreDb.collection('users').doc(currentUser!.uid).collection('blockedUsers').doc(uid).delete();
   }
 
   @override
-  Future<void> deleteAccount(User? currentUser) async {
+  Future<void> deleteAccount(AuthUser? currentUser) async {
     await firestoreDb.collection('users').doc(currentUser!.uid).delete();
   }
 
   // save image locally via shared preferences (should be replaced with FirebaseStorage later)
   @override
-  Future<void> saveProfileImage(XFile imageFile, User? currentUser) async {
+  Future<void> saveProfileImage(XFile imageFile, AuthUser? currentUser) async {
     if (currentUser == null) return Future.delayed(Duration(milliseconds: 0));
     final prefs = await SharedPreferences.getInstance();
     try {

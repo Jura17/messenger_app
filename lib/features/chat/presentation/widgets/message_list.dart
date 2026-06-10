@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
+import 'package:messenger_app/features/chat/presentation/bloc/chat_bloc.dart';
 
-import 'package:messenger_app/features/chat/bloc/chat_state.dart';
+import 'package:messenger_app/features/chat/presentation/bloc/chat_state.dart';
 import 'package:messenger_app/features/chat/data/models/message.dart';
 import 'package:messenger_app/features/chat/data/models/message_with_date_time_marker.dart';
 

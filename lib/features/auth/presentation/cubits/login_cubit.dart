@@ -1,13 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:messenger_app/features/auth/cubits/login_state.dart';
-
+import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
+import 'package:messenger_app/features/auth/presentation/cubits/login_state.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
-
 import 'package:messenger_app/features/auth/data/models/error_handling_authentication.dart';
-
-import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
+import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final AuthRepository _authRepo;
@@ -35,7 +31,7 @@ class LoginCubit extends Cubit<LoginState> {
     emit(state.copyWith(status: LoginStatus.loading, errorMessage: null));
 
     try {
-      User user = await _authRepo.signIn(state.email, state.password);
+      AuthUser user = await _authRepo.signIn(state.email, state.password);
       await _userdataRepo.updateOnlineStatus(user.uid, true);
     } on LogInWithEmailAndPasswordFailure catch (e) {
       emit(state.copyWith(status: LoginStatus.failure, errorMessage: e.message));

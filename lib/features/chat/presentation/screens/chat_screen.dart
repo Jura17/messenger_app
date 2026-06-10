@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 
-import 'package:messenger_app/features/chat/data/repositories/chat_repository.dart';
+import 'package:messenger_app/features/chat/domain/repositories/chat_repository.dart';
 
 import 'package:messenger_app/features/chat/presentation/widgets/message_list.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/message_input.dart';
-import 'package:messenger_app/features/users/bloc/current_user_bloc.dart';
-import 'package:messenger_app/features/users/bloc/current_user_state.dart';
+import 'package:messenger_app/features/users/presentation/bloc/current_user_bloc.dart';
+import 'package:messenger_app/features/users/presentation/bloc/current_user_state.dart';
 
 class ChatScreen extends StatefulWidget with WidgetsBindingObserver {
   final String chatPartnerEmail;
@@ -69,6 +69,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         _scrollDown();
 
         final currentUser = authRepo.getCurrentUser();
+        // TODO: replace User with AuthUser in chatRepo
         chatRepo.markMessagesAsRead(widget.chatPartnerId, currentUser);
       },
     );

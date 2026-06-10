@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:messenger_app/features/auth/data/models/mock_user.dart';
 import 'package:messenger_app/features/auth/data/repositories/mock_auth_repository.dart';
 
-import 'package:messenger_app/features/users/cubits/current_user_cubit.dart';
-import 'package:messenger_app/features/users/cubits/current_user_cubit_state.dart';
+import 'package:messenger_app/features/users/presentation/cubits/current_user_cubit.dart';
+import 'package:messenger_app/features/users/presentation/cubits/current_user_cubit_state.dart';
 import 'package:messenger_app/features/users/data/repositories/mock_userdata_repository.dart';
 import 'package:mocktail/mocktail.dart';
 

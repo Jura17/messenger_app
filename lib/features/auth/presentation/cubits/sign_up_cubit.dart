@@ -1,12 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:messenger_app/features/auth/cubits/sign_up_state.dart';
+import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
+import 'package:messenger_app/features/auth/presentation/cubits/sign_up_state.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
-
 import 'package:messenger_app/features/auth/data/models/error_handling_authentication.dart';
-
-import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
+import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
   final AuthRepository _authRepo;
@@ -44,7 +41,7 @@ class SignUpCubit extends Cubit<SignUpState> {
     emit(state.copyWith(status: SignUpStatus.loading, errorMessage: null));
 
     try {
-      User user = await _authRepo.signUp(email: state.email, username: state.username, password: state.password);
+      AuthUser user = await _authRepo.signUp(email: state.email, username: state.username, password: state.password);
 
       await _userdataRepo.createUser(user.uid, state.username, state.email);
     } on SignUpWithEmailAndPasswordFailure catch (e) {

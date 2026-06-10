@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
-import 'package:messenger_app/features/chat/bloc/chat_event.dart';
+import 'package:messenger_app/features/chat/presentation/bloc/chat_bloc.dart';
+import 'package:messenger_app/features/chat/presentation/bloc/chat_event.dart';
 
 import 'package:messenger_app/features/chat/presentation/widgets/message_textfield.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/blocked_user_tile.dart';
-import 'package:messenger_app/features/users/bloc/user_state.dart';
+import 'package:messenger_app/features/users/presentation/bloc/user_state.dart';
 
 class BlockedUserListView extends StatelessWidget {
   const BlockedUserListView({

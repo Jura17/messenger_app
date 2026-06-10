@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:messenger_app/features/auth/bloc/auth_event.dart';
-import 'package:messenger_app/features/auth/bloc/auth_state.dart';
-
+import 'package:messenger_app/features/auth/presentation/bloc/auth_event.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
+import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
-
-import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
+import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepo;
@@ -25,7 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   // Event handlers
   Future<void> _onAppStarted(AppStarted event, Emitter<AuthState> emit) async {
-    return emit.onEach<User?>(
+    return emit.onEach<AuthUser?>(
       _authRepo.onAuthChanged(),
       // if Firebase says we have a user -> emit Authenticated
       onData: (user) => user != null ? emit(Authenticated(user)) : emit(Unauthenticated()),

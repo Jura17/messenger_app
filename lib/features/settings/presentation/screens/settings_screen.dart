@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';
 
-import 'package:messenger_app/features/auth/bloc/auth_state.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
 
 import 'package:messenger_app/features/settings/presentation/widgets/settings_options.dart';
 
-import 'package:messenger_app/features/users/cubits/current_user_cubit.dart';
-import 'package:messenger_app/features/users/cubits/current_user_cubit_state.dart';
+import 'package:messenger_app/features/users/presentation/cubits/current_user_cubit.dart';
+import 'package:messenger_app/features/users/presentation/cubits/current_user_cubit_state.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});

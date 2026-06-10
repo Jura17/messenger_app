@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
-import 'package:messenger_app/features/auth/bloc/auth_event.dart';
-import 'package:messenger_app/features/auth/bloc/auth_state.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_event.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:messenger_app/features/settings/presentation/screens/settings_screen.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/drawer_menu_item.dart';
 

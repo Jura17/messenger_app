@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:messenger_app/features/chat/presentation/screens/home_screen.dart';
 import 'package:messenger_app/features/settings/presentation/screens/settings_screen.dart';
-import 'package:messenger_app/features/users/cubits/current_user_cubit.dart';
+import 'package:messenger_app/features/users/presentation/cubits/current_user_cubit.dart';
 
 class NavigationScaffold extends StatefulWidget {
   const NavigationScaffold({super.key});

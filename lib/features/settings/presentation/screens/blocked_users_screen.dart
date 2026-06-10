@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
-import 'package:messenger_app/features/auth/bloc/auth_state.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/blocked_user_list_view.dart';
 
-import 'package:messenger_app/features/users/bloc/user_bloc.dart';
+import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
 
-import 'package:messenger_app/features/users/bloc/user_state.dart';
+import 'package:messenger_app/features/users/presentation/bloc/user_state.dart';
 
 class BlockedUsersScreen extends StatelessWidget {
   const BlockedUsersScreen({super.key});

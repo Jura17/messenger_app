@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:messenger_app/features/auth/bloc/auth_bloc.dart';
-import 'package:messenger_app/features/auth/bloc/auth_event.dart';
-import 'package:messenger_app/features/auth/bloc/auth_state.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_event.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:messenger_app/features/auth/data/models/mock_user.dart';
 import 'package:messenger_app/features/auth/data/repositories/mock_auth_repository.dart';
 import 'package:messenger_app/features/users/data/repositories/mock_userdata_repository.dart';

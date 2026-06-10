@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 
-import 'package:messenger_app/features/chat/bloc/chat_bloc.dart';
-import 'package:messenger_app/features/chat/bloc/chat_event.dart';
-import 'package:messenger_app/features/chat/data/repositories/chat_repository.dart';
+import 'package:messenger_app/features/chat/presentation/bloc/chat_bloc.dart';
+import 'package:messenger_app/features/chat/presentation/bloc/chat_event.dart';
+import 'package:messenger_app/features/chat/domain/repositories/chat_repository.dart';
 
 import 'package:messenger_app/features/chat/presentation/screens/chat_screen.dart';
-import 'package:messenger_app/features/users/bloc/current_user_bloc.dart';
-import 'package:messenger_app/features/users/bloc/current_user_event.dart';
+import 'package:messenger_app/features/users/presentation/bloc/current_user_bloc.dart';
+import 'package:messenger_app/features/users/presentation/bloc/current_user_event.dart';
 
-import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
+import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 import 'package:messenger_app/utils/format_chat_date.dart';
 import 'package:messenger_app/utils/get_username_initials.dart';
 

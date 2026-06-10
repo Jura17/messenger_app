@@ -1,11 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 
 import 'package:messenger_app/features/users/data/models/user_data.dart';
 
 import 'package:messenger_app/features/users/data/provider/userdata_api.dart';
-import 'package:messenger_app/features/users/data/repositories/userdata_repository.dart';
+import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class FirestoreUserdataRepository implements UserdataRepository {
@@ -19,7 +19,7 @@ class FirestoreUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Stream<List<Userdata>> getAllPermittedUsersStream(User? currentUser) {
+  Stream<List<Userdata>> getAllPermittedUsersStream(AuthUser? currentUser) {
     if (currentUser == null) throw Stream.error("UserdataRepo, getAllPermittedUsersStream: Userdata stream error");
 
     final allUsersStream = _userdataApi.getAllUsersStream();
@@ -35,7 +35,7 @@ class FirestoreUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Stream<List<Userdata>> getBlockedUsersStream(User? currentUser) {
+  Stream<List<Userdata>> getBlockedUsersStream(AuthUser? currentUser) {
     if (currentUser == null) return Stream.error("Blocked users stream error");
 
     final allUsersStream = _userdataApi.getAllUsersStream();
@@ -66,22 +66,22 @@ class FirestoreUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Future<void> blockUser(String otherUserId, User? currentUser) async {
+  Future<void> blockUser(String otherUserId, AuthUser? currentUser) async {
     await _userdataApi.blockUser(otherUserId, currentUser);
   }
 
   @override
-  Future<void> unblockUser(String otherUserId, User? currentUser) async {
+  Future<void> unblockUser(String otherUserId, AuthUser? currentUser) async {
     await _userdataApi.unblockUser(otherUserId, currentUser);
   }
 
   @override
-  Future<void> deleteAccount(User? currentUser) async {
+  Future<void> deleteAccount(AuthUser? currentUser) async {
     await _userdataApi.deleteAccount(currentUser);
   }
 
   @override
-  Future<void> saveProfileImage(XFile imageFile, User? currentUser) async {
+  Future<void> saveProfileImage(XFile imageFile, AuthUser? currentUser) async {
     debugPrint("from userdata api saveProfileImage");
     await _userdataApi.saveProfileImage(imageFile, currentUser);
   }

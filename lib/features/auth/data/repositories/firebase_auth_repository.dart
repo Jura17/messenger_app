@@ -4,6 +4,7 @@ import 'package:messenger_app/features/auth/data/provider/auth_api.dart';
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 
+// converts raw Firebase data to app specific types
 class FirebaseAuthRepository implements AuthRepository {
   final AuthApi _authApi;
 
@@ -11,22 +12,31 @@ class FirebaseAuthRepository implements AuthRepository {
 
   AuthUser _toEntity(User user) => AuthUser(uid: user.uid, email: user.email);
 
-  // TODO: replace User with AuthUser step by step wherever necessary
+  // .map() transforms each value as it flows out
   @override
-  Stream<User?> onAuthChanged() => _authApi.onAuthChanged();
+  Stream<AuthUser?> onAuthChanged() {
+    return _authApi.onAuthChanged().map((firebaseUser) {
+      if (firebaseUser == null) return null;
+      return _toEntity(firebaseUser);
+    });
+  }
 
   @override
-  User? getCurrentUser() => _authApi.getCurrentUser();
+  AuthUser? getCurrentUser() {
+    final firebaseUser = _authApi.getCurrentUser();
+    if (firebaseUser == null) return null;
+    return _toEntity(firebaseUser);
+  }
 
   @override
-  Future<User> signIn(String email, String password) async {
+  Future<AuthUser> signIn(String email, String password) async {
     email = email.trim();
     password = password.trim();
 
     try {
       UserCredential userCredential = await _authApi.signInWithEmailPassword(email, password);
-
-      return userCredential.user!;
+      final authUser = AuthUser(uid: userCredential.user!.uid, email: userCredential.user!.email);
+      return authUser;
     } on FirebaseAuthException catch (e) {
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
@@ -35,13 +45,14 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<User> signUp({required email, required username, required password}) async {
+  Future<AuthUser> signUp({required email, required username, required password}) async {
     email = email.trim();
 
     try {
       UserCredential userCredential =
           await _authApi.signUpWithEmailPassword(email: email, username: username, password: password);
-      return userCredential.user!;
+      final authUser = AuthUser(uid: userCredential.user!.uid, email: userCredential.user!.email);
+      return authUser;
     } on FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
