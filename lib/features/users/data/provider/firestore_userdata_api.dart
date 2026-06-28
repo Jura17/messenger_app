@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 
-import 'package:messenger_app/features/users/data/models/user_data.dart';
+import 'package:messenger_app/features/users/data/models/firestore_user_data.dart';
 import 'package:messenger_app/features/users/data/provider/userdata_api.dart';
+import 'package:messenger_app/features/users/domain/entities/app_user_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FirestoreUserdataApi implements UserdataApi {
@@ -45,38 +46,73 @@ class FirestoreUserdataApi implements UserdataApi {
   }
 
   @override
-  Future<Userdata?> getUserById(String uid) async {
+  Future<AppUserData?> getUserById(String uid) async {
     final userDoc = await firestoreDb.collection('users').doc(uid).get();
 
     if (userDoc.exists) {
       final data = userDoc.data();
-      if (data != null) return Userdata.fromMap(data);
+      if (data != null) {
+        final userdata = FirestoreUserdata.fromMap(data);
+
+        return AppUserData(
+          uid: uid,
+          email: userdata.email,
+          username: userdata.username,
+          createdAt: userdata.createdAt,
+          lastSeen: userdata.lastSeen,
+        );
+      }
     }
     return null;
   }
 
   @override
-  Stream<Userdata?> watchCurrentUser(String uid) {
+  Stream<AppUserData?> watchCurrentUser(String uid) {
     return firestoreDb.collection('users').doc(uid).snapshots().map((doc) {
       if (!doc.exists) return null;
-      return Userdata.fromMap(doc.data()!);
+      final userdata = FirestoreUserdata.fromMap(doc.data()!);
+
+      return AppUserData(
+        uid: uid,
+        email: userdata.email,
+        username: userdata.username,
+        createdAt: userdata.createdAt,
+        lastSeen: userdata.lastSeen,
+      );
     });
   }
 
   @override
   Future<void> updateOnlineStatus(String uid, bool isOnline) async {
-    Userdata? user = await getUserById(uid);
-    Map<String, dynamic> updatedUser;
+    AppUserData? user = await getUserById(uid);
+    Map<String, dynamic> updatedUserMap;
     if (user == null) {
       return;
     }
     // if isOnline is true -> update only the bool, if false -> update also the lastSeen timestamp
     if (isOnline) {
-      updatedUser = user.copyWith(isOnline: isOnline).toMap();
+      updatedUserMap = {
+        'uid': uid,
+        'username': user.username,
+        'email': user.email,
+        'profileImageUrl': user.profileImageUrl,
+        'lastSeen': Timestamp.fromDate(user.lastSeen),
+        'createdAt': Timestamp.fromDate(user.createdAt),
+        'isOnline': isOnline,
+      };
     } else {
-      updatedUser = user.copyWith(lastSeen: DateTime.now(), isOnline: isOnline).toMap();
+      // updatedUserMap = user.copyWith(lastSeen: DateTime.now(), isOnline: isOnline).toMap();
+      updatedUserMap = {
+        'uid': uid,
+        'username': user.username,
+        'email': user.email,
+        'profileImageUrl': user.profileImageUrl,
+        'lastSeen': Timestamp.fromDate(DateTime.now()),
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+        'isOnline': isOnline,
+      };
     }
-    await firestoreDb.collection('users').doc(uid).set(updatedUser, SetOptions(merge: true));
+    await firestoreDb.collection('users').doc(uid).set(updatedUserMap, SetOptions(merge: true));
   }
 
   @override

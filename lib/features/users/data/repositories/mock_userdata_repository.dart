@@ -2,15 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
+import 'package:messenger_app/features/users/domain/entities/app_user_data.dart';
 import 'package:messenger_app/features/users/presentation/bloc/user_state.dart';
-import 'package:messenger_app/features/users/data/models/user_data.dart';
+
 import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockUserdataRepository extends Mock implements UserdataRepository {
-  final List<Userdata> _mockUserDb = [];
+  final List<AppUserData> _mockUserDb = [];
   final Map<String, Set<String>> _blockedUsersMap = {};
-  final _allUsersStreamController = StreamController<List<Userdata>>.broadcast();
+  final _allUsersStreamController = StreamController<List<AppUserData>>.broadcast();
 
   MockUserdataRepository() {
     _emitUserUpdates();
@@ -24,7 +25,7 @@ class MockUserdataRepository extends Mock implements UserdataRepository {
   Future<void> createUser(String uid, String username, String email) async {
     await Future.delayed(Duration(milliseconds: 200));
     _mockUserDb.add(
-      Userdata(
+      AppUserData(
         uid: uid,
         username: username,
         email: email,
@@ -35,7 +36,7 @@ class MockUserdataRepository extends Mock implements UserdataRepository {
     _emitUserUpdates();
   }
 
-  void emitMockUser(List<Userdata> users) {
+  void emitMockUser(List<AppUserData> users) {
     _mockUserDb
       ..clear()
       ..addAll(users);
@@ -43,7 +44,7 @@ class MockUserdataRepository extends Mock implements UserdataRepository {
   }
 
   @override
-  Stream<List<Userdata>> getAllPermittedUsersStream(AuthUser? currentUser) {
+  Stream<List<AppUserData>> getAllPermittedUsersStream(AuthUser? currentUser) {
     if (currentUser == null) throw UserError("No current user");
 
     // Emit immediately before returning stream so that combineLatest2() actually returns sth
@@ -58,7 +59,7 @@ class MockUserdataRepository extends Mock implements UserdataRepository {
   }
 
   @override
-  Stream<List<Userdata>> getBlockedUsersStream(AuthUser? currentUser) {
+  Stream<List<AppUserData>> getBlockedUsersStream(AuthUser? currentUser) {
     if (currentUser == null) throw UserError("No current user");
 
     // listen to all user updates, and dynamically filter for blocked ones
@@ -69,7 +70,7 @@ class MockUserdataRepository extends Mock implements UserdataRepository {
   }
 
   @override
-  Future<Userdata?> getUserById(String uid) async {
+  Future<AppUserData?> getUserById(String uid) async {
     try {
       Future.delayed(Duration(milliseconds: 500));
       return _mockUserDb.firstWhere((user) => user.uid == uid);
@@ -80,7 +81,7 @@ class MockUserdataRepository extends Mock implements UserdataRepository {
   }
 
   @override
-  Stream<Userdata?> watchCurrentUser(String uid) {
+  Stream<AppUserData?> watchCurrentUser(String uid) {
     // makes stream behave like a firestore state stream, instead of a normal dart event stream,
     // meaning: right after subscription we want to emit the latest state of our data
     Future.microtask(_emitUserUpdates);
@@ -96,21 +97,45 @@ class MockUserdataRepository extends Mock implements UserdataRepository {
 
   @override
   Future<void> updateOnlineStatus(String uid, bool isOnline) async {
-    final Userdata? currentUser = await getUserById(uid);
-    Map<String, dynamic> updatedUser;
-    if (currentUser == null) {
+    final AppUserData? user = await getUserById(uid);
+    Map<String, dynamic> updatedUserMap;
+    if (user == null) {
       debugPrint("Test user not found");
       return;
     }
-    final currentUserIndex = _mockUserDb.indexWhere((user) => currentUser.uid == uid);
+    final currentUserIndex = _mockUserDb.indexWhere((user) => user.uid == uid);
 
     if (isOnline) {
-      updatedUser = currentUser.copyWith(isOnline: isOnline).toMap();
+      updatedUserMap = {
+        'uid': uid,
+        'username': user.username,
+        'email': user.email,
+        'profileImageUrl': user.profileImageUrl,
+        'lastSeen': user.lastSeen,
+        'createdAt': user.createdAt,
+        'isOnline': isOnline,
+      };
     } else {
-      updatedUser = currentUser.copyWith(lastSeen: DateTime.now(), isOnline: isOnline).toMap();
+      // updatedUserMap = user.copyWith(lastSeen: DateTime.now(), isOnline: isOnline).toMap();
+      updatedUserMap = {
+        'uid': uid,
+        'username': user.username,
+        'email': user.email,
+        'profileImageUrl': user.profileImageUrl,
+        'lastSeen': DateTime.now(),
+        'createdAt': DateTime.now(),
+        'isOnline': isOnline,
+      };
     }
 
-    _mockUserDb[currentUserIndex] = Userdata.fromMap(updatedUser);
+    // _mockUserDb[currentUserIndex] = FirestoreUserdata.fromMap(updatedUser);
+    _mockUserDb[currentUserIndex] = AppUserData(
+      uid: uid,
+      email: updatedUserMap['email'],
+      username: updatedUserMap['username'],
+      createdAt: updatedUserMap['createdAt'],
+      lastSeen: updatedUserMap['lastSeen'],
+    );
   }
 
   @override

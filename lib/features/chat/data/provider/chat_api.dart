@@ -1,5 +1,5 @@
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
-import 'package:messenger_app/features/chat/data/models/message.dart';
+import 'package:messenger_app/features/chat/domain/entities/message.dart';
 
 abstract class ChatApi {
   Stream<List<Message>> getMessages(String chatPartnerId, AuthUser? currentUser);

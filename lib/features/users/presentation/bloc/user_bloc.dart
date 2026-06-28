@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:messenger_app/features/users/domain/entities/app_user_data.dart';
 
 import 'package:messenger_app/features/users/presentation/bloc/user_event.dart';
 import 'package:messenger_app/features/users/presentation/bloc/user_state.dart';
-import 'package:messenger_app/features/users/data/models/user_data.dart';
 
 import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 import 'package:rxdart/rxdart.dart';
@@ -51,7 +51,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
       // Combining both streams into one
       await emit.forEach(
-        Rx.combineLatest2<List<Userdata>, List<Userdata>, UsersLoaded>(
+        Rx.combineLatest2<List<AppUserData>, List<AppUserData>, UsersLoaded>(
           permittedStream,
           blockedStream,
           (permitted, blocked) {

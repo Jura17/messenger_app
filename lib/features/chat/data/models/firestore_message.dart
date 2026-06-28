@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Message {
+class FirestoreMessage {
   final String id;
   final String senderId;
   final String senderEmail;
@@ -9,7 +9,7 @@ class Message {
   final Timestamp timestamp;
   final bool isRead;
 
-  Message({
+  FirestoreMessage({
     required this.id,
     required this.senderId,
     required this.senderEmail,
@@ -31,8 +31,8 @@ class Message {
     };
   }
 
-  factory Message.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
-    return Message(
+  factory FirestoreMessage.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
+    return FirestoreMessage(
       id: doc.id,
       senderId: doc['senderId'],
       senderEmail: doc['senderEmail'],

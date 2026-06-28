@@ -1,4 +1,4 @@
-import 'package:messenger_app/features/users/data/models/user_data.dart';
+import 'package:messenger_app/features/users/domain/entities/app_user_data.dart';
 
 sealed class CurrentUserCubitState {}
 
@@ -7,7 +7,7 @@ class CurrentUserCubitInitial extends CurrentUserCubitState {}
 final class CurrentUserCubitLoading extends CurrentUserCubitState {}
 
 final class CurrentUserCubitLoaded extends CurrentUserCubitState {
-  final Userdata currentUser;
+  final AppUserData currentUser;
 
   CurrentUserCubitLoaded(this.currentUser);
 }

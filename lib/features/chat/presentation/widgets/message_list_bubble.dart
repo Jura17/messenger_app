@@ -7,7 +7,7 @@ import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:messenger_app/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:messenger_app/features/chat/presentation/bloc/chat_event.dart';
 
-import 'package:messenger_app/features/chat/data/models/message.dart';
+import 'package:messenger_app/features/chat/domain/entities/message.dart';
 import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
 import 'package:messenger_app/features/users/presentation/bloc/user_event.dart';
 import 'package:provider/provider.dart';

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:messenger_app/features/chat/domain/entities/message.dart';
+import 'package:messenger_app/features/chat/domain/entities/message_with_date_time_marker.dart';
 
 import 'package:messenger_app/features/chat/presentation/bloc/chat_bloc.dart';
 
 import 'package:messenger_app/features/chat/presentation/bloc/chat_state.dart';
-import 'package:messenger_app/features/chat/data/models/message.dart';
-import 'package:messenger_app/features/chat/data/models/message_with_date_time_marker.dart';
 
 import 'package:messenger_app/features/chat/presentation/widgets/message_list_bubble.dart';
 import 'package:messenger_app/utils/format_chat_date.dart';
@@ -43,8 +43,8 @@ class MessageList extends StatelessWidget {
               itemBuilder: (context, index) {
                 final messageItem = preparedMessages[index];
 
-                final String time = DateFormat.Hm().format(messageItem.message.timestamp.toDate());
-                final String date = formatChatDate(messageItem.message.timestamp.toDate());
+                final String time = DateFormat.Hm().format(messageItem.message.dateTime);
+                final String date = formatChatDate(messageItem.message.dateTime);
 
                 return Column(
                   children: [
@@ -79,8 +79,8 @@ class MessageList extends StatelessWidget {
     String? lastTime;
 
     for (final message in messages) {
-      final date = DateFormat.MMMEd().format(message.timestamp.toDate());
-      final time = DateFormat.Hm().format(message.timestamp.toDate());
+      final date = DateFormat.MMMEd().format(message.dateTime);
+      final time = DateFormat.Hm().format(message.dateTime);
       final showDate = date != lastDate;
       final showTime = time != lastTime;
       lastDate = date;

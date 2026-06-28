@@ -1,4 +1,4 @@
-import 'package:messenger_app/features/chat/data/models/message.dart';
+import 'package:messenger_app/features/chat/domain/entities/message.dart';
 
 class MessageWithDateTimeMarker {
   final Message message;

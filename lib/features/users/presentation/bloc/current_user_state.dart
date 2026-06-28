@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:messenger_app/features/users/data/models/user_data.dart';
+import 'package:messenger_app/features/users/domain/entities/app_user_data.dart';
 
 sealed class CurrentUserState extends Equatable {
   const CurrentUserState();
@@ -13,7 +13,7 @@ final class CurrentUserInitial extends CurrentUserState {}
 final class CurrentUserLoading extends CurrentUserState {}
 
 final class CurrentUserLoaded extends CurrentUserState {
-  final Userdata? userdata;
+  final AppUserData? userdata;
 
   const CurrentUserLoaded(this.userdata);
 

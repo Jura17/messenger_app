@@ -15,20 +15,19 @@ class CurrentUserCubit extends Cubit<CurrentUserCubitState> {
         super(CurrentUserCubitInitial());
 
   Future<void> loadCurrentUser() async {
-    final currentFirebaseUser = _authRepo.getCurrentUser();
+    final currentUser = _authRepo.getCurrentUser();
 
-    if (currentFirebaseUser == null) {
+    if (currentUser == null) {
       emit(CurrentUserCubitUnauthenticated());
       return;
     }
 
     emit(CurrentUserCubitLoading());
 
-    // firestore user document might need some time to get created even though the firebase user is already authenticated
-    // retry fetching user 5 times
+    // retry fetching user 5 times in case user document is not created yet and needs more time
     try {
       for (int i = 0; i < 5; i++) {
-        final user = await _userdataRepo.getUserById(currentFirebaseUser.uid);
+        final user = await _userdataRepo.getUserById(currentUser.uid);
         if (user != null) {
           emit(CurrentUserCubitLoaded(user));
           return;
@@ -43,13 +42,13 @@ class CurrentUserCubit extends Cubit<CurrentUserCubitState> {
   }
 
   Future<void> updateOnlineStatus(bool isOnline) async {
-    final currentFirebaseUser = _authRepo.getCurrentUser();
+    final currentUser = _authRepo.getCurrentUser();
 
-    if (currentFirebaseUser == null) {
+    if (currentUser == null) {
       emit(CurrentUserCubitUnauthenticated());
       return;
     }
 
-    await _userdataRepo.updateOnlineStatus(currentFirebaseUser.uid, isOnline);
+    await _userdataRepo.updateOnlineStatus(currentUser.uid, isOnline);
   }
 }

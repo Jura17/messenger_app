@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Userdata {
+class FirestoreUserdata {
   final String uid;
   final String username;
   final String email;
@@ -10,7 +10,7 @@ class Userdata {
   final DateTime lastSeen;
   final bool isOnline;
 
-  Userdata({
+  FirestoreUserdata({
     required this.uid,
     required this.email,
     required this.username,
@@ -20,8 +20,8 @@ class Userdata {
     this.isOnline = true,
   });
 
-  factory Userdata.fromMap(Map<String, dynamic> map) {
-    return Userdata(
+  factory FirestoreUserdata.fromMap(Map<String, dynamic> map) {
+    return FirestoreUserdata(
       uid: map['uid'] as String,
       username: map['username'],
       email: map['email'] as String,
@@ -44,8 +44,8 @@ class Userdata {
     };
   }
 
-  Userdata copyWith({String? profileImage, DateTime? lastSeen, bool? isOnline}) {
-    return Userdata(
+  FirestoreUserdata copyWith({String? profileImage, DateTime? lastSeen, bool? isOnline}) {
+    return FirestoreUserdata(
       uid: uid,
       username: username,
       email: email,

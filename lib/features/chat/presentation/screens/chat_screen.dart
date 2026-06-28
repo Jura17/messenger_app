@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 
-import 'package:messenger_app/features/chat/domain/repositories/chat_repository.dart';
+import 'package:messenger_app/features/chat/presentation/bloc/chat_bloc.dart';
+import 'package:messenger_app/features/chat/presentation/bloc/chat_event.dart';
 
 import 'package:messenger_app/features/chat/presentation/widgets/message_list.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/message_input.dart';
@@ -59,8 +59,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    final authRepo = context.read<AuthRepository>();
-    final chatRepo = context.read<ChatRepository>();
+    // final authRepo = context.read<AuthRepository>();
+    // final chatRepo = context.read<ChatRepository>();
     _scrollController.addListener(_scrollListener);
 
     Future.delayed(
@@ -68,9 +68,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       () {
         _scrollDown();
 
-        final currentUser = authRepo.getCurrentUser();
-        // TODO: replace User with AuthUser in chatRepo
-        chatRepo.markMessagesAsRead(widget.chatPartnerId, currentUser);
+        if (mounted) context.read<ChatBloc>().add(MarkMessagesAsRead(widget.chatPartnerId));
+        // final currentUser = authRepo.getCurrentUser();
+        // chatRepo.markMessagesAsRead(widget.chatPartnerId, currentUser);
       },
     );
   }

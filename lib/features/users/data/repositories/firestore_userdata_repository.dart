@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 
-import 'package:messenger_app/features/users/data/models/user_data.dart';
-
 import 'package:messenger_app/features/users/data/provider/userdata_api.dart';
+import 'package:messenger_app/features/users/domain/entities/app_user_data.dart';
 import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -19,7 +18,7 @@ class FirestoreUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Stream<List<Userdata>> getAllPermittedUsersStream(AuthUser? currentUser) {
+  Stream<List<AppUserData>> getAllPermittedUsersStream(AuthUser? currentUser) {
     if (currentUser == null) throw Stream.error("UserdataRepo, getAllPermittedUsersStream: Userdata stream error");
 
     final allUsersStream = _userdataApi.getAllUsersStream();
@@ -30,12 +29,20 @@ class FirestoreUserdataRepository implements UserdataRepository {
       final permittedUsers =
           allUsers.where((user) => user['uid'] != currentUser.uid && !blockedUserIds.contains(user['uid']));
 
-      return permittedUsers.map((user) => Userdata.fromMap(user)).toList();
+      return permittedUsers.map((user) {
+        return AppUserData(
+          uid: user['uid'],
+          email: user['email'],
+          username: user['username'],
+          createdAt: user['createdAt'].toDate(),
+          lastSeen: user['lastSeen'].toDate(),
+        );
+      }).toList();
     });
   }
 
   @override
-  Stream<List<Userdata>> getBlockedUsersStream(AuthUser? currentUser) {
+  Stream<List<AppUserData>> getBlockedUsersStream(AuthUser? currentUser) {
     if (currentUser == null) return Stream.error("Blocked users stream error");
 
     final allUsersStream = _userdataApi.getAllUsersStream();
@@ -46,17 +53,25 @@ class FirestoreUserdataRepository implements UserdataRepository {
       final blockedUsers =
           allUsers.where((user) => user['uid'] != currentUser.uid && blockedUserIds.contains(user['uid']));
 
-      return blockedUsers.map((user) => Userdata.fromMap(user)).toList();
+      return blockedUsers.map((user) {
+        return AppUserData(
+          uid: user['uid'],
+          email: user['email'],
+          username: user['username'],
+          createdAt: user['createdAt'].toDate(),
+          lastSeen: user['lastSeen'].toDate(),
+        );
+      }).toList();
     });
   }
 
   @override
-  Future<Userdata?> getUserById(String uid) {
+  Future<AppUserData?> getUserById(String uid) {
     return _userdataApi.getUserById(uid);
   }
 
   @override
-  Stream<Userdata?> watchCurrentUser(String uid) {
+  Stream<AppUserData?> watchCurrentUser(String uid) {
     return _userdataApi.watchCurrentUser(uid);
   }
 

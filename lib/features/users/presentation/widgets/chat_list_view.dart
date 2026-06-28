@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
-import 'package:messenger_app/features/chat/data/models/chat_preview.dart';
+import 'package:messenger_app/features/chat/domain/entities/chat_preview.dart';
 import 'package:messenger_app/features/chat/domain/repositories/chat_repository.dart';
 
 import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
@@ -69,11 +69,14 @@ class _ChatListViewState extends State<ChatListView> {
                         (userData) {
                           if (userData.email == currentUser?.email) return SizedBox.shrink();
                           final preview = previewByPartner[userData.uid];
+                          var dateTime = preview?.lastMessageDateTime;
+
                           return ChatTile(
+                            currentUser: currentUser!,
                             chatPartnerName: userData.username,
                             chatPartnerId: userData.uid,
                             lastMessageText: preview?.lastMessageText ?? '',
-                            lastMessageTimestamp: preview?.lastMessageTimestamp,
+                            lastMessageDateTime: dateTime,
                             profileImage: userData.profileImageUrl,
                             lastSeen: userData.lastSeen,
                           );

@@ -1,6 +1,6 @@
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
-import 'package:messenger_app/features/chat/data/models/chat_preview.dart';
-import 'package:messenger_app/features/chat/data/models/message.dart';
+import 'package:messenger_app/features/chat/domain/entities/chat_preview.dart';
+import 'package:messenger_app/features/chat/domain/entities/message.dart';
 
 abstract interface class ChatRepository {
   Stream<List<Message>> watchChatroomMessages(String chatPartnerId, AuthUser? currentUser);

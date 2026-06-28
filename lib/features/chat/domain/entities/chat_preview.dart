@@ -1,16 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class ChatPreview {
   final String chatroomId;
   final String lastMessageText;
-  final Timestamp lastMessageTimestamp;
+  final DateTime lastMessageDateTime;
   final String lastMessageSenderId;
   final List<String> participants;
 
   ChatPreview({
     required this.chatroomId,
     required this.lastMessageText,
-    required this.lastMessageTimestamp,
+    required this.lastMessageDateTime,
     required this.lastMessageSenderId,
     required this.participants,
   });

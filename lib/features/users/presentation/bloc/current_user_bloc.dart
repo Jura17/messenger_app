@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messenger_app/features/users/domain/entities/app_user_data.dart';
 import 'package:messenger_app/features/users/presentation/bloc/current_user_event.dart';
 import 'package:messenger_app/features/users/presentation/bloc/current_user_state.dart';
-import 'package:messenger_app/features/users/data/models/user_data.dart';
 import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 
 class CurrentUserBloc extends Bloc<CurrentUserEvent, CurrentUserState> {
@@ -16,7 +16,7 @@ class CurrentUserBloc extends Bloc<CurrentUserEvent, CurrentUserState> {
 
   Future<void> _onWatchCurrentUser(WatchCurrentUser event, Emitter<CurrentUserState> emit) async {
     emit(CurrentUserLoading());
-    return emit.forEach<Userdata?>(
+    return emit.forEach<AppUserData?>(
       _userRepo.watchCurrentUser(event.uid),
       onData: (userdata) {
         return CurrentUserLoaded(userdata);

@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
-import 'package:messenger_app/features/chat/data/models/chat_preview.dart';
-
-import 'package:messenger_app/features/chat/data/models/message.dart';
+import 'package:flutter/material.dart';
+import 'package:messenger_app/features/chat/data/models/firestore_message.dart';
 import 'package:messenger_app/features/chat/data/provider/chat_api.dart';
+import 'package:messenger_app/features/chat/domain/entities/chat_preview.dart';
+import 'package:messenger_app/features/chat/domain/entities/message.dart';
+import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 
 class FirestoreChatApi implements ChatApi {
   final FirebaseFirestore firestoreDb;
@@ -28,7 +28,16 @@ class FirestoreChatApi implements ChatApi {
         .orderBy('timestamp', descending: false)
         .snapshots()
         .map((snapshot) => snapshot.docs.map((messageDoc) {
-              return Message.fromDocument(messageDoc);
+              final message = FirestoreMessage.fromDocument(messageDoc);
+
+              return Message(
+                id: message.id,
+                senderId: message.senderId,
+                senderEmail: message.senderEmail,
+                receiverId: message.receiverId,
+                message: message.message,
+                dateTime: message.timestamp.toDate(),
+              );
             }).toList());
   }
 
@@ -46,10 +55,11 @@ class FirestoreChatApi implements ChatApi {
         .map(
           (snapshot) => snapshot.docs.map((doc) {
             final data = doc.data();
+
             return ChatPreview(
               chatroomId: doc.id,
               lastMessageText: data['lastMessageText'] ?? '',
-              lastMessageTimestamp: data['lastMessageTimestamp'],
+              lastMessageDateTime: data['lastMessageTimestamp'].toDate() ?? 'Error loading message timestamp',
               lastMessageSenderId: data['lastMessageSenderId'] ?? '',
               participants: List<String>.from(data['participants'] ?? []),
             );
@@ -74,7 +84,7 @@ class FirestoreChatApi implements ChatApi {
     final docRef = firestoreDb.collection('chatrooms').doc(chatroomId).collection('messages').doc();
 
     // create a new message
-    Message newMessage = Message(
+    final newMessage = FirestoreMessage(
       id: docRef.id,
       senderId: currentUserId,
       senderEmail: currentUserEmail,
@@ -131,6 +141,7 @@ class FirestoreChatApi implements ChatApi {
 
   @override
   Stream<int> watchUnreadMessageCount(String chatPartnerId, AuthUser? currentUser) {
+    debugPrint("From ChatRepoApi: UnreadMessageCount stream method");
     if (currentUser == null) throw Exception('No authenticated user');
 
     final currentUserId = currentUser.uid;
@@ -150,7 +161,7 @@ class FirestoreChatApi implements ChatApi {
         .snapshots()
         .map((snapshot) {
       final count = snapshot.docs.length;
-
+      debugPrint("from ChatRepoApi: Count is $count");
       return count;
     });
   }

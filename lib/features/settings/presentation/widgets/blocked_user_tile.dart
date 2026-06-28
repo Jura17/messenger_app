@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:messenger_app/features/users/domain/entities/app_user_data.dart';
 
 import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
 import 'package:messenger_app/features/users/presentation/bloc/user_event.dart';
-import 'package:messenger_app/features/users/data/models/user_data.dart';
+
 import 'package:provider/provider.dart';
 
 class BlockedUserTile extends StatelessWidget {
@@ -11,7 +12,7 @@ class BlockedUserTile extends StatelessWidget {
     required this.user,
   });
 
-  final Userdata user;
+  final AppUserData user;
 
   @override
   Widget build(BuildContext context) {
