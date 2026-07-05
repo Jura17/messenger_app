@@ -6,7 +6,9 @@ import 'package:messenger_app/features/auth/domain/repositories/auth_repository.
 import 'package:messenger_app/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:messenger_app/features/chat/presentation/bloc/chat_event.dart';
 import 'package:messenger_app/features/chat/domain/repositories/chat_repository.dart';
-import 'package:messenger_app/features/chat/presentation/bloc/chat_state.dart';
+import 'package:messenger_app/features/chat/presentation/bloc/unread_bloc.dart';
+
+import 'package:messenger_app/features/chat/presentation/bloc/unread_state.dart';
 
 import 'package:messenger_app/features/chat/presentation/screens/chat_screen.dart';
 import 'package:messenger_app/features/users/presentation/bloc/current_user_bloc.dart';
@@ -41,24 +43,12 @@ class ChatTile extends StatefulWidget {
 }
 
 class _ChatTileState extends State<ChatTile> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   context.read<ChatBloc>().add(WatchUnreadMessagesCount(widget.chatPartnerId));
-  // }
-
   @override
   Widget build(BuildContext context) {
     int unreadCount = 0;
 
-    // TODO: repositories should be read from via cubits/bloc, not direcly through the repo
     final chatRepo = context.read<ChatRepository>();
-
-    // final currentUser = authRepo.getCurrentUser();
     final usernameInitials = getUsernameInitials(widget.chatPartnerName);
-
-    final Stream<int> unreadCountStream =
-        context.watch<ChatRepository>().watchUnreadMessageCount(widget.chatPartnerId, widget.currentUser);
 
     return GestureDetector(
       onTap: () async {
@@ -101,7 +91,6 @@ class _ChatTileState extends State<ChatTile> {
               ),
               child: Center(
                 child: widget.profileImage.isNotEmpty
-                    // TODO: make whole parent container a CircleAvatar?
                     ? CircleAvatar(
                         backgroundImage: NetworkImage(widget.profileImage),
                         radius: 25,
@@ -130,74 +119,42 @@ class _ChatTileState extends State<ChatTile> {
                 ],
               ),
             ),
-            // BlocBuilder<ChatBloc, ChatState>(
-            //   builder: (context, state) {
-            //     if (state is UnreadCountLoaded && state.chatPartnerId == widget.chatPartnerId) {
-            //       debugPrint("state is UnreadCountLoaded");
-            //       unreadCount = state.count;
-            //       debugPrint(unreadCount.toString());
-            //     }
-
-            //     return Column(
-            //       crossAxisAlignment: CrossAxisAlignment.end,
-            //       children: [
-            //         // show last message
-            //         if (widget.lastMessageDateTime != null) Text(formatChatDate(widget.lastMessageDateTime!)),
-            //         // show unread count as highlighted circle
-            //         if (unreadCount != 0)
-            //           Container(
-            //             padding: EdgeInsets.all(10),
-            //             decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).highlightColor),
-            //             child: Text(
-            //               state.toString(),
-            //               style: TextStyle(
-            //                 color: Theme.of(context).colorScheme.tertiary,
-            //                 fontWeight: FontWeight.bold,
-            //               ),
-            //             ),
-            //           ),
-            //       ],
-            //     );
-            //   },
-            // ),
-            StreamBuilder<int>(
-              stream: unreadCountStream,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  debugPrint("Error fetching unread count");
+            BlocBuilder<UnreadBloc, UnreadState>(
+              builder: (context, state) {
+                if (state is UnreadError) {
+                  debugPrint(state.message);
                   return SizedBox.shrink();
                 }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
+                if (state is UnreadLoading) {
                   return CircularProgressIndicator();
                 }
+                if (state is UnreadLoaded && state.chatPartnerId == widget.chatPartnerId) {
+                  unreadCount = state.count;
 
-                if (snapshot.data != null) {
-                  unreadCount = snapshot.data!;
-                }
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // show last message
-                    if (widget.lastMessageDateTime != null) Text(formatChatDate(widget.lastMessageDateTime!)),
-                    // show unread count as highlighted circle
-                    if (unreadCount != 0)
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).highlightColor),
-                        child: Text(
-                          snapshot.data.toString(),
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.tertiary,
-                            fontWeight: FontWeight.bold,
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // show last message
+                      if (widget.lastMessageDateTime != null) Text(formatChatDate(widget.lastMessageDateTime!)),
+                      // show unread count as highlighted circle
+                      if (unreadCount != 0)
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).highlightColor),
+                          child: Text(
+                            unreadCount.toString(),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.tertiary,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                  ],
-                );
+                    ],
+                  );
+                }
+                return SizedBox.shrink();
               },
-            )
+            ),
           ],
         ),
       ),

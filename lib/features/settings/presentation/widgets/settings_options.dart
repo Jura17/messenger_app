@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' hide BuildContext;
+import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/core/theme/theme_cubit.dart';
 import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';

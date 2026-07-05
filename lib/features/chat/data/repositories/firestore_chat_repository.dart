@@ -16,8 +16,8 @@ class FirestoreChatRepository implements ChatRepository {
   }
 
   @override
-  Stream<int> watchUnreadMessageCount(String chatPartnerId, AuthUser? currentUser) {
-    return chatApi.watchUnreadMessageCount(chatPartnerId, currentUser);
+  Stream<int> watchUnreadMessageCount(String chatPartnerId, String? currentUserId) {
+    return chatApi.watchUnreadMessageCount(chatPartnerId, currentUserId);
   }
 
   @override

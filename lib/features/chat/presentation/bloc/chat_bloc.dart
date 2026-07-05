@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 
@@ -10,7 +9,6 @@ import 'package:messenger_app/features/chat/domain/repositories/chat_repository.
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatRepository _chatRepo;
   final AuthRepository _authRepo;
-  // TODO: get rid of authRepo here; get current user before calling watchChatroomMessage() and inject it there
 
   ChatBloc({
     required ChatRepository chatRepo,
@@ -19,7 +17,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         _authRepo = authRepo,
         super(ChatInitial()) {
     on<WatchMessages>(_onWatchMessages);
-    on<WatchUnreadMessagesCount>(_onWatchUnreadMessagesCount);
     on<SendMessage>(_onSendMessage);
     on<MarkMessagesAsRead>(_onMarkMessagesAsRead);
     on<ReportMessage>(_onReportMessage);
@@ -31,17 +28,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       _chatRepo.watchChatroomMessages(event.chatPartnerId, _authRepo.getCurrentUser()),
       onData: (messages) {
         return ChatLoaded(messages);
-      },
-      onError: (error, stackTrace) => ChatError(error.toString()),
-    );
-  }
-
-  Future<void> _onWatchUnreadMessagesCount(WatchUnreadMessagesCount event, Emitter<ChatState> emit) async {
-    await emit.forEach<int>(
-      _chatRepo.watchUnreadMessageCount(event.chatPartnerId, _authRepo.getCurrentUser()),
-      onData: (count) {
-        debugPrint("UnreadMessagesCount loaded");
-        return UnreadCountLoaded(count, event.chatPartnerId);
       },
       onError: (error, stackTrace) => ChatError(error.toString()),
     );

@@ -140,11 +140,8 @@ class FirestoreChatApi implements ChatApi {
   }
 
   @override
-  Stream<int> watchUnreadMessageCount(String chatPartnerId, AuthUser? currentUser) {
-    debugPrint("From ChatRepoApi: UnreadMessageCount stream method");
-    if (currentUser == null) throw Exception('No authenticated user');
-
-    final currentUserId = currentUser.uid;
+  Stream<int> watchUnreadMessageCount(String chatPartnerId, String? currentUserId) {
+    if (currentUserId == null) throw Exception('No authenticated user');
 
     // build consistent chatroom ID
     List<String> userIds = [currentUserId, chatPartnerId];
@@ -161,7 +158,6 @@ class FirestoreChatApi implements ChatApi {
         .snapshots()
         .map((snapshot) {
       final count = snapshot.docs.length;
-      debugPrint("from ChatRepoApi: Count is $count");
       return count;
     });
   }

@@ -4,7 +4,7 @@ import 'package:messenger_app/features/chat/domain/entities/message.dart';
 
 abstract interface class ChatRepository {
   Stream<List<Message>> watchChatroomMessages(String chatPartnerId, AuthUser? currentUser);
-  Stream<int> watchUnreadMessageCount(String chatPartnerId, AuthUser? currentUser);
+  Stream<int> watchUnreadMessageCount(String chatPartnerId, String? currentUserId);
   Future<void> sendMessage(String chatPartnerId, String message, AuthUser? currentUser);
   Stream<List<ChatPreview>> watchChatroom(AuthUser? currentUser);
   Future<void> markMessagesAsRead(String chatPartnerId, AuthUser? currentUser);

@@ -16,14 +16,14 @@ class WatchMessages extends ChatEvent {
   List<Object?> get props => [chatPartnerId];
 }
 
-class WatchUnreadMessagesCount extends ChatEvent {
-  final String chatPartnerId;
+// class WatchUnreadMessagesCount extends ChatEvent {
+//   final String chatPartnerId;
 
-  const WatchUnreadMessagesCount(this.chatPartnerId);
+//   const WatchUnreadMessagesCount(this.chatPartnerId);
 
-  @override
-  List<Object?> get props => [chatPartnerId];
-}
+//   @override
+//   List<Object?> get props => [chatPartnerId];
+// }
 
 class SendMessage extends ChatEvent {
   final String chatPartnerId;
