@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:messenger_app/features/chat/data/models/firestore_message.dart';
 import 'package:messenger_app/features/chat/data/provider/chat_api.dart';
 import 'package:messenger_app/features/chat/domain/entities/chat_preview.dart';

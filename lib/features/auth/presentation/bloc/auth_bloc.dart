@@ -1,5 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messenger_app/features/auth/domain/auth_exceptions.dart';
+
 import 'package:messenger_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
@@ -36,10 +38,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       await _authRepo.logout();
       emit(Unauthenticated());
-    } on FirebaseAuthException catch (e) {
-      emit(AuthError(e.message ?? 'Logout failed'));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthError("Logout failed for some reason: ${e.toString()}"));
     }
   }
 
@@ -49,12 +49,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _authRepo.deleteAccount();
       await _userRepo.deleteAccount(currentUser);
       emit(Unauthenticated());
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'requires-recent-login') {
-        final currentState = state;
-        if (currentState is Authenticated) {
-          emit(Authenticated(currentState.user, needsReauthentication: true));
-        }
+    } on RequiresRecentLoginException catch (e) {
+      final currentState = state;
+      if (currentState is Authenticated) {
+        debugPrint("Needs recent login, error code: $e");
+        emit(Authenticated(currentState.user, needsReauthentication: true));
       }
     } catch (e) {
       emit(AuthError(e.toString()));

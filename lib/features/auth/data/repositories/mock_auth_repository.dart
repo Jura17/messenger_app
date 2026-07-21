@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:messenger_app/features/auth/data/models/error_handling_authentication.dart';
 import 'package:messenger_app/features/auth/data/models/mock_user.dart';
+import 'package:messenger_app/features/auth/domain/auth_exceptions.dart';
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:mocktail/mocktail.dart';
@@ -48,7 +49,8 @@ class MockAuthRepository extends Mock implements AuthRepository {
   @override
   Future<void> deleteAccount() async {
     if (requiresRecentLogin) {
-      throw FirebaseAuthException(code: 'requires-recent-login');
+      throw RequiresRecentLoginException();
+      // throw FirebaseAuthException(code: 'requires-recent-login');
     }
     currentUser = null;
     _streamController.add(null);

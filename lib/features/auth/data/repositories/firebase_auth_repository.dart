@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:messenger_app/features/auth/data/models/error_handling_authentication.dart';
 import 'package:messenger_app/features/auth/data/provider/auth_api.dart';
+import 'package:messenger_app/features/auth/domain/auth_exceptions.dart';
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 
@@ -62,7 +63,14 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> deleteAccount() async {
-    await _authApi.deleteAccount();
+    try {
+      await _authApi.deleteAccount();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        throw RequiresRecentLoginException();
+      }
+    }
+    throw AuthException('Authentication failed');
   }
 
   @override
