@@ -6,10 +6,9 @@ import 'package:messenger_app/features/auth/data/models/mock_user.dart';
 import 'package:messenger_app/features/auth/domain/auth_exceptions.dart';
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
-import 'package:mocktail/mocktail.dart';
 
 // Fake repo for tests; never communicates with Firebase
-class MockAuthRepository extends Mock implements AuthRepository {
+class FakeAuthRepository implements AuthRepository {
   final _streamController = StreamController<AuthUser?>.broadcast();
   AuthUser? currentUser;
   bool shouldFail = false;

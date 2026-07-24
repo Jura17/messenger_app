@@ -3,16 +3,16 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:messenger_app/features/auth/presentation/cubits/sign_up_cubit.dart';
 import 'package:messenger_app/features/auth/presentation/cubits/sign_up_state.dart';
-import 'package:messenger_app/features/auth/data/repositories/mock_auth_repository.dart';
-import 'package:messenger_app/features/users/data/repositories/mock_userdata_repository.dart';
+import 'package:messenger_app/features/auth/data/repositories/fake_auth_repository.dart';
+import 'package:messenger_app/features/users/data/repositories/fake_userdata_repository.dart';
 
 void main() {
   group('sign up cubit tests', () {
     blocTest<SignUpCubit, SignUpState>(
       'emits [loading, success] when signing up succeeds',
       build: () {
-        final mockAuthRepo = MockAuthRepository();
-        final mockUserRepo = MockUserdataRepository();
+        final mockAuthRepo = FakeAuthRepository();
+        final mockUserRepo = FakeUserdataRepository();
         final signUpCubit = SignUpCubit(authRepo: mockAuthRepo, userdataRepo: mockUserRepo);
         return signUpCubit;
       },
@@ -34,8 +34,8 @@ void main() {
     blocTest(
       'emits [loading, failure] when signing up fails due to invalid credentials',
       build: () {
-        final mockAuthRepo = MockAuthRepository()..shouldFail = true;
-        final mockUserRepo = MockUserdataRepository();
+        final mockAuthRepo = FakeAuthRepository()..shouldFail = true;
+        final mockUserRepo = FakeUserdataRepository();
         final signUpCubit = SignUpCubit(authRepo: mockAuthRepo, userdataRepo: mockUserRepo);
         return signUpCubit;
       },
@@ -67,8 +67,8 @@ void main() {
     blocTest(
       'emits [loading, failure] when signing up fails due to not matching passwords',
       build: () {
-        final mockAuthRepo = MockAuthRepository()..shouldFail = true;
-        final mockUserRepo = MockUserdataRepository();
+        final mockAuthRepo = FakeAuthRepository()..shouldFail = true;
+        final mockUserRepo = FakeUserdataRepository();
         final signUpCubit = SignUpCubit(authRepo: mockAuthRepo, userdataRepo: mockUserRepo);
         return signUpCubit;
       },
@@ -100,8 +100,8 @@ void main() {
     blocTest(
       'emits [loading, failure] when signing up fails due to empty fields',
       build: () {
-        final mockAuthRepo = MockAuthRepository()..shouldFail = true;
-        final mockUserRepo = MockUserdataRepository();
+        final mockAuthRepo = FakeAuthRepository()..shouldFail = true;
+        final mockUserRepo = FakeUserdataRepository();
         final signUpCubit = SignUpCubit(authRepo: mockAuthRepo, userdataRepo: mockUserRepo);
         return signUpCubit;
       },
@@ -132,8 +132,8 @@ void main() {
     blocTest<SignUpCubit, SignUpState>(
       'emits [loading, failure] when signing up fails, due to unknown error',
       build: () {
-        final mockAuthRepo = MockAuthRepository()..throwUnknownError = true;
-        final mockUserRepo = MockUserdataRepository();
+        final mockAuthRepo = FakeAuthRepository()..throwUnknownError = true;
+        final mockUserRepo = FakeUserdataRepository();
         return SignUpCubit(authRepo: mockAuthRepo, userdataRepo: mockUserRepo);
       },
       act: (cubit) async {

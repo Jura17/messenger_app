@@ -1,19 +1,19 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:messenger_app/features/auth/data/repositories/mock_auth_repository.dart';
+import 'package:messenger_app/features/auth/data/repositories/fake_auth_repository.dart';
 import 'package:messenger_app/features/users/presentation/bloc/current_user_bloc.dart';
 import 'package:messenger_app/features/users/presentation/bloc/current_user_event.dart';
 import 'package:messenger_app/features/users/presentation/bloc/current_user_state.dart';
-import 'package:messenger_app/features/users/data/repositories/mock_userdata_repository.dart';
+import 'package:messenger_app/features/users/data/repositories/fake_userdata_repository.dart';
 
 void main() {
-  late MockAuthRepository mockAuthRepository;
-  late MockUserdataRepository mockUserdataRepository;
+  late FakeAuthRepository mockAuthRepository;
+  late FakeUserdataRepository mockUserdataRepository;
   late CurrentUserBloc currentUserBloc;
 
   setUp(() async {
-    mockAuthRepository = MockAuthRepository();
-    mockUserdataRepository = MockUserdataRepository();
+    mockAuthRepository = FakeAuthRepository();
+    mockUserdataRepository = FakeUserdataRepository();
     currentUserBloc = CurrentUserBloc(userRepo: mockUserdataRepository);
 
     await mockUserdataRepository.createUser('user_a', 'userA', 'a@test.com');

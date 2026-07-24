@@ -4,17 +4,17 @@ import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
 import 'package:messenger_app/features/users/presentation/bloc/user_event.dart';
 import 'package:messenger_app/features/users/presentation/bloc/user_state.dart';
 
-import 'package:messenger_app/features/auth/data/repositories/mock_auth_repository.dart';
-import 'package:messenger_app/features/users/data/repositories/mock_userdata_repository.dart';
+import 'package:messenger_app/features/auth/data/repositories/fake_auth_repository.dart';
+import 'package:messenger_app/features/users/data/repositories/fake_userdata_repository.dart';
 
 void main() {
-  late MockAuthRepository mockAuthRepo;
-  late MockUserdataRepository mockUserRepo;
+  late FakeAuthRepository mockAuthRepo;
+  late FakeUserdataRepository mockUserRepo;
   late UserBloc userBloc;
 
   setUp(() async {
-    mockAuthRepo = MockAuthRepository();
-    mockUserRepo = MockUserdataRepository();
+    mockAuthRepo = FakeAuthRepository();
+    mockUserRepo = FakeUserdataRepository();
     userBloc = UserBloc(authRepo: mockAuthRepo, userRepo: mockUserRepo);
 
     // Populate the mock DB
@@ -92,7 +92,7 @@ void main() {
     'emits [UserError] when there is no current user',
     build: () {
       // no current user signed in
-      final unauthRepo = MockAuthRepository();
+      final unauthRepo = FakeAuthRepository();
       return UserBloc(authRepo: unauthRepo, userRepo: mockUserRepo);
     },
     act: (bloc) => bloc.add(WatchUsers()),

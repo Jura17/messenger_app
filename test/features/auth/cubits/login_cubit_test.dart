@@ -2,16 +2,16 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:messenger_app/features/auth/presentation/cubits/login_cubit.dart';
 import 'package:messenger_app/features/auth/presentation/cubits/login_state.dart';
-import 'package:messenger_app/features/auth/data/repositories/mock_auth_repository.dart';
-import 'package:messenger_app/features/users/data/repositories/mock_userdata_repository.dart';
+import 'package:messenger_app/features/auth/data/repositories/fake_auth_repository.dart';
+import 'package:messenger_app/features/users/data/repositories/fake_userdata_repository.dart';
 
 void main() {
   group('login cubit tests', () {
     blocTest<LoginCubit, LoginState>(
       'emits [loading, success] when login succeeds',
       build: () {
-        final mockAuthRepo = MockAuthRepository();
-        final mockUserRepo = MockUserdataRepository();
+        final mockAuthRepo = FakeAuthRepository();
+        final mockUserRepo = FakeUserdataRepository();
         return LoginCubit(authRepo: mockAuthRepo, userdataRepo: mockUserRepo);
       },
       act: (cubit) async {
@@ -31,8 +31,8 @@ void main() {
     blocTest<LoginCubit, LoginState>(
       'emits [loading, failure] when login fails',
       build: () {
-        final mockAuthRepo = MockAuthRepository()..shouldFail = true;
-        final mockUserRepo = MockUserdataRepository();
+        final mockAuthRepo = FakeAuthRepository()..shouldFail = true;
+        final mockUserRepo = FakeUserdataRepository();
         return LoginCubit(authRepo: mockAuthRepo, userdataRepo: mockUserRepo);
       },
       act: (cubit) async {
@@ -56,8 +56,8 @@ void main() {
     blocTest<LoginCubit, LoginState>(
       'emits [loading, failure] when login fails, due to empty fields',
       build: () {
-        final mockAuthRepo = MockAuthRepository()..shouldFail = true;
-        final mockUserRepo = MockUserdataRepository();
+        final mockAuthRepo = FakeAuthRepository()..shouldFail = true;
+        final mockUserRepo = FakeUserdataRepository();
         return LoginCubit(authRepo: mockAuthRepo, userdataRepo: mockUserRepo);
       },
       act: (cubit) async {
@@ -78,8 +78,8 @@ void main() {
     blocTest<LoginCubit, LoginState>(
       'emits [loading, failure] when login fails, due to unknown error',
       build: () {
-        final mockAuthRepo = MockAuthRepository()..throwUnknownError = true;
-        final mockUserRepo = MockUserdataRepository();
+        final mockAuthRepo = FakeAuthRepository()..throwUnknownError = true;
+        final mockUserRepo = FakeUserdataRepository();
         return LoginCubit(authRepo: mockAuthRepo, userdataRepo: mockUserRepo);
       },
       act: (cubit) async {

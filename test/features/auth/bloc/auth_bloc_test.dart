@@ -5,32 +5,32 @@ import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:messenger_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:messenger_app/features/auth/data/models/mock_user.dart';
-import 'package:messenger_app/features/auth/data/repositories/mock_auth_repository.dart';
-import 'package:messenger_app/features/users/data/repositories/mock_userdata_repository.dart';
+import 'package:messenger_app/features/auth/data/repositories/fake_auth_repository.dart';
+import 'package:messenger_app/features/users/data/repositories/fake_userdata_repository.dart';
 
 void main() {
-  late MockAuthRepository mockAuthRepo;
-  late MockUserdataRepository mockUserRepo;
+  late FakeAuthRepository fakeAuthRepo;
+  late FakeUserdataRepository fakeUserRepo;
   group(
     'auth bloc tests',
     () {
       setUp(() {
-        mockAuthRepo = MockAuthRepository();
-        mockUserRepo = MockUserdataRepository();
+        fakeAuthRepo = FakeAuthRepository();
+        fakeUserRepo = FakeUserdataRepository();
       });
 
       tearDown(() {
-        mockAuthRepo.dispose();
-        mockUserRepo.dispose();
+        fakeAuthRepo.dispose();
+        fakeUserRepo.dispose();
       });
 
       blocTest<AuthBloc, AuthState>(
         'emit [Unauthenticated] when AppStarted and no user is signed in',
-        build: () => AuthBloc(authRepo: mockAuthRepo, userRepo: mockUserRepo),
+        build: () => AuthBloc(authRepo: fakeAuthRepo, userRepo: fakeUserRepo),
         act: (bloc) async {
           bloc.add(AppStarted());
           await Future.delayed(const Duration(milliseconds: 50));
-          mockAuthRepo.logout();
+          fakeAuthRepo.logout();
         },
         expect: () {
           return [isA<Unauthenticated>()];
@@ -38,19 +38,19 @@ void main() {
       );
       blocTest<AuthBloc, AuthState>(
         'emits [Authenticated] when AppStarted and user is signed in',
-        build: () => AuthBloc(authRepo: mockAuthRepo, userRepo: mockUserRepo),
+        build: () => AuthBloc(authRepo: fakeAuthRepo, userRepo: fakeUserRepo),
         act: (bloc) async {
           bloc.add(AppStarted());
           await Future.delayed(const Duration(milliseconds: 50));
           // simulate Firebase emitting a user
-          await mockAuthRepo.signIn('test@email.com', '123456');
+          await fakeAuthRepo.signIn('test@email.com', '123456');
         },
         expect: () => [isA<Authenticated>()],
       );
 
       blocTest<AuthBloc, AuthState>(
         'emits [Unauthenticated] when LogoutRequested is added',
-        build: () => AuthBloc(authRepo: mockAuthRepo, userRepo: mockUserRepo),
+        build: () => AuthBloc(authRepo: fakeAuthRepo, userRepo: fakeUserRepo),
         act: (bloc) async {
           bloc.add(LogoutRequested());
           await Future.delayed(const Duration(milliseconds: 50));
@@ -60,9 +60,9 @@ void main() {
 
       blocTest<AuthBloc, AuthState>(
         'emits [Unauthenticated] when DeletionRequested is added',
-        build: () => AuthBloc(authRepo: mockAuthRepo, userRepo: mockUserRepo),
+        build: () => AuthBloc(authRepo: fakeAuthRepo, userRepo: fakeUserRepo),
         act: (bloc) async {
-          await mockAuthRepo.signIn('test@email.com', '123456');
+          await fakeAuthRepo.signIn('test@email.com', '123456');
           await Future.delayed(const Duration(milliseconds: 50));
 
           bloc.add(DeletionRequested());
@@ -74,12 +74,12 @@ void main() {
       blocTest<AuthBloc, AuthState>(
         'emits [Authenticated(needsReauthentication: true)] when re-authenticate is required on account deletion request',
         build: () {
-          mockAuthRepo.requiresRecentLogin = true;
-          return AuthBloc(authRepo: mockAuthRepo, userRepo: mockUserRepo);
+          fakeAuthRepo.requiresRecentLogin = true;
+          return AuthBloc(authRepo: fakeAuthRepo, userRepo: fakeUserRepo);
         },
         seed: () => Authenticated(MockUser(uid: '123', email: 'test@email.com')),
         act: (bloc) async {
-          await mockAuthRepo.signIn('test@email.com', '123456');
+          await fakeAuthRepo.signIn('test@email.com', '123456');
           await Future.delayed(const Duration(milliseconds: 50));
           bloc.add(DeletionRequested());
         },

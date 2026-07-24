@@ -1,19 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 import 'package:messenger_app/features/users/domain/entities/app_user_data.dart';
 import 'package:messenger_app/features/users/presentation/bloc/user_state.dart';
 
 import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
-import 'package:mocktail/mocktail.dart';
 
-class MockUserdataRepository extends Mock implements UserdataRepository {
+class FakeUserdataRepository implements UserdataRepository {
   final List<AppUserData> _mockUserDb = [];
   final Map<String, Set<String>> _blockedUsersMap = {};
   final _allUsersStreamController = StreamController<List<AppUserData>>.broadcast();
 
-  MockUserdataRepository() {
+  FakeUserdataRepository() {
     _emitUserUpdates();
   }
 
@@ -172,7 +172,13 @@ class MockUserdataRepository extends Mock implements UserdataRepository {
   void _emitUserUpdates() {
     // notify listeners and
     // create immutable-snapshot-like object (and not the direct reference to the db)
-    // ==> Matches Firestore semeantics
+    // ==> Matches Firestore semantics
     _allUsersStreamController.add(List.unmodifiable(_mockUserDb));
+  }
+
+  @override
+  Future<void> saveProfileImage(XFile imageFile, AuthUser? currentUser) {
+    // TODO: implement saveProfileImage
+    throw UnimplementedError();
   }
 }
