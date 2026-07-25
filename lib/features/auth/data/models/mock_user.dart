@@ -1,7 +1,6 @@
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
-import 'package:mocktail/mocktail.dart';
 
-class MockUser extends Mock implements AuthUser {
+class MockUser implements AuthUser {
   @override
   final String uid;
   @override

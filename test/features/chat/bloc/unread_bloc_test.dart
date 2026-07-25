@@ -24,7 +24,7 @@ void main() {
 
   tearDown(() => unreadBloc.close());
 
-  blocTest(
+  blocTest<UnreadBloc, UnreadState>(
     "emits [UnreadLoaded] with correct count when stream updates",
     // build the BloC and prepare the mock repo environment. No actions are taken yet. The BloC is sitting there doing nothing.
     build: () {
