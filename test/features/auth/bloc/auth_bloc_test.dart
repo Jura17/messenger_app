@@ -1,19 +1,16 @@
 import 'package:bloc_test/bloc_test.dart';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:messenger_app/features/auth/data/repositories/mock_auth_repository.dart';
 import 'package:messenger_app/features/auth/domain/auth_exceptions.dart';
-import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
+
 import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:messenger_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:messenger_app/features/auth/data/models/mock_user.dart';
+import 'package:messenger_app/features/users/data/repositories/mock_userdata_repository.dart';
 
-import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 import 'package:mocktail/mocktail.dart';
-
-class MockAuthRepository extends Mock implements AuthRepository {}
-
-class MockUserdataRepository extends Mock implements UserdataRepository {}
 
 void main() {
   late MockAuthRepository mockAuthRepo;
@@ -28,63 +25,64 @@ void main() {
   });
 
   tearDown(() => authBloc.close());
+  group('auth bloc tests', () {
+    blocTest<AuthBloc, AuthState>(
+      'emit [Unauthenticated] when AppStarted and no user is signed in',
+      build: () {
+        // When the app starts we have no user and (due to the empty mock repo object) no stream
+        when(() => mockAuthRepo.onAuthChanged()).thenAnswer((_) => Stream.value(null));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AppStarted()),
+      expect: () => [Unauthenticated()],
+    );
 
-  blocTest<AuthBloc, AuthState>(
-    'emit [Unauthenticated] when AppStarted and no user is signed in',
-    build: () {
-      // When the app starts we have no user and (due to the empty mock repo object) no stream
-      when(() => mockAuthRepo.onAuthChanged()).thenAnswer((_) => Stream.value(null));
-      return authBloc;
-    },
-    act: (bloc) => bloc.add(AppStarted()),
-    expect: () => [Unauthenticated()],
-  );
+    blocTest<AuthBloc, AuthState>(
+      'emits [Authenticated] when AppStarted and user is signed in',
+      build: () {
+        when(() => mockAuthRepo.onAuthChanged()).thenAnswer((_) => Stream.value(mockUser));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AppStarted()),
+      expect: () => [Authenticated(mockUser)],
+    );
 
-  blocTest<AuthBloc, AuthState>(
-    'emits [Authenticated] when AppStarted and user is signed in',
-    build: () {
-      when(() => mockAuthRepo.onAuthChanged()).thenAnswer((_) => Stream.value(mockUser));
-      return authBloc;
-    },
-    act: (bloc) => bloc.add(AppStarted()),
-    expect: () => [Authenticated(mockUser)],
-  );
+    blocTest<AuthBloc, AuthState>(
+      'emits [Unauthenticated] when LogoutRequested is added',
+      build: () {
+        // since only _authRepo.logout() is called inside _onLogoutRequested() we only need to stub that
+        when(() => mockAuthRepo.logout()).thenAnswer((_) async {});
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(LogoutRequested()),
+      expect: () => [Unauthenticated()],
+    );
 
-  blocTest<AuthBloc, AuthState>(
-    'emits [Unauthenticated] when LogoutRequested is added',
-    build: () {
-      // since only _authRepo.logout() is called inside _onLogoutRequested() we only need to stub that
-      when(() => mockAuthRepo.logout()).thenAnswer((_) async {});
-      return authBloc;
-    },
-    act: (bloc) => bloc.add(LogoutRequested()),
-    expect: () => [Unauthenticated()],
-  );
+    blocTest(
+      'emits [Unauthenticated] when DeletionRequested is added',
+      build: () {
+        when(() => mockAuthRepo.getCurrentUser()).thenReturn(mockUser);
+        when(() => mockAuthRepo.deleteAccount()).thenAnswer((_) async => {});
+        when(() => mockUserdataRepo.deleteAccount(mockUser)).thenAnswer((_) async => {});
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(DeletionRequested()),
+      expect: () => [Unauthenticated()],
+    );
 
-  blocTest(
-    'emits [Unauthenticated] when DeletionRequested is added',
-    build: () {
-      when(() => mockAuthRepo.getCurrentUser()).thenReturn(mockUser);
-      when(() => mockAuthRepo.deleteAccount()).thenAnswer((_) async => {});
-      when(() => mockUserdataRepo.deleteAccount(mockUser)).thenAnswer((_) async => {});
-      return authBloc;
-    },
-    act: (bloc) => bloc.add(DeletionRequested()),
-    expect: () => [Unauthenticated()],
-  );
-
-  blocTest<AuthBloc, AuthState>(
-    'emits [Authenticated(needsReauthentication: true)] when re-authenticate is required on account deletion request',
-    seed: () => Authenticated(mockUser),
-    build: () {
-      // use thenReturn instead of thenAnswer when the answer is synchronous
-      when(() => mockAuthRepo.getCurrentUser()).thenReturn(mockUser);
-      when(() => mockAuthRepo.deleteAccount()).thenThrow(RequiresRecentLoginException());
-      return authBloc;
-    },
-    act: (bloc) => bloc.add(DeletionRequested()),
-    expect: () => [Authenticated(mockUser, needsReauthentication: true)],
-  );
+    blocTest<AuthBloc, AuthState>(
+      'emits [Authenticated(needsReauthentication: true)] when re-authenticate is required on account deletion request',
+      seed: () => Authenticated(mockUser),
+      build: () {
+        // use thenReturn instead of thenAnswer when the answer is synchronous
+        when(() => mockAuthRepo.getCurrentUser()).thenReturn(mockUser);
+        when(() => mockAuthRepo.deleteAccount()).thenThrow(RequiresRecentLoginException());
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(DeletionRequested()),
+      expect: () => [Authenticated(mockUser, needsReauthentication: true)],
+    );
+  });
   // late FakeAuthRepository fakeAuthRepo;
   // late FakeUserdataRepository fakeUserRepo;
   // group(
