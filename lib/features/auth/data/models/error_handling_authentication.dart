@@ -8,6 +8,10 @@ class LogInWithEmailAndPasswordFailure implements Exception {
 
   factory LogInWithEmailAndPasswordFailure.fromCode(String code) {
     switch (code) {
+      case 'empty-fields':
+        return const LogInWithEmailAndPasswordFailure(
+          'Email and password cannot be empty.',
+        );
       case 'invalid-credential':
         return const LogInWithEmailAndPasswordFailure(
           'Invalid credentials. Please check your email and password.',

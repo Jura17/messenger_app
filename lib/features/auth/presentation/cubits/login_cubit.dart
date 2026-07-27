@@ -20,23 +20,18 @@ class LoginCubit extends Cubit<LoginState> {
   void passwordChanged(String value) => emit(state.copyWith(password: value, errorMessage: null));
 
   Future<void> logIn() async {
-    if (state.email.isEmpty || state.password.isEmpty) {
-      emit(state.copyWith(
-        status: LoginStatus.failure,
-        errorMessage: "Email and password cannot be empty.",
-      ));
-      return;
-    }
-
     emit(state.copyWith(status: LoginStatus.loading, errorMessage: null));
-
     try {
-      AuthUser user = await _authRepo.signIn(state.email, state.password);
+      if (state.email.isEmpty || state.password.isEmpty) {
+        throw LogInWithEmailAndPasswordFailure.fromCode('empty-fields');
+      }
+
+      AuthUser? user = await _authRepo.signIn(state.email, state.password);
       await _userdataRepo.updateOnlineStatus(user.uid, true);
     } on LogInWithEmailAndPasswordFailure catch (e) {
       emit(state.copyWith(status: LoginStatus.failure, errorMessage: e.message));
     } catch (e) {
-      emit(state.copyWith(status: LoginStatus.failure, errorMessage: "Unexpected error: $e"));
+      emit(state.copyWith(status: LoginStatus.failure, errorMessage: 'Unexpected error: $e'));
     }
   }
 }
