@@ -37,7 +37,7 @@ class LogInWithEmailAndPasswordFailure implements Exception {
           'Incorrect password, please try again.',
         );
       default:
-        return const LogInWithEmailAndPasswordFailure();
+        return LogInWithEmailAndPasswordFailure('An unknown exception occurred: $code');
     }
   }
 }
@@ -52,6 +52,14 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
 
   factory SignUpWithEmailAndPasswordFailure.fromCode(String code) {
     switch (code) {
+      case 'empty-fields':
+        return const SignUpWithEmailAndPasswordFailure(
+          'Email and password cannot be empty',
+        );
+      case 'passwords-do-not-match':
+        return const SignUpWithEmailAndPasswordFailure(
+          'Passwords don not match',
+        );
       case 'invalid-email':
         return const SignUpWithEmailAndPasswordFailure(
           'Email is not valid or badly formatted.',
@@ -77,7 +85,7 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
           'Please enter a stronger password.',
         );
       default:
-        return const SignUpWithEmailAndPasswordFailure();
+        return SignUpWithEmailAndPasswordFailure('An unknown exception occurred: $code');
     }
   }
 }

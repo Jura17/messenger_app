@@ -22,33 +22,22 @@ class SignUpCubit extends Cubit<SignUpState> {
   void confirmPasswordChanged(String value) => emit(state.copyWith(confirmPassword: value, errorMessage: null));
 
   Future<void> signUp() async {
-    if (state.email.isEmpty || state.password.isEmpty) {
-      emit(state.copyWith(
-        status: SignUpStatus.failure,
-        errorMessage: "Email and password cannot be empty.",
-      ));
-      return;
-    }
-
-    if (state.password != state.confirmPassword) {
-      emit(state.copyWith(
-        status: SignUpStatus.failure,
-        errorMessage: "Passwords do not match.",
-      ));
-      return;
-    }
-
     emit(state.copyWith(status: SignUpStatus.loading, errorMessage: null));
-
     try {
-      AuthUser user = await _authRepo.signUp(email: state.email, username: state.username, password: state.password);
+      if (state.email.isEmpty || state.password.isEmpty) {
+        throw SignUpWithEmailAndPasswordFailure.fromCode('empty-fields');
+      }
 
+      if (state.password != state.confirmPassword) {
+        throw SignUpWithEmailAndPasswordFailure.fromCode('passwords-do-not-match');
+      }
+
+      AuthUser user = await _authRepo.signUp(email: state.email, username: state.username, password: state.password);
       await _userdataRepo.createUser(user.uid, state.username, state.email);
     } on SignUpWithEmailAndPasswordFailure catch (e) {
       emit(state.copyWith(status: SignUpStatus.failure, errorMessage: e.message));
     } catch (e) {
-      if (isClosed) return;
-      emit(state.copyWith(status: SignUpStatus.failure, errorMessage: "Unexpected error: $e"));
+      emit(state.copyWith(status: SignUpStatus.failure, errorMessage: 'Unexpected error: $e'));
     }
   }
 }

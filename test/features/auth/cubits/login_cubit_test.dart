@@ -46,7 +46,7 @@ void main() {
         'emits [loading, failure] when login fails due to wrong email',
         build: () {
           when(() => mockAuthRepo.signIn('wrongEmail@test.com', '123456'))
-              .thenAnswer((_) async => throw LogInWithEmailAndPasswordFailure.fromCode('invalid-credential'));
+              .thenThrow(LogInWithEmailAndPasswordFailure.fromCode('invalid-credential'));
           return LoginCubit(authRepo: mockAuthRepo, userdataRepo: mockUserdataRepository);
         },
         act: (cubit) async {
@@ -81,6 +81,55 @@ void main() {
             password: '123456',
             status: LoginStatus.failure,
             errorMessage: 'Email and password cannot be empty.',
+          ),
+        ],
+      );
+
+      blocTest<LoginCubit, LoginState>(
+        'emits [loading, failure] when login fails due to unknown error',
+        build: () {
+          when(() => mockAuthRepo.signIn('user@test.com', '123456'))
+              .thenThrow(Exception('Database crashed or sth else unknown occurred...'));
+          return LoginCubit(authRepo: mockAuthRepo, userdataRepo: mockUserdataRepository);
+        },
+        act: (cubit) {
+          cubit.emailChanged('user@test.com');
+          cubit.passwordChanged('123456');
+          cubit.logIn();
+        },
+        expect: () => [
+          LoginState(email: 'user@test.com', password: '', status: LoginStatus.initial),
+          LoginState(email: 'user@test.com', password: '123456', status: LoginStatus.initial),
+          LoginState(email: 'user@test.com', password: '123456', status: LoginStatus.loading),
+          LoginState(
+            email: 'user@test.com',
+            password: '123456',
+            status: LoginStatus.failure,
+            errorMessage: 'Unexpected error: Exception: Database crashed or sth else unknown occurred...',
+          ),
+        ],
+      );
+      blocTest<LoginCubit, LoginState>(
+        'emits [loading, failure] when login fails due to unknown error code coming from data layer',
+        build: () {
+          when(() => mockAuthRepo.signIn('user@test.com', '123456'))
+              .thenThrow(LogInWithEmailAndPasswordFailure.fromCode('Some weird unknown backend error code'));
+          return LoginCubit(authRepo: mockAuthRepo, userdataRepo: mockUserdataRepository);
+        },
+        act: (cubit) {
+          cubit.emailChanged('user@test.com');
+          cubit.passwordChanged('123456');
+          cubit.logIn();
+        },
+        expect: () => [
+          LoginState(email: 'user@test.com', password: '', status: LoginStatus.initial),
+          LoginState(email: 'user@test.com', password: '123456', status: LoginStatus.initial),
+          LoginState(email: 'user@test.com', password: '123456', status: LoginStatus.loading),
+          LoginState(
+            email: 'user@test.com',
+            password: '123456',
+            status: LoginStatus.failure,
+            errorMessage: 'An unknown exception occurred: Some weird unknown backend error code',
           ),
         ],
       );
