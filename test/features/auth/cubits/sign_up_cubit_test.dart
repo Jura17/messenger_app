@@ -1,11 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:messenger_app/features/auth/data/models/error_handling_authentication.dart';
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 
 import 'package:messenger_app/features/auth/presentation/cubits/sign_up_cubit.dart';
 import 'package:messenger_app/features/auth/presentation/cubits/sign_up_state.dart';
-import 'package:messenger_app/features/auth/data/repositories/fake_auth_repository.dart';
-import 'package:messenger_app/features/users/data/repositories/fake_userdata_repository.dart';
+
 import 'package:messenger_app/features/users/data/repositories/mock_userdata_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -20,40 +20,78 @@ void main() {
     mockUserdataRepository = MockUserdataRepository();
   });
 
-  group(
-    'sign up cubit tests',
-    () {
-      blocTest<SignUpCubit, SignUpState>(
-        'emit [initial, loading] when sign-up succeeds',
-        build: () {
-          when(() => mockAuthRepository.signUp(email: 'user@test.com', username: 'John Test', password: '123456'))
-              .thenAnswer((_) async => AuthUser(uid: '123'));
-          when(() => mockUserdataRepository.createUser('123', 'John Test', 'user@test.com'))
-              .thenAnswer((_) async => {});
-          return SignUpCubit(authRepo: mockAuthRepository, userdataRepo: mockUserdataRepository);
-        },
-        act: (cubit) async {
-          cubit.emailChanged('user@test.com');
-          cubit.usernameChanged('John Test');
-          cubit.passwordChanged('123456');
-          cubit.confirmPasswordChanged('123456');
-          await cubit.signUp();
-        },
-        expect: () => [
-          SignUpState(email: 'user@test.com'),
-          SignUpState(email: 'user@test.com', username: 'John Test'),
-          SignUpState(email: 'user@test.com', username: 'John Test', password: '123456'),
-          SignUpState(email: 'user@test.com', username: 'John Test', password: '123456', confirmPassword: '123456'),
-          SignUpState(
-            email: 'user@test.com',
-            username: 'John Test',
-            password: '123456',
-            confirmPassword: '123456',
-            status: SignUpStatus.loading,
-          ),
-        ],
-      );
-    },
+  group('sign up cubit tests', () {
+    blocTest<SignUpCubit, SignUpState>(
+      'emit [initial, loading] when sign-up succeeds',
+      build: () {
+        when(() => mockAuthRepository.signUp(email: 'user@test.com', username: 'John Test', password: '123456'))
+            .thenAnswer((_) async => AuthUser(uid: '123'));
+        when(() => mockUserdataRepository.createUser('123', 'John Test', 'user@test.com')).thenAnswer((_) async => {});
+        return SignUpCubit(authRepo: mockAuthRepository, userdataRepo: mockUserdataRepository);
+      },
+      act: (cubit) async {
+        cubit.emailChanged('user@test.com');
+        cubit.usernameChanged('John Test');
+        cubit.passwordChanged('123456');
+        cubit.confirmPasswordChanged('123456');
+        await cubit.signUp();
+      },
+      expect: () => [
+        SignUpState(email: 'user@test.com'),
+        SignUpState(email: 'user@test.com', username: 'John Test'),
+        SignUpState(email: 'user@test.com', username: 'John Test', password: '123456'),
+        SignUpState(email: 'user@test.com', username: 'John Test', password: '123456', confirmPassword: '123456'),
+        SignUpState(
+          email: 'user@test.com',
+          username: 'John Test',
+          password: '123456',
+          confirmPassword: '123456',
+          status: SignUpStatus.loading,
+        ),
+      ],
+    );
+    blocTest<SignUpCubit, SignUpState>(
+      'emits [initial, loading, failure] due to invalid credentials',
+      build: () {
+        when(() => mockAuthRepository.signUp(email: 'invalid@email', username: 'John Test', password: '123456'))
+            .thenThrow(SignUpWithEmailAndPasswordFailure.fromCode('invalid-email'));
+        return SignUpCubit(authRepo: mockAuthRepository, userdataRepo: mockUserdataRepository);
+      },
+      act: (cubit) async {
+        cubit.emailChanged('invalid@email');
+        cubit.usernameChanged('John Test');
+        cubit.passwordChanged('123456');
+        cubit.confirmPasswordChanged('123456');
+        await cubit.signUp();
+      },
+      expect: () => [
+        SignUpState(email: 'invalid@email'),
+        SignUpState(email: 'invalid@email', username: 'John Test'),
+        SignUpState(email: 'invalid@email', username: 'John Test', password: '123456'),
+        SignUpState(email: 'invalid@email', username: 'John Test', password: '123456', confirmPassword: '123456'),
+        SignUpState(
+          email: 'invalid@email',
+          username: 'John Test',
+          password: '123456',
+          confirmPassword: '123456',
+          status: SignUpStatus.loading,
+        ),
+        SignUpState(
+          email: 'invalid@email',
+          username: 'John Test',
+          password: '123456',
+          confirmPassword: '123456',
+          status: SignUpStatus.failure,
+          errorMessage: 'Email is not valid or badly formatted.',
+        )
+      ],
+    );
+  });
+  blocTest<SignUpCubit, SignUpState>(
+    'emits [loading, failure] when signing up fails due to not matching passwords',
+    build: () {},
+    act: (cubit) {},
+    expect: () => [],
   );
   // group('sign up cubit tests', () {
   //   blocTest<SignUpCubit, SignUpState>(

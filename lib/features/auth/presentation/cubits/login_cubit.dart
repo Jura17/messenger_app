@@ -26,7 +26,7 @@ class LoginCubit extends Cubit<LoginState> {
         throw LogInWithEmailAndPasswordFailure.fromCode('empty-fields');
       }
 
-      AuthUser? user = await _authRepo.signIn(state.email, state.password);
+      AuthUser user = await _authRepo.signIn(state.email, state.password);
       await _userdataRepo.updateOnlineStatus(user.uid, true);
     } on LogInWithEmailAndPasswordFailure catch (e) {
       emit(state.copyWith(status: LoginStatus.failure, errorMessage: e.message));

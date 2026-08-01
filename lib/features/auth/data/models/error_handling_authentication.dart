@@ -58,7 +58,7 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
         );
       case 'passwords-do-not-match':
         return const SignUpWithEmailAndPasswordFailure(
-          'Passwords don not match',
+          'Passwords do not match',
         );
       case 'invalid-email':
         return const SignUpWithEmailAndPasswordFailure(
