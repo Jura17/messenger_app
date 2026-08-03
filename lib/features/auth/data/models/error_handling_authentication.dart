@@ -54,11 +54,11 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
     switch (code) {
       case 'empty-fields':
         return const SignUpWithEmailAndPasswordFailure(
-          'Email and password cannot be empty',
+          'One or more fields have been left empty.',
         );
       case 'passwords-do-not-match':
         return const SignUpWithEmailAndPasswordFailure(
-          'Passwords do not match',
+          'Passwords do not match.',
         );
       case 'invalid-email':
         return const SignUpWithEmailAndPasswordFailure(

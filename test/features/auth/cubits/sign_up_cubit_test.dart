@@ -89,9 +89,103 @@ void main() {
   });
   blocTest<SignUpCubit, SignUpState>(
     'emits [loading, failure] when signing up fails due to not matching passwords',
-    build: () {},
-    act: (cubit) {},
-    expect: () => [],
+    build: () => SignUpCubit(authRepo: mockAuthRepository, userdataRepo: mockUserdataRepository),
+    act: (cubit) async {
+      cubit.emailChanged('user@test.com');
+      cubit.usernameChanged('John Test');
+      cubit.passwordChanged('123456');
+      cubit.confirmPasswordChanged('654321');
+      await cubit.signUp();
+    },
+    expect: () => [
+      SignUpState(email: 'user@test.com'),
+      SignUpState(email: 'user@test.com', username: 'John Test'),
+      SignUpState(email: 'user@test.com', username: 'John Test', password: '123456'),
+      SignUpState(email: 'user@test.com', username: 'John Test', password: '123456', confirmPassword: '654321'),
+      SignUpState(
+        email: 'user@test.com',
+        username: 'John Test',
+        password: '123456',
+        confirmPassword: '654321',
+        status: SignUpStatus.loading,
+      ),
+      SignUpState(
+        email: 'user@test.com',
+        username: 'John Test',
+        password: '123456',
+        confirmPassword: '654321',
+        status: SignUpStatus.failure,
+        errorMessage: 'Passwords do not match.',
+      )
+    ],
+  );
+
+  blocTest<SignUpCubit, SignUpState>(
+    'emits [loading, failure] when signing up fails due to empty fields',
+    build: () => SignUpCubit(authRepo: mockAuthRepository, userdataRepo: mockUserdataRepository),
+    act: (cubit) async {
+      cubit.usernameChanged('John Test');
+      cubit.passwordChanged('123456');
+      cubit.confirmPasswordChanged('123456');
+      await cubit.signUp();
+    },
+    expect: () => [
+      SignUpState(email: '', username: 'John Test'),
+      SignUpState(email: '', username: 'John Test', password: '123456'),
+      SignUpState(email: '', username: 'John Test', password: '123456', confirmPassword: '123456'),
+      SignUpState(
+        email: '',
+        username: 'John Test',
+        password: '123456',
+        confirmPassword: '123456',
+        status: SignUpStatus.loading,
+      ),
+      SignUpState(
+        email: '',
+        username: 'John Test',
+        password: '123456',
+        confirmPassword: '123456',
+        status: SignUpStatus.failure,
+        errorMessage: 'One or more fields have been left empty.',
+      )
+    ],
+  );
+
+  blocTest<SignUpCubit, SignUpState>(
+    'emits [loading, failure] when signing up fails, due to unknown error',
+    build: () {
+      when(() => mockAuthRepository.signUp(email: 'user@test.com', username: 'John Test', password: '123456'))
+          .thenThrow(Exception('Something mysterious happened...'));
+      return SignUpCubit(authRepo: mockAuthRepository, userdataRepo: mockUserdataRepository);
+    },
+    act: (cubit) async {
+      cubit.emailChanged('user@test.com');
+      cubit.usernameChanged('John Test');
+      cubit.passwordChanged('123456');
+      cubit.confirmPasswordChanged('123456');
+      await cubit.signUp();
+    },
+    expect: () => [
+      SignUpState(email: 'user@test.com'),
+      SignUpState(email: 'user@test.com', username: 'John Test'),
+      SignUpState(email: 'user@test.com', username: 'John Test', password: '123456'),
+      SignUpState(email: 'user@test.com', username: 'John Test', password: '123456', confirmPassword: '123456'),
+      SignUpState(
+        email: 'user@test.com',
+        username: 'John Test',
+        password: '123456',
+        confirmPassword: '123456',
+        status: SignUpStatus.loading,
+      ),
+      SignUpState(
+        email: 'user@test.com',
+        username: 'John Test',
+        password: '123456',
+        confirmPassword: '123456',
+        status: SignUpStatus.failure,
+        errorMessage: 'Unexpected error: Exception: Something mysterious happened...',
+      )
+    ],
   );
   // group('sign up cubit tests', () {
   //   blocTest<SignUpCubit, SignUpState>(
