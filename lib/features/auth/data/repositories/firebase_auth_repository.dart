@@ -69,8 +69,9 @@ class FirebaseAuthRepository implements AuthRepository {
       if (e.code == 'requires-recent-login') {
         throw RequiresRecentLoginException();
       }
+    } catch (e) {
+      throw AuthException('Authentication failed: $e');
     }
-    throw AuthException('Authentication failed');
   }
 
   @override

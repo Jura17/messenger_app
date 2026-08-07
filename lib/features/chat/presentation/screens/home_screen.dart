@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:messenger_app/features/auth/presentation/bloc/auth_event.dart';
 
 import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
 import 'package:messenger_app/features/users/presentation/bloc/user_event.dart';
@@ -17,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     context.read<UserBloc>().add(WatchUsers());
+    // context.read<AuthBloc>().add(LogoutRequested());
   }
 
   @override

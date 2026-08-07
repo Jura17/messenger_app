@@ -5,6 +5,7 @@ import 'package:messenger_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:messenger_app/features/settings/presentation/screens/settings_screen.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/drawer_menu_item.dart';
+import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
 
 import 'package:provider/provider.dart';
 
@@ -64,6 +65,7 @@ class CustomDrawer extends StatelessWidget {
             DrawerMenuItem(
               onTap: () {
                 context.read<AuthBloc>().add(LogoutRequested());
+                // context.read<UserBloc>().close();
               },
               title: "L O G O U T",
               iconData: Icons.logout,
