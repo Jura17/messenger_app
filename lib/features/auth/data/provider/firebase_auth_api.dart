@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:messenger_app/features/auth/data/provider/auth_api.dart';
 
 class FirebaseAuthApi implements AuthApi {
@@ -7,7 +8,10 @@ class FirebaseAuthApi implements AuthApi {
   FirebaseAuthApi(this.auth);
 
   @override
-  Stream<User?> onAuthChanged() => auth.authStateChanges();
+  Stream<User?> onAuthChanged() {
+    debugPrint("onAuthChanged called");
+    return auth.authStateChanges();
+  }
 
   @override
   User? getCurrentUser() {

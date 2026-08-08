@@ -26,7 +26,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late final TextEditingController _usernameController;
   late final TextEditingController _passwordController;
   late final TextEditingController _confirmPasswordController;
-  // String errorText = '';
 
   @override
   void initState() {

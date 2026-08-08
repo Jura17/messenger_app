@@ -24,6 +24,13 @@ class SignUpCubit extends Cubit<SignUpState> {
   Future<void> signUp() async {
     emit(state.copyWith(status: SignUpStatus.loading, errorMessage: null));
     try {
+      if (state.username.length < 3) {
+        throw SignUpWithEmailAndPasswordFailure.fromCode('username-too-short');
+      }
+      if (state.username.length > 20) {
+        throw SignUpWithEmailAndPasswordFailure.fromCode('username-too-long');
+      }
+
       if (state.email.isEmpty || state.password.isEmpty) {
         throw SignUpWithEmailAndPasswordFailure.fromCode('empty-fields');
       }

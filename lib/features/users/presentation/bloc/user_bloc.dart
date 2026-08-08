@@ -1,3 +1,5 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:messenger_app/features/users/domain/entities/app_user_data.dart';
@@ -20,7 +22,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         super(UsersInitial()) {
     on<BlockUser>(_onBlockUser);
     on<UnblockUser>(_onUnblockUser);
-    on<WatchUsers>(_onWatchUsers);
+    // restartable(): cancels the previous event handler's subscription/work (in my case: emit.forEach(stream...) when another event arrives
+    // ==> results in old user stream subscription being canceled when new WatchUsers event arrives
+    on<WatchUsers>(_onWatchUsers, transformer: restartable());
   }
 
   Future<void> _onBlockUser(BlockUser event, Emitter<UserState> emit) async {

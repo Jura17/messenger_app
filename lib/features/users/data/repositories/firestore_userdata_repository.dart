@@ -26,8 +26,9 @@ class FirestoreUserdataRepository implements UserdataRepository {
 
     // merge user stream and blocked user ID stream into one (emits value when one of them changes)
     return Rx.combineLatest2(allUsersStream, blockedUsersStream, (allUsers, blockedUserIds) {
-      final permittedUsers =
-          allUsers.where((user) => user['uid'] != currentUser.uid && !blockedUserIds.contains(user['uid']));
+      final permittedUsers = allUsers.where((user) {
+        return user['uid'] != currentUser.uid && !blockedUserIds.contains(user['uid']);
+      });
 
       return permittedUsers.map((user) {
         return AppUserData(

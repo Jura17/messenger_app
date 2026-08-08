@@ -25,6 +25,7 @@ dependencies:
   path_provider: ^2.1.5
   app_settings: ^7.0.0
   firebase_storage: ^13.1.0
+  bloc_concurrency: ^0.3.0
 
 
 dev_dependencies:

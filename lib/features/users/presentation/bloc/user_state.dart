@@ -16,7 +16,11 @@ final class UsersLoaded extends UserState {
   final List<AppUserData> permittedUsers;
   final List<AppUserData> blockedUsers;
 
+  // Which properties determine whether two instances of this state are considered equal? ==> permittedUsers and blockedUsers!
   const UsersLoaded(this.permittedUsers, this.blockedUsers);
+
+  @override
+  List<Object?> get props => [permittedUsers, blockedUsers];
 }
 
 final class UserActionSuccess extends UserState {

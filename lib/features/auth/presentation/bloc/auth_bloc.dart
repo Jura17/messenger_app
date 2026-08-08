@@ -29,7 +29,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     return emit.onEach<AuthUser?>(
       _authRepo.onAuthChanged(),
       // if backend (e.g. Firebase) says we have a user -> emit Authenticated
-      onData: (user) => user != null ? emit(Authenticated(user)) : emit(Unauthenticated()),
+      onData: (user) {
+        debugPrint("onData from onAuthChanged stream");
+        user != null ? emit(Authenticated(user)) : emit(Unauthenticated());
+      },
       onError: (_, __) => AuthError("Error loading auth state"),
     );
   }

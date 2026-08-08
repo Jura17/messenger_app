@@ -1,6 +1,3 @@
-//
-import 'package:flutter/widgets.dart';
-
 // return up to 2 capital letters (first name and for the second name) for the given string input
 String? getUsernameInitials(String? username) {
   if (username == null) return null;
@@ -9,7 +6,6 @@ String? getUsernameInitials(String? username) {
   // remove leading and trailing whitespace using trim() and remove any other whitespace character
   final parts = username.trim().split(RegExp(r'\s+'));
 
-  debugPrint(parts.toString());
   // extract initials of first name
   parts.removeWhere((part) => part.isEmpty);
   if (parts.isEmpty) return null;

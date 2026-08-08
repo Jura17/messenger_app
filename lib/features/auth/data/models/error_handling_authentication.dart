@@ -56,6 +56,14 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
         return const SignUpWithEmailAndPasswordFailure(
           'One or more fields have been left empty.',
         );
+      case 'username-too-short':
+        return const SignUpWithEmailAndPasswordFailure(
+          'Please choose a longer username',
+        );
+      case 'username-too-long':
+        return const SignUpWithEmailAndPasswordFailure(
+          'Please choose a shorter username',
+        );
       case 'passwords-do-not-match':
         return const SignUpWithEmailAndPasswordFailure(
           'Passwords do not match.',

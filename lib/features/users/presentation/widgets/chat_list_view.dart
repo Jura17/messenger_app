@@ -70,7 +70,7 @@ class _ChatListViewState extends State<ChatListView> {
                       ]
                     : state.permittedUsers.map<Widget>(
                         (userData) {
-                          if (userData.email == currentUser?.email) return SizedBox.shrink();
+                          // if (userData.email == currentUser?.email) return SizedBox.shrink();
                           final preview = previewByPartner[userData.uid];
                           var dateTime = preview?.lastMessageDateTime;
 
