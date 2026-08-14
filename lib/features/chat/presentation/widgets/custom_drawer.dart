@@ -5,8 +5,6 @@ import 'package:messenger_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:messenger_app/features/settings/presentation/screens/settings_screen.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/drawer_menu_item.dart';
-import 'package:messenger_app/features/users/presentation/bloc/current_user_bloc.dart';
-import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
 
 import 'package:provider/provider.dart';
 

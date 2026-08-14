@@ -35,31 +35,26 @@ class FakeChatRepository implements ChatRepository {
 
   @override
   Future<void> markMessagesAsRead(String chatPartnerId, AuthUser? currentUser) {
-    // TODO: implement markMessagesAsRead
     throw UnimplementedError();
   }
 
   @override
   Future<void> reportMessage(String messageId, String chatPartnerId, AuthUser? currentUser) {
-    // TODO: implement reportMessage
     throw UnimplementedError();
   }
 
   @override
   Future<void> sendMessage(String chatPartnerId, String message, AuthUser? currentUser) {
-    // TODO: implement sendMessage
     throw UnimplementedError();
   }
 
   @override
   Stream<List<ChatPreview>> watchChatroom(AuthUser? currentUser) {
-    // TODO: implement watchChatroom
     throw UnimplementedError();
   }
 
   @override
   Stream<List<Message>> watchChatroomMessages(String chatPartnerId, AuthUser? currentUser) {
-    // TODO: implement watchChatroomMessages
     throw UnimplementedError();
   }
 

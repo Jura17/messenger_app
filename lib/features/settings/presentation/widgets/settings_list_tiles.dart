@@ -41,7 +41,7 @@ class SettingsListTiles extends StatelessWidget {
           ),
           SettingsListTile(
             title: "Change password",
-            onTap: () => debugPrint("Change password..."),
+            onTap: () => debugPrint("Changing password..."),
           ),
           SettingsListTile(
             title: "Blocked users",

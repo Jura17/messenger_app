@@ -75,7 +75,6 @@ class FakeUserdataRepository implements UserdataRepository {
       Future.delayed(Duration(milliseconds: 500));
       return _mockUserDb.firstWhere((user) => user.uid == uid);
     } catch (e) {
-      debugPrint("from mock userdata repo, getUser: $e");
       return null;
     }
   }
@@ -83,7 +82,7 @@ class FakeUserdataRepository implements UserdataRepository {
   @override
   Stream<AppUserData?> watchCurrentUser(String uid) {
     // makes stream behave like a firestore state stream, instead of a normal dart event stream,
-    // meaning: right after subscription we want to emit the latest state of our data
+    // ==> right after subscription we want to emit the latest state of our data
     Future.microtask(_emitUserUpdates);
 
     return _allUsersStreamController.stream.map((allUsers) {
@@ -116,7 +115,6 @@ class FakeUserdataRepository implements UserdataRepository {
         'isOnline': isOnline,
       };
     } else {
-      // updatedUserMap = user.copyWith(lastSeen: DateTime.now(), isOnline: isOnline).toMap();
       updatedUserMap = {
         'uid': uid,
         'username': user.username,
@@ -128,7 +126,6 @@ class FakeUserdataRepository implements UserdataRepository {
       };
     }
 
-    // _mockUserDb[currentUserIndex] = FirestoreUserdata.fromMap(updatedUser);
     _mockUserDb[currentUserIndex] = AppUserData(
       uid: uid,
       email: updatedUserMap['email'],
@@ -178,7 +175,6 @@ class FakeUserdataRepository implements UserdataRepository {
 
   @override
   Future<void> saveProfileImage(XFile imageFile, AuthUser? currentUser) {
-    // TODO: implement saveProfileImage
     throw UnimplementedError();
   }
 }

@@ -1,5 +1,5 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:messenger_app/features/users/domain/entities/app_user_data.dart';

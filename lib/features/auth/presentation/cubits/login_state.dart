@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 enum LoginStatus { initial, loading, failure }
-// TODO: maybe add success state, so that we can show a success animation right before re-directing user to home screen
 
 class LoginState extends Equatable {
   final String email;

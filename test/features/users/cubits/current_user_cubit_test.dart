@@ -16,7 +16,6 @@ void main() {
   mockAuthRepo = FakeAuthRepository();
   mockUserRepo = FakeUserdataRepository();
 
-// TODO: modify mock repos so that they work with Mocktail (currently more or less fakes instead of mock classes)
   blocTest<CurrentUserCubit, CurrentUserCubitState>(
     'test description',
     build: () {

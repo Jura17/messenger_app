@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
+// NOT USED AT THE MOMENT
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final _messageStreamController = BehaviorSubject<RemoteMessage>();

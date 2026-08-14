@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 
@@ -98,7 +97,6 @@ class FirestoreUserdataRepository implements UserdataRepository {
 
   @override
   Future<void> saveProfileImage(XFile imageFile, AuthUser? currentUser) async {
-    debugPrint("from userdata api saveProfileImage");
     await _userdataApi.saveProfileImage(imageFile, currentUser);
   }
 }

@@ -130,7 +130,7 @@ class FirestoreUserdataApi implements UserdataApi {
     await firestoreDb.collection('users').doc(currentUser!.uid).delete();
   }
 
-  // save image locally via shared preferences (should be replaced with FirebaseStorage later)
+  // save image locally via shared preferences (should be replaced with cloud storage service, i.e. Firebase Cloud Storage, later)
   @override
   Future<void> saveProfileImage(XFile imageFile, AuthUser? currentUser) async {
     if (currentUser == null) return Future.delayed(Duration(milliseconds: 0));
