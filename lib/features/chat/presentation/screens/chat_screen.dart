@@ -7,8 +7,8 @@ import 'package:messenger_app/features/chat/presentation/bloc/chat_event.dart';
 
 import 'package:messenger_app/features/chat/presentation/widgets/message_list.dart';
 import 'package:messenger_app/features/chat/presentation/widgets/message_input.dart';
-import 'package:messenger_app/features/users/presentation/bloc/current_user_bloc.dart';
-import 'package:messenger_app/features/users/presentation/bloc/current_user_state.dart';
+import 'package:messenger_app/features/users/presentation/bloc/chat_partner_bloc.dart';
+import 'package:messenger_app/features/users/presentation/bloc/chat_partner_state.dart';
 
 class ChatScreen extends StatefulWidget with WidgetsBindingObserver {
   final String chatPartnerEmail;
@@ -59,8 +59,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // final authRepo = context.read<AuthRepository>();
-    // final chatRepo = context.read<ChatRepository>();
     _scrollController.addListener(_scrollListener);
 
     Future.delayed(
@@ -69,8 +67,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         _scrollDown();
 
         if (mounted) context.read<ChatBloc>().add(MarkMessagesAsRead(widget.chatPartnerId));
-        // final currentUser = authRepo.getCurrentUser();
-        // chatRepo.markMessagesAsRead(widget.chatPartnerId, currentUser);
       },
     );
   }
@@ -89,14 +85,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         title: Column(
           children: [
             Text(widget.chatPartnerEmail),
-            BlocBuilder<CurrentUserBloc, CurrentUserState>(builder: (context, state) {
-              if (state is CurrentUserLoading) {
+            BlocBuilder<ChatPartnerBloc, ChatPartnerState>(builder: (context, state) {
+              if (state is ChatPartnerLoading) {
                 return Text("Loading user status...");
               }
-              if (state is CurrentUserError) {
+              if (state is ChatPartnerError) {
                 debugPrint(state.errorText);
               }
-              if (state is CurrentUserLoaded) {
+              if (state is ChatPartnerLoaded) {
                 final isOnline = state.userdata!.isOnline;
                 final lastSeen = state.userdata!.lastSeen;
 

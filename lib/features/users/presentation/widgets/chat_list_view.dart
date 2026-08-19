@@ -8,9 +8,9 @@ import 'package:messenger_app/features/chat/domain/repositories/chat_repository.
 import 'package:messenger_app/features/chat/presentation/bloc/unread_bloc.dart';
 import 'package:messenger_app/features/chat/presentation/bloc/unread_event.dart';
 
-import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_bloc.dart';
 
-import 'package:messenger_app/features/users/presentation/bloc/user_state.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_state.dart';
 
 import 'package:messenger_app/features/users/presentation/widgets/chat_tile.dart';
 
@@ -40,9 +40,9 @@ class _ChatListViewState extends State<ChatListView> {
           if (partnerId.isNotEmpty) previewByPartner[partnerId] = preview;
         }
 
-        return BlocBuilder<UserBloc, UserState>(
+        return BlocBuilder<UsersBloc, UsersState>(
           builder: (context, state) {
-            if (state is UserError) {
+            if (state is UsersError) {
               return Center(
                 child: Text(
                   state.errorText,

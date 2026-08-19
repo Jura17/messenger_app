@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
-import 'package:messenger_app/features/users/presentation/bloc/user_event.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_bloc.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_event.dart';
 import 'package:messenger_app/features/users/presentation/widgets/chat_list_view.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<UserBloc>().add(WatchUsers());
+    context.read<UsersBloc>().add(WatchUsers());
   }
 
   @override

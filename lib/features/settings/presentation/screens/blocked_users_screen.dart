@@ -5,9 +5,9 @@ import 'package:messenger_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:messenger_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:messenger_app/features/settings/presentation/widgets/blocked_user_list_view.dart';
 
-import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_bloc.dart';
 
-import 'package:messenger_app/features/users/presentation/bloc/user_state.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_state.dart';
 
 class BlockedUsersScreen extends StatelessWidget {
   const BlockedUsersScreen({super.key});
@@ -23,9 +23,9 @@ class BlockedUsersScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text("Blocked Users")),
-      body: BlocBuilder<UserBloc, UserState>(
+      body: BlocBuilder<UsersBloc, UsersState>(
         builder: (context, state) {
-          if (state is UserError) {
+          if (state is UsersError) {
             return Center(
               child: Text(
                 state.errorText,

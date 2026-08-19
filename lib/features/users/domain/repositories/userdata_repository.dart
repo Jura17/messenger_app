@@ -6,7 +6,7 @@ abstract interface class UserdataRepository {
   Future<void> createUser(String uid, String username, String email);
   Stream<List<AppUserData>> getAllPermittedUsersStream(AuthUser? currentUser);
   Future<AppUserData?> getUserById(String uid);
-  Stream<AppUserData?> watchCurrentUser(String uid);
+  Stream<AppUserData?> watchUser(String uid);
   Future<void> saveProfileImage(XFile imageFile, AuthUser? currentUser);
   Future<void> updateOnlineStatus(String uid, bool onlineStatus);
   Stream<List<AppUserData>> getBlockedUsersStream(AuthUser? currentUser);

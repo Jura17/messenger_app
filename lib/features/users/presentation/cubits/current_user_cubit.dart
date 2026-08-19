@@ -3,6 +3,8 @@ import 'package:messenger_app/features/auth/domain/repositories/auth_repository.
 import 'package:messenger_app/features/users/presentation/cubits/current_user_cubit_state.dart';
 import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 
+// - Loads the user profile data of the currently authenticated user
+// - Should use a stream instead of a one-time future if data like username or password where to change, so it can emit updates easily
 class CurrentUserCubit extends Cubit<CurrentUserCubitState> {
   final UserdataRepository _userdataRepo;
   final AuthRepository _authRepo;

@@ -8,8 +8,8 @@ import 'package:messenger_app/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:messenger_app/features/chat/presentation/bloc/chat_event.dart';
 
 import 'package:messenger_app/features/chat/domain/entities/message.dart';
-import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
-import 'package:messenger_app/features/users/presentation/bloc/user_event.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_bloc.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_event.dart';
 import 'package:provider/provider.dart';
 
 class MessageListBubble extends StatelessWidget {
@@ -168,7 +168,7 @@ class MessageListBubble extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              context.read<UserBloc>().add(BlockUser(userId));
+              context.read<UsersBloc>().add(BlockUser(userId));
               Navigator.pop(context);
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(

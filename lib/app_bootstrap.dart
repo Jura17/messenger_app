@@ -14,7 +14,7 @@ import 'package:messenger_app/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:messenger_app/features/chat/data/provider/firestore_chat_api.dart';
 import 'package:messenger_app/features/chat/domain/repositories/chat_repository.dart';
 import 'package:messenger_app/features/chat/data/repositories/firestore_chat_repository.dart';
-import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_bloc.dart';
 import 'package:messenger_app/features/users/data/provider/firestore_userdata_api.dart';
 import 'package:messenger_app/features/users/data/provider/userdata_api.dart';
 import 'package:messenger_app/features/users/data/repositories/firestore_userdata_repository.dart';
@@ -60,11 +60,11 @@ class AppBootstrap {
               return authBloc;
             },
           ),
-          BlocProvider<UserBloc>(
+          BlocProvider<UsersBloc>(
             create: (context) {
               final userRepo = context.read<UserdataRepository>();
               final authRepo = context.read<AuthRepository>();
-              final userBloc = UserBloc(authRepo: authRepo, userRepo: userRepo);
+              final userBloc = UsersBloc(authRepo: authRepo, userRepo: userRepo);
               return userBloc;
             },
           ),

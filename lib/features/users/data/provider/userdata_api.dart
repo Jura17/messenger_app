@@ -7,7 +7,7 @@ abstract class UserdataApi {
   Future<void> createUser(String uid, String username, String email);
   Stream<List<Map<String, dynamic>>> getAllUsersStream();
   Stream<List<String>> getBlockedUserIdsStream(AuthUser? currentUser);
-  Stream<AppUserData?> watchCurrentUser(String uid);
+  Stream<AppUserData?> watchUser(String uid);
   Future<AppUserData?> getUserById(String otherUserId);
   Future<void> saveProfileImage(XFile imageFile, AuthUser? currentUser);
   Future<void> updateOnlineStatus(String uid, bool isOnline);

@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:messenger_app/features/users/presentation/bloc/user_bloc.dart';
-import 'package:messenger_app/features/users/presentation/bloc/user_event.dart';
-import 'package:messenger_app/features/users/presentation/bloc/user_state.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_bloc.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_event.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_state.dart';
 
 import 'package:messenger_app/features/auth/data/repositories/fake_auth_repository.dart';
 import 'package:messenger_app/features/users/data/repositories/fake_userdata_repository.dart';
@@ -10,12 +10,12 @@ import 'package:messenger_app/features/users/data/repositories/fake_userdata_rep
 void main() {
   late FakeAuthRepository mockAuthRepo;
   late FakeUserdataRepository mockUserRepo;
-  late UserBloc userBloc;
+  late UsersBloc userBloc;
 
   setUp(() async {
     mockAuthRepo = FakeAuthRepository();
     mockUserRepo = FakeUserdataRepository();
-    userBloc = UserBloc(authRepo: mockAuthRepo, userRepo: mockUserRepo);
+    userBloc = UsersBloc(authRepo: mockAuthRepo, userRepo: mockUserRepo);
 
     // Populate the mock DB
     await mockUserRepo.createUser('main_uid', 'mainUser', 'main@test.com');
@@ -32,7 +32,7 @@ void main() {
     userBloc.close();
   });
 
-  blocTest<UserBloc, UserState>(
+  blocTest<UsersBloc, UsersState>(
     'emits [UsersLoading, UsersLoaded] with all permitted users when WatchUsers is added',
     build: () => userBloc,
     act: (bloc) => bloc.add(WatchUsers()),
@@ -47,7 +47,7 @@ void main() {
     ],
   );
 
-  blocTest<UserBloc, UserState>(
+  blocTest<UsersBloc, UsersState>(
     'emits [UsersLoading, UsersLoaded] where blocked user moves from permitted → blocked when BlockUser is added',
     build: () => userBloc,
     act: (bloc) async {
@@ -67,7 +67,7 @@ void main() {
     ],
   );
 
-  blocTest<UserBloc, UserState>(
+  blocTest<UsersBloc, UsersState>(
     'emits [UsersLoading, UsersLoaded] where unblocked user moves from blocked -> permitted when UnblockUser is added',
     build: () => userBloc,
     act: (bloc) async {
@@ -88,14 +88,14 @@ void main() {
     ],
   );
 
-  blocTest<UserBloc, UserState>(
+  blocTest<UsersBloc, UsersState>(
     'emits [UserError] when there is no current user',
     build: () {
       // no current user signed in
       final unauthRepo = FakeAuthRepository();
-      return UserBloc(authRepo: unauthRepo, userRepo: mockUserRepo);
+      return UsersBloc(authRepo: unauthRepo, userRepo: mockUserRepo);
     },
     act: (bloc) => bloc.add(WatchUsers()),
-    expect: () => [isA<UsersLoading>(), isA<UserError>()],
+    expect: () => [isA<UsersLoading>(), isA<UsersError>()],
   );
 }

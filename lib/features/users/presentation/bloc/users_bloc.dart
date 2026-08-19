@@ -4,17 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:messenger_app/features/users/domain/entities/app_user_data.dart';
 
-import 'package:messenger_app/features/users/presentation/bloc/user_event.dart';
-import 'package:messenger_app/features/users/presentation/bloc/user_state.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_event.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_state.dart';
 
 import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
-class UserBloc extends Bloc<UserEvent, UserState> {
+// - Manages whole lists of permitted/blocked users + the blocking/unblocking of users
+class UsersBloc extends Bloc<UsersEvent, UsersState> {
   final AuthRepository _authRepo;
   final UserdataRepository _userRepo;
 
-  UserBloc({
+  UsersBloc({
     required AuthRepository authRepo,
     required UserdataRepository userRepo,
   })  : _authRepo = authRepo,
@@ -27,25 +28,25 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<WatchUsers>(_onWatchUsers, transformer: restartable());
   }
 
-  Future<void> _onBlockUser(BlockUser event, Emitter<UserState> emit) async {
+  Future<void> _onBlockUser(BlockUser event, Emitter<UsersState> emit) async {
     try {
       await _userRepo.blockUser(event.uid, _authRepo.getCurrentUser());
       add(WatchUsers());
     } catch (e) {
-      emit(UserError(e.toString()));
+      emit(UsersError(e.toString()));
     }
   }
 
-  Future<void> _onUnblockUser(UnblockUser event, Emitter<UserState> emit) async {
+  Future<void> _onUnblockUser(UnblockUser event, Emitter<UsersState> emit) async {
     try {
       await _userRepo.unblockUser(event.uid, _authRepo.getCurrentUser());
       add(WatchUsers());
     } catch (e) {
-      emit(UserError(e.toString()));
+      emit(UsersError(e.toString()));
     }
   }
 
-  Future<void> _onWatchUsers(WatchUsers _, Emitter<UserState> emit) async {
+  Future<void> _onWatchUsers(WatchUsers _, Emitter<UsersState> emit) async {
     emit(UsersLoading());
 
     try {
@@ -63,10 +64,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           },
         ),
         onData: (state) => state,
-        onError: (error, stackTrace) => UserError(error.toString()),
+        onError: (error, stackTrace) => UsersError(error.toString()),
       );
     } catch (e) {
-      emit(UserError(e.toString()));
+      emit(UsersError(e.toString()));
     }
   }
 }

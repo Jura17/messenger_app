@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:messenger_app/features/auth/domain/entities/auth_user.dart';
 import 'package:messenger_app/features/users/domain/entities/app_user_data.dart';
-import 'package:messenger_app/features/users/presentation/bloc/user_state.dart';
+import 'package:messenger_app/features/users/presentation/bloc/users_state.dart';
 
 import 'package:messenger_app/features/users/domain/repositories/userdata_repository.dart';
 
@@ -45,7 +45,7 @@ class FakeUserdataRepository implements UserdataRepository {
 
   @override
   Stream<List<AppUserData>> getAllPermittedUsersStream(AuthUser? currentUser) {
-    if (currentUser == null) throw UserError("No current user");
+    if (currentUser == null) throw UsersError("No current user");
 
     // Emit immediately before returning stream so that combineLatest2() actually returns sth
     Future.microtask(() {
@@ -60,7 +60,7 @@ class FakeUserdataRepository implements UserdataRepository {
 
   @override
   Stream<List<AppUserData>> getBlockedUsersStream(AuthUser? currentUser) {
-    if (currentUser == null) throw UserError("No current user");
+    if (currentUser == null) throw UsersError("No current user");
 
     // listen to all user updates, and dynamically filter for blocked ones
     return _allUsersStreamController.stream.map((allUsers) {
@@ -80,7 +80,7 @@ class FakeUserdataRepository implements UserdataRepository {
   }
 
   @override
-  Stream<AppUserData?> watchCurrentUser(String uid) {
+  Stream<AppUserData?> watchUser(String uid) {
     // makes stream behave like a firestore state stream, instead of a normal dart event stream,
     // ==> right after subscription we want to emit the latest state of our data
     Future.microtask(_emitUserUpdates);
