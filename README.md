@@ -1,6 +1,6 @@
 # Firebase Messenger App
 
-A Flutter-based messaging application built with Firebase Authentication, Cloud Firestore, and the BLoC state management pattern. The project is structured around a modular feature-based architecture, providing clear separation between authentication, chat, user management, settings, notifications, and theming.
+A Flutter-based messaging application built with Firebase Authentication, Cloud Firestore, and the BLoC state management pattern. The project is structured around a modular feature-based architecture, providing clear separation between authentication, chat, user management, settings and theming.
 
 This repository represents an in-progress messaging platform. It currently supports core functionality such as account creation, login, chat messaging, message reporting and user blocking. It also shows the chat partner's current online status or the last time they were online. Future iterations will integrate profile pictures so users can upload an image from their gallery via an image picker. Also planned: A contact-based discovery so users can chat with people from their phone address book who also use the app.
 
